@@ -2,7 +2,11 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { trlLevels, expectedDeliverables, risks } from '@/data/eda';
 import { cn } from '@/lib/utils';
-import { Target, AlertTriangle, Rocket } from 'lucide-react';
+import { Target, AlertTriangle, Rocket, ShieldCheck } from 'lucide-react';
+import SplitText from '@/components/reactbits/SplitText';
+import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import TiltedCard from '@/components/reactbits/TiltedCard';
+import MagicBento, { BentoCard } from '@/components/reactbits/MagicBento';
 
 const LEVEL_STYLE = {
   Alto: 'border-l-terracotta bg-terracotta/8',
@@ -23,10 +27,32 @@ export default function Slide07Results() {
       </motion.div>
 
       <div className="relative w-full max-w-[1600px] mx-auto px-[clamp(24px,5vw,80px)] py-20">
-        <span className="eyebrow">7 · Resultados esperados · Riesgos</span>
-        <h2 className="mt-3 font-display text-[clamp(36px,5vw,68px)] leading-[1.02] tracking-tight text-ink max-w-3xl">
-          Qué entregamos, qué <span className="italic text-terracotta">podría salir mal</span>.
+        <span className="eyebrow">7 · Entregables · Plan de contingencia</span>
+        <h2 className="mt-3 font-display text-[clamp(36px,5vw,68px)] leading-[1.02] tracking-tight text-ink max-w-4xl">
+          <SplitText
+            text="Cuatro entregables comprometidos."
+            as="span"
+            trigger="scroll"
+            stagger={0.014}
+          />
+          <br />
+          <span className="italic text-terracotta">
+            <SplitText
+              text="Siete contingencias controladas."
+              as="span"
+              trigger="scroll"
+              stagger={0.014}
+              delay={0.35}
+            />
+          </span>
         </h2>
+        <ScrollReveal delay={0.6} direction="up" distance={14}>
+          <p className="mt-5 text-[15px] text-muted-stone leading-relaxed max-w-2xl flex items-center gap-2">
+            <ShieldCheck size={15} className="text-terracotta shrink-0" strokeWidth={1.8} />
+            Cada riesgo trae un plan de retorno explícito a la fase CRISP-DM
+            correspondiente — no improvisación.
+          </p>
+        </ScrollReveal>
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* TRL + entregables (5 cols) */}
@@ -127,39 +153,50 @@ export default function Slide07Results() {
               </span>
               <span className="text-[10px] text-light-steel font-mono">CRISP-DM retorno</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <MagicBento
+              className="grid grid-cols-1 md:grid-cols-2 gap-3"
+              glowColor={'186, 80, 49'}
+              radius={200}
+            >
               {risks.map((r, i) => (
                 <motion.div
                   key={r.id}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.07, duration: 0.5 }}
+                  transition={{ delay: i * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   viewport={{ once: true }}
-                  whileHover={{ y: -4 }}
-                  className={cn(
-                    'border-l-4 rounded-lg p-4 cursor-default transition-shadow hover:shadow-md',
-                    LEVEL_STYLE[r.level]
-                  )}
+                  className="h-full"
                 >
-                  <div className="flex items-baseline gap-3 mb-2">
-                    <span className="font-display text-2xl text-ink italic">{r.id}</span>
-                    <h4 className="text-[13.5px] font-medium text-ink flex-1 leading-snug">{r.name}</h4>
-                    <span
+                  <TiltedCard intensity={5} glare={false} scale={1.01} className="h-full">
+                    <BentoCard
                       className={cn(
-                        'text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shrink-0',
-                        r.level === 'Alto' ? 'bg-terracotta text-canvas' : 'bg-chart-2 text-canvas'
+                        'border-l-4 rounded-lg p-4 cursor-default h-full transition-shadow hover:shadow-md',
+                        LEVEL_STYLE[r.level]
                       )}
                     >
-                      {r.level}
-                    </span>
-                  </div>
-                  <p className="text-[11.5px] text-muted-stone leading-snug pl-10">
-                    <span className="text-ink/70 font-medium">Plan · </span>
-                    {r.plan}
-                  </p>
+                      <div className="flex items-baseline gap-3 mb-2">
+                        <span className="font-display text-2xl text-ink italic">{r.id}</span>
+                        <h4 className="text-[13.5px] font-medium text-ink flex-1 leading-snug">
+                          {r.name}
+                        </h4>
+                        <span
+                          className={cn(
+                            'text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full shrink-0',
+                            r.level === 'Alto' ? 'bg-terracotta text-canvas' : 'bg-chart-2 text-canvas'
+                          )}
+                        >
+                          {r.level}
+                        </span>
+                      </div>
+                      <p className="text-[11.5px] text-muted-stone leading-snug pl-10">
+                        <span className="text-ink/70 font-medium">Plan · </span>
+                        {r.plan}
+                      </p>
+                    </BentoCard>
+                  </TiltedCard>
                 </motion.div>
               ))}
-            </div>
+            </MagicBento>
           </div>
         </div>
       </div>

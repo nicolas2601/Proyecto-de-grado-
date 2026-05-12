@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { TOTAL_SECONDS, slideTimings } from '@/data/eda';
 import { cn } from '@/lib/utils';
+import SpotlightCursor from '@/components/reactbits/SpotlightCursor';
+import ClickSpark from '@/components/reactbits/ClickSpark';
 
 import Slide00Cover from '@/components/slides/Slide00Cover';
 import Slide01Context from '@/components/slides/Slide01Context';
@@ -129,6 +131,10 @@ export default function PresentationShell() {
 
   return (
     <>
+      {/* Global motion layer — cursor spotlight + click sparks */}
+      <SpotlightCursor color="rgba(186, 80, 49, 0.10)" size={520} />
+      <ClickSpark sparkColor="#ba5031" sparkCount={10} sparkRadius={18} duration={460} />
+
       {/* Top progress bar — no print */}
       <div className="no-print fixed top-0 left-0 right-0 z-50 h-[3px] bg-ink/5">
         <div
