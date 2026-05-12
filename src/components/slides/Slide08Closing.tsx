@@ -1,6 +1,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { references, projectMeta } from '@/data/eda';
+import SplitText from '@/components/reactbits/SplitText';
+import ShinyText from '@/components/reactbits/ShinyText';
 
 export default function Slide08Closing() {
   const ref = useRef<HTMLDivElement>(null);
@@ -29,17 +31,13 @@ export default function Slide08Closing() {
         <div className="lg:col-span-5 flex flex-col justify-center">
           <span className="eyebrow">8 · Cierre</span>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            viewport={{ once: true }}
-            className="mt-3 font-display text-[clamp(48px,6.5vw,96px)] leading-[1] tracking-tight text-ink"
-          >
-            <span className="italic text-terracotta">Gracias</span>
+          <h2 className="mt-3 font-display text-[clamp(48px,6.5vw,96px)] leading-[1] tracking-tight text-ink">
+            <span className="italic text-terracotta">
+              <SplitText text="Gracias" as="span" trigger="scroll" stagger={0.04} duration={1} />
+            </span>
             <br />
-            por su atención.
-          </motion.h2>
+            <SplitText text="por su atención." as="span" trigger="scroll" stagger={0.025} delay={0.5} />
+          </h2>
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -62,10 +60,10 @@ export default function Slide08Closing() {
               <p className="text-sm text-ink font-medium">{projectMeta.authors[0]}</p>
               <p className="text-sm text-ink/80">{projectMeta.authors[1]}</p>
               <p className="text-xs text-muted-stone mt-3">
-                Director · {projectMeta.director}
+                Director · <ShinyText text={projectMeta.director} speed={7} />
               </p>
               <p className="text-xs text-muted-stone">
-                Asesora · {projectMeta.advisor} · KAUST
+                Asesora · <ShinyText text={`${projectMeta.advisor} · KAUST`} speed={7} />
               </p>
             </div>
           </motion.div>

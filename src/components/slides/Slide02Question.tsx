@@ -2,6 +2,10 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { researchCore } from '@/data/eda';
 import { Lightbulb, Compass } from 'lucide-react';
+import SplitText from '@/components/reactbits/SplitText';
+import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import TiltedCard from '@/components/reactbits/TiltedCard';
+import MagicBento, { BentoCard } from '@/components/reactbits/MagicBento';
 
 export default function Slide02Question() {
   const ref = useRef<HTMLDivElement>(null);
@@ -73,7 +77,14 @@ export default function Slide02Question() {
             <div>
               <span className="eyebrow text-terracotta">Pregunta de investigación</span>
               <p className="mt-3 font-display text-[clamp(28px,3.8vw,56px)] leading-[1.12] tracking-tight text-ink">
-                <span className="italic">Cómo diseñar</span> un algoritmo de IA basado en{' '}
+                <SplitText
+                  as="span"
+                  trigger="scroll"
+                  stagger={0.014}
+                  text="Cómo diseñar"
+                  className="italic"
+                />{' '}
+                un algoritmo de IA basado en{' '}
                 <span className="italic text-terracotta">aprendizaje autosupervisado</span> para la
                 detección de lesiones cutáneas a partir de imágenes dermatológicas que apoye el
                 diagnóstico clínico en{' '}
@@ -117,29 +128,25 @@ export default function Slide02Question() {
         </motion.div>
 
         {/* Supuestos / enfoque */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.7 }}
-          viewport={{ once: true }}
-          className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl"
-        >
-          <SupuestoCard
-            icon={<Compass size={18} />}
-            label="Supuesto 1"
-            text="Existe regularidad estructural en los datos dermatoscópicos públicos que un esquema autosupervisado puede capturar."
-          />
-          <SupuestoCard
-            icon={<Compass size={18} />}
-            label="Supuesto 2"
-            text="La representación aprendida se transfiere a un conjunto pequeño de etiquetas relevantes para Santander."
-          />
-          <SupuestoCard
-            icon={<Compass size={18} />}
-            label="Supuesto 3"
-            text="Las clases de mayor incidencia regional (CBC, CEC, melanoma) están suficientemente representadas en HAM10000 + BCN20000."
-          />
-        </motion.div>
+        <ScrollReveal delay={0.2} direction="up" distance={20} className="mt-12">
+          <MagicBento className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl">
+            <SupuestoCard
+              icon={<Compass size={18} />}
+              label="Supuesto 1"
+              text="Existe regularidad estructural en los datos dermatoscópicos públicos que un esquema autosupervisado puede capturar."
+            />
+            <SupuestoCard
+              icon={<Compass size={18} />}
+              label="Supuesto 2"
+              text="La representación aprendida se transfiere a un conjunto pequeño de etiquetas relevantes para Santander."
+            />
+            <SupuestoCard
+              icon={<Compass size={18} />}
+              label="Supuesto 3"
+              text="Las clases de mayor incidencia regional (CBC, CEC, melanoma) están suficientemente representadas en HAM10000 + BCN20000."
+            />
+          </MagicBento>
+        </ScrollReveal>
       </div>
     </div>
   );
@@ -155,16 +162,14 @@ function SupuestoCard({
   text: string;
 }) {
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2 }}
-      className="card p-5 group cursor-default"
-    >
-      <div className="flex items-center gap-2 text-light-steel group-hover:text-terracotta transition-colors">
-        {icon}
-        <span className="text-[10px] uppercase tracking-[0.18em] font-medium">{label}</span>
-      </div>
-      <p className="mt-3 text-[13.5px] text-ink/85 leading-relaxed">{text}</p>
-    </motion.div>
+    <TiltedCard intensity={5} glare={false} scale={1.01}>
+      <BentoCard className="card p-5 group cursor-default h-full">
+        <div className="flex items-center gap-2 text-light-steel group-hover:text-terracotta transition-colors">
+          {icon}
+          <span className="text-[10px] uppercase tracking-[0.18em] font-medium">{label}</span>
+        </div>
+        <p className="mt-3 text-[13.5px] text-ink/85 leading-relaxed">{text}</p>
+      </BentoCard>
+    </TiltedCard>
   );
 }
