@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { ArrowDown, Sparkles } from 'lucide-react';
+import { scrollToSlide } from '@/lib/scroll';
 import Aurora from '@/components/reactbits/Aurora';
 import SplitText from '@/components/reactbits/SplitText';
 import ShinyText from '@/components/reactbits/ShinyText';
@@ -138,10 +139,7 @@ export default function Slide00Cover() {
         {/* Down hint */}
         <motion.button
           type="button"
-          onClick={() => {
-            const next = document.querySelector('[data-slide-idx="1"]');
-            if (next) next.scrollIntoView({ behavior: 'smooth' });
-          }}
+          onClick={() => scrollToSlide(1)}
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.4, duration: 1 }}

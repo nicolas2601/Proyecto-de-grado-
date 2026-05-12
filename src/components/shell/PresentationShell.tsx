@@ -3,6 +3,7 @@ import { TOTAL_SECONDS, slideTimings } from '@/data/eda';
 import { cn } from '@/lib/utils';
 import SpotlightCursor from '@/components/reactbits/SpotlightCursor';
 import ClickSpark from '@/components/reactbits/ClickSpark';
+import { getLenis, scrollToSlide, destroyLenis } from '@/lib/scroll';
 
 import Slide00Cover from '@/components/slides/Slide00Cover';
 import Slide01Context from '@/components/slides/Slide01Context';
@@ -39,6 +40,12 @@ export default function PresentationShell() {
   const [showNotes, setShowNotes] = useState(false);
   const startRef = useRef<number | null>(null);
 
+  // Lenis smooth scroll — mount/unmount lifecycle
+  useEffect(() => {
+    getLenis();
+    return () => destroyLenis();
+  }, []);
+
   // Scroll-driven slide tracking
   useEffect(() => {
     const slides = document.querySelectorAll('[data-slide-idx]');
@@ -64,10 +71,7 @@ export default function PresentationShell() {
   // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      const goTo = (idx: number) => {
-        const el = document.querySelector(`[data-slide-idx="${idx}"]`);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      };
+      const goTo = (idx: number) => scrollToSlide(idx);
       switch (e.key) {
         case 'ArrowRight':
         case 'PageDown':
@@ -150,7 +154,7 @@ export default function PresentationShell() {
 
       {/* Top-right control cluster */}
       <div className="no-print fixed top-5 right-5 z-50 flex items-center gap-2">
-        <div className="card-fog rounded-full px-4 py-1.5 text-xs font-medium text-muted-stone flex items-center gap-3">
+        <div className="glass rounded-full px-4 py-1.5 text-xs font-medium text-muted-stone flex items-center gap-3 shadow-sm">
           <span>
             <span className="font-display italic text-ink text-base">{current + 1}</span>
             <span className="text-light-steel"> / {slideTimings.length}</span>
@@ -179,7 +183,7 @@ export default function PresentationShell() {
           type="button"
           onClick={() => setShowNotes((v) => !v)}
           className={cn(
-            'card-fog rounded-full w-8 h-8 flex items-center justify-center text-xs font-medium transition-colors',
+            'glass rounded-full w-8 h-8 flex items-center justify-center text-xs font-medium transition-all shadow-sm hover:scale-105',
             showNotes && 'bg-warm-mist text-terracotta'
           )}
           title="Toggle presenter notes (N)"
@@ -194,15 +198,12 @@ export default function PresentationShell() {
       </div>
 
       {/* Slide thumbnails (bottom-right) */}
-      <nav className="no-print fixed bottom-5 right-5 z-40 flex gap-1.5">
+      <nav className="no-print fixed bottom-5 right-5 z-40 flex gap-1.5 glass rounded-full px-3 py-2 shadow-sm">
         {slideTimings.map((s) => (
           <button
             key={s.id}
             type="button"
-            onClick={() => {
-              const el = document.querySelector(`[data-slide-idx="${s.id}"]`);
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => scrollToSlide(s.id)}
             className={cn(
               'h-1.5 rounded-full transition-all',
               current === s.id ? 'w-8 bg-ink' : 'w-3 bg-ink/20 hover:bg-ink/40'

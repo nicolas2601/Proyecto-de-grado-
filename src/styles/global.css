@@ -132,6 +132,59 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* Glassmorphism — premium frosted surfaces */
+  .glass {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(23, 25, 28, 0.08);
+  }
+  .glass-warm {
+    background: rgba(251, 225, 209, 0.45);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgba(186, 80, 49, 0.12);
+  }
+  .glass-dark {
+    background: rgba(23, 25, 28, 0.62);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Cinematic typography helpers */
+  .text-cinema {
+    font-feature-settings: "ss01", "cv02", "cv03";
+    letter-spacing: -0.02em;
+    font-variation-settings: "wght" 380;
+  }
+
+  /* Dynamic gradient that breathes */
+  .gradient-warm-breath {
+    background: linear-gradient(
+      130deg,
+      rgba(251, 225, 209, 0.4) 0%,
+      rgba(186, 80, 49, 0.25) 35%,
+      rgba(93, 42, 26, 0.18) 70%,
+      rgba(251, 225, 209, 0.4) 100%
+    );
+    background-size: 280% 280%;
+    animation: gradientFlow 22s ease-in-out infinite;
+  }
+  @keyframes gradientFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  /* Lenis html mount — disables native smooth scrolling when active */
+  html.lenis,
+  html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: clip; }
+  .lenis.lenis-smooth iframe { pointer-events: none; }
 }
 
 @media print {
