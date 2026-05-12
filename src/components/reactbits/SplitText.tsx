@@ -65,19 +65,33 @@ export default function SplitText({
     };
   }, [text, delay, duration, stagger, ease, trigger]);
 
+  const words = text.split(/(\s+)/);
+
   return (
     <Tag ref={ref as any} className={className} aria-label={text}>
-      {text.split('').map((ch, i) => (
-        <span
-          key={i}
-          data-char
-          aria-hidden
-          className="inline-block"
-          style={{ whiteSpace: ch === ' ' ? 'pre' : undefined }}
-        >
-          {ch}
-        </span>
-      ))}
+      {words.map((word, wi) => {
+        if (/^\s+$/.test(word)) {
+          return (
+            <span key={`s-${wi}`} aria-hidden style={{ whiteSpace: 'pre' }}>
+              {word}
+            </span>
+          );
+        }
+        return (
+          <span
+            key={`w-${wi}`}
+            aria-hidden
+            className="inline-block"
+            style={{ whiteSpace: 'nowrap' }}
+          >
+            {word.split('').map((ch, ci) => (
+              <span key={ci} data-char className="inline-block">
+                {ch}
+              </span>
+            ))}
+          </span>
+        );
+      })}
     </Tag>
   );
 }
