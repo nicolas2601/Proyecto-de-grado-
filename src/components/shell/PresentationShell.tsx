@@ -3,6 +3,8 @@ import { TOTAL_SECONDS, slideTimings } from '@/data/eda';
 import { cn } from '@/lib/utils';
 import SpotlightCursor from '@/components/reactbits/SpotlightCursor';
 import ClickSpark from '@/components/reactbits/ClickSpark';
+import BlobCursor from '@/components/reactbits/BlobCursor';
+import SlideProgress from '@/components/reactbits/SlideProgress';
 import { getLenis, scrollToSlide, destroyLenis } from '@/lib/scroll';
 
 import Slide00Cover from '@/components/slides/Slide00Cover';
@@ -135,17 +137,14 @@ export default function PresentationShell() {
 
   return (
     <>
-      {/* Global motion layer — cursor spotlight + click sparks */}
-      <SpotlightCursor color="rgba(186, 80, 49, 0.10)" size={520} />
-      <ClickSpark sparkColor="#ba5031" sparkCount={10} sparkRadius={18} duration={460} />
+      {/* Global motion layer — cursor spotlight + blob + click sparks + scroll progress */}
+      <SpotlightCursor color="rgba(186, 80, 49, 0.18)" size={480} />
+      <BlobCursor />
+      <ClickSpark sparkColor="#ba5031" sparkCount={12} sparkRadius={22} duration={520} />
+      <SlideProgress />
 
-      {/* Top progress bar — no print */}
-      <div className="no-print fixed top-0 left-0 right-0 z-50 h-[3px] bg-ink/5">
-        <div
-          className="h-full bg-ink transition-[width] duration-300 ease-out"
-          style={{ width: `${Math.min(progress, 100)}%` }}
-        />
-        {/* Target marker */}
+      {/* Timer overlay marker (kept only as visual ref for cumulative-target) */}
+      <div className="no-print fixed top-[3px] left-0 right-0 z-50 h-[2px] pointer-events-none">
         <div
           className="absolute top-0 h-full w-px bg-terracotta"
           style={{ left: `${(cumulativeTarget / TOTAL_SECONDS) * 100}%` }}
