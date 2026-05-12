@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Steep — Warm Crisp Canvas */
+  --color-canvas: #ffffff;
+  --color-ink: #17191c;
+  --color-graphite: #000000;
+  --color-warm-mist: #fbe1d1;
+  --color-terracotta: #5d2a1a;
+  --color-fog: #f7f7f8;
+  --color-muted-stone: #4c4c4c;
+  --color-light-steel: #777b86;
+  --color-hint-of-grey: #a3a6af;
+  --color-dusk-link: #8b8c8d;
+
+  /* Colorblind palette for charts (matches notebook seaborn 'colorblind') */
+  --color-chart-1: #0173b2;
+  --color-chart-2: #de8f05;
+  --color-chart-3: #029e73;
+  --color-chart-4: #d55e00;
+  --color-chart-5: #cc78bc;
+  --color-chart-6: #ca9161;
+  --color-chart-7: #fbafe4;
+  --color-chart-8: #949494;
+  --color-chart-9: #ece133;
+  --color-chart-10: #56b4e9;
+
+  /* Severity / risk */
+  --color-risk-high: #5d2a1a;
+  --color-risk-medium: #de8f05;
+  --color-risk-low: #029e73;
+
+  /* Typography */
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Shadows */
+  --shadow-subtle: rgba(4, 23, 43, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.08) 0px 20px 25px -5px, rgba(0, 0, 0, 0.06) 0px 8px 10px -6px;
+  --shadow-card: rgba(4, 23, 43, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.06) 0px 4px 12px -2px;
+
+  /* Animation */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@layer base {
+  html, body {
+    @apply bg-canvas text-ink antialiased;
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overscroll-behavior: none;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  ::selection {
+    background: var(--color-warm-mist);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-serif);
+  }
+
+  .pill {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-colors;
+  }
+  .pill-ink {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-colors bg-ink text-canvas hover:bg-graphite;
+  }
+  .pill-ghost {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-medium transition-colors border border-ink/15 text-ink hover:bg-fog;
+  }
+
+  .card {
+    background: var(--color-canvas);
+    border-radius: 24px;
+    box-shadow: var(--shadow-subtle);
+    padding: 24px;
+  }
+  .card-fog {
+    background: var(--color-fog);
+    border-radius: 24px;
+    padding: 24px;
+  }
+  .card-warm {
+    background: var(--color-warm-mist);
+    border-radius: 24px;
+    padding: 24px;
+  }
+
+  .eyebrow {
+    @apply text-xs uppercase tracking-[0.18em] text-muted-stone font-medium;
+  }
+
+  .slide {
+    @apply relative w-full;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .slide-narrow {
+    max-width: 1600px;
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: clamp(24px, 5vw, 80px);
+    padding-block: clamp(56px, 8vw, 96px);
+  }
+
+  .grain {
+    background-image: radial-gradient(circle at 1px 1px, rgba(23, 25, 28, 0.04) 1px, transparent 0);
+    background-size: 14px 14px;
+  }
+
+  /* Subtle scroll-reveal class — used by IntersectionObserver in shell */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 900ms var(--ease-out-expo), transform 900ms var(--ease-out-expo);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  .slide {
+    min-height: auto;
+    page-break-after: always;
+    padding: 32px;
+  }
+  body { background: white !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
