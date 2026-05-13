@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * BlobCursor — círculo grande que sigue el mouse con difference blend.
- * MUCHO más visible que el spotlight tenue. Se queda como pegote rosa/terracotta.
+ * MONO X7 cursor — ink square with mix-blend-mode: difference.
+ * Inverts the underlying content so it stays visible on both white sections
+ * and inverted (.card-dark) zones without ever looking decorative.
+ * Grows when hovering interactive elements (a, button, [role="button"], [data-cursor="magnetic"]).
  */
 export default function BlobCursor() {
-  const blobRef = useRef<HTMLDivElement>(null);
+  const blockRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,39 +22,57 @@ export default function BlobCursor() {
     let dx = mx;
     let dy = my;
     let raf = 0;
+    let hovering = false;
+    let pressed = false;
+
+    const isInteractive = (el: Element | null): boolean => {
+      if (!el) return false;
+      const tag = el.tagName;
+      if (tag === 'A' || tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' || tag === 'LABEL') return true;
+      if ((el as HTMLElement).dataset.cursor === 'magnetic') return true;
+      if ((el as HTMLElement).getAttribute('role') === 'button') return true;
+      if ((el as HTMLElement).getAttribute('tabindex') === '0') return true;
+      return false;
+    };
 
     const onMove = (e: MouseEvent) => {
       mx = e.clientX;
       my = e.clientY;
+      let n: Element | null = e.target as Element | null;
+      let h = false;
+      while (n && n !== document.body) {
+        if (isInteractive(n)) { h = true; break; }
+        n = n.parentElement;
+      }
+      hovering = h;
     };
     const onEnter = () => {
-      if (blobRef.current) blobRef.current.style.opacity = '1';
+      if (blockRef.current) blockRef.current.style.opacity = '1';
       if (dotRef.current) dotRef.current.style.opacity = '1';
     };
     const onLeave = () => {
-      if (blobRef.current) blobRef.current.style.opacity = '0';
+      if (blockRef.current) blockRef.current.style.opacity = '0';
       if (dotRef.current) dotRef.current.style.opacity = '0';
     };
-    const onDown = () => {
-      if (blobRef.current) blobRef.current.style.transform += ' scale(0.78)';
-    };
-    const onUp = () => {
-      // reset transform; loop will rewrite next frame
-    };
+    const onDown = () => { pressed = true; };
+    const onUp = () => { pressed = false; };
 
     const loop = () => {
-      // blob lags more
-      bx += (mx - bx) * 0.12;
-      by += (my - by) * 0.12;
-      // dot lags less
-      dx += (mx - dx) * 0.4;
-      dy += (my - dy) * 0.4;
+      bx += (mx - bx) * 0.18;
+      by += (my - by) * 0.18;
+      dx += (mx - dx) * 0.42;
+      dy += (my - dy) * 0.42;
 
-      if (blobRef.current) {
-        blobRef.current.style.transform = `translate3d(${bx - 28}px, ${by - 28}px, 0)`;
+      if (blockRef.current) {
+        const baseSize = hovering ? 56 : 22;
+        const size = pressed ? baseSize * 0.78 : baseSize;
+        const half = size / 2;
+        blockRef.current.style.width = `${size}px`;
+        blockRef.current.style.height = `${size}px`;
+        blockRef.current.style.transform = `translate3d(${bx - half}px, ${by - half}px, 0)`;
       }
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${dx - 4}px, ${dy - 4}px, 0)`;
+        dotRef.current.style.transform = `translate3d(${dx - 2}px, ${dy - 2}px, 0)`;
       }
       raf = requestAnimationFrame(loop);
     };
@@ -77,18 +97,17 @@ export default function BlobCursor() {
   return (
     <>
       <div
-        ref={blobRef}
+        ref={blockRef}
         className="fixed top-0 left-0 pointer-events-none z-[60] no-print"
         style={{
-          width: 56,
-          height: 56,
-          borderRadius: '50%',
-          background: 'rgba(186, 80, 49, 0.55)',
-          mixBlendMode: 'multiply',
-          filter: 'blur(2px)',
-          willChange: 'transform',
+          width: 22,
+          height: 22,
+          borderRadius: 0,
+          background: '#ffffff',
+          mixBlendMode: 'difference',
+          willChange: 'transform, width, height',
           opacity: 0,
-          transition: 'opacity 0.3s ease',
+          transition: 'opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), width 220ms cubic-bezier(0.16, 1, 0.3, 1), height 220ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         aria-hidden
       />
@@ -96,13 +115,14 @@ export default function BlobCursor() {
         ref={dotRef}
         className="fixed top-0 left-0 pointer-events-none z-[61] no-print"
         style={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
-          background: '#17191c',
+          width: 4,
+          height: 4,
+          borderRadius: 0,
+          background: '#ffffff',
+          mixBlendMode: 'difference',
           willChange: 'transform',
           opacity: 0,
-          transition: 'opacity 0.3s ease',
+          transition: 'opacity 280ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}
         aria-hidden
       />

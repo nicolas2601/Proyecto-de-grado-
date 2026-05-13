@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { type ReactNode } from 'react';
 
 /**
- * Marquee — banda horizontal con loop infinito. Tipografía cinemática.
+ * Marquee · banda horizontal con loop infinito. Tipografía cinemática.
  * Útil para títulos de sección, eyebrow infinito, lista de tags.
  */
 export default function Marquee({

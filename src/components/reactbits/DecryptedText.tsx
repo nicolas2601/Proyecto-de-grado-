@@ -4,7 +4,7 @@ import { useInView } from 'framer-motion';
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?';
 
 /**
- * DecryptedText — texto que se "decifra" letra por letra desde caracteres aleatorios.
+ * DecryptedText · texto que se "decifra" letra por letra desde caracteres aleatorios.
  * Se dispara en viewport. Útil para títulos cortos / labels.
  */
 export default function DecryptedText({

@@ -2,7 +2,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { useRef, type ReactNode, type MouseEvent } from 'react';
 
 /**
- * MagneticButton — el botón se mueve sutilmente hacia el cursor cuando está cerca.
+ * MagneticButton · el botón se mueve sutilmente hacia el cursor cuando está cerca.
  * Spring suave. Reset al salir. Aplica también a links / íconos.
  */
 export default function MagneticButton({

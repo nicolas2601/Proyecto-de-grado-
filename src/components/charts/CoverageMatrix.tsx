@@ -1,34 +1,70 @@
 import { motion } from 'framer-motion';
 import { coverageMatrix } from '@/data/eda';
-import { cn } from '@/lib/utils';
 
-const CELL: Record<string, { bg: string; text: string; label: string }> = {
-  covered: { bg: 'bg-chart-3', text: 'text-canvas', label: 'Sí' },
-  partial: { bg: 'bg-chart-2', text: 'text-canvas', label: 'P' },
-  absent: { bg: 'bg-ink/8', text: 'text-light-steel', label: '·' },
-};
+type CoverageValue = 'covered' | 'partial' | 'absent';
 
-const PRIO_COLOR: Record<string, string> = {
-  CRÍTICA: 'text-terracotta',
-  ALTA: 'text-chart-4',
-  MEDIA: 'text-chart-2',
-  BAJA: 'text-light-steel',
-  FUTURO: 'text-chart-1',
-};
+// MONO X7 cell renderer · solid black, diagonal hatch pattern, or empty
+function CoverageCell({ value }: { value: CoverageValue }) {
+  return (
+    <div
+      className="relative h-7 w-full border border-[#292929] overflow-hidden transition-[outline] duration-150 hover:outline hover:outline-2 hover:outline-black"
+      style={{ borderRadius: 0 }}
+    >
+      {value === 'covered' && (
+        <div className="absolute inset-0" style={{ background: '#292929' }} />
+      )}
+      {value === 'partial' && (
+        <svg
+          className="absolute inset-0 h-full w-full"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <pattern
+              id="coverageHatch"
+              patternUnits="userSpaceOnUse"
+              width="6"
+              height="6"
+              patternTransform="rotate(45)"
+            >
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#292929" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#coverageHatch)" />
+        </svg>
+      )}
+      {/* absent → empty white, no fill */}
+    </div>
+  );
+}
 
 export default function CoverageMatrix() {
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className="grid grid-cols-[1fr_repeat(3,68px)] gap-1 mb-1.5 text-[10px] uppercase tracking-wider text-light-steel font-medium">
+    <div className="w-full font-[Oswald]">
+      {/* Column header · ink bottom border */}
+      <div
+        className="grid grid-cols-[1fr_repeat(3,68px)] gap-1 pb-1.5 mb-1.5 border-b"
+        style={{ borderColor: '#292929', borderWidth: '0 0 1px 0' }}
+      >
         <div />
-        <div className="text-center">HAM</div>
-        <div className="text-center">BCN</div>
-        <div className="text-center">CO2W</div>
+        {['HAM', 'BCN', 'CO2W'].map((label) => (
+          <div
+            key={label}
+            className="text-center"
+            style={{
+              fontFamily: "'Oswald', Impact, sans-serif",
+              fontSize: 11,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              color: '#292929',
+            }}
+          >
+            {label}
+          </div>
+        ))}
       </div>
 
-      {/* Rows */}
-      <div className="space-y-0.5">
+      <div className="space-y-1">
         {coverageMatrix.map((row, i) => (
           <motion.div
             key={row.pathology}
@@ -38,48 +74,89 @@ export default function CoverageMatrix() {
             viewport={{ once: true }}
             className="grid grid-cols-[1fr_repeat(3,68px)] gap-1 items-center"
           >
-            <div className="text-[11.5px] flex items-center gap-1.5">
-              <span className="text-ink leading-tight">{row.pathology}</span>
+            {/* Row label · ink right border */}
+            <div
+              className="flex items-center gap-2 pr-2 border-r"
+              style={{ borderColor: '#292929', borderWidth: '0 1px 0 0', minHeight: 28 }}
+            >
               <span
-                className={cn(
-                  'text-[9px] font-mono uppercase tracking-wider shrink-0',
-                  PRIO_COLOR[row.priority]
-                )}
+                style={{
+                  fontFamily: "'Oswald', Impact, sans-serif",
+                  fontSize: 11,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#292929',
+                  lineHeight: 1.1,
+                }}
+              >
+                {row.pathology}
+              </span>
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color: '#646464',
+                  marginLeft: 'auto',
+                }}
               >
                 · {row.priority}
               </span>
             </div>
-            {(['ham', 'bcn', 'co2'] as const).map((col) => {
-              const v = row[col];
-              const c = CELL[v];
-              return (
-                <div
-                  key={col}
-                  className={cn(
-                    'h-7 rounded flex items-center justify-center text-[11px] font-semibold',
-                    c.bg,
-                    c.text
-                  )}
-                >
-                  {c.label}
-                </div>
-              );
-            })}
+            {(['ham', 'bcn', 'co2'] as const).map((col) => (
+              <CoverageCell key={col} value={row[col] as CoverageValue} />
+            ))}
           </motion.div>
         ))}
       </div>
 
       {/* Legend */}
-      <div className="mt-3 flex gap-3 text-[10px] text-muted-stone">
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-3 rounded-sm bg-chart-3" /> cubierta
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-3 rounded-sm bg-chart-2" /> parcial
-        </span>
-        <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-3 rounded-sm bg-ink/15" /> ausente
-        </span>
+      <div className="mt-4 flex flex-wrap items-center gap-5">
+        {[
+          { label: 'Cubierta', kind: 'solid' as const },
+          { label: 'Parcial', kind: 'hatch' as const },
+          { label: 'Ausente', kind: 'empty' as const },
+        ].map((entry) => (
+          <span key={entry.label} className="inline-flex items-center gap-2">
+            <span
+              aria-hidden
+              className="relative block h-3 w-4 border border-[#292929]"
+              style={{ borderRadius: 0 }}
+            >
+              {entry.kind === 'solid' && (
+                <span className="absolute inset-0" style={{ background: '#292929' }} />
+              )}
+              {entry.kind === 'hatch' && (
+                <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern
+                      id={`legendHatch-${entry.label}`}
+                      patternUnits="userSpaceOnUse"
+                      width="4"
+                      height="4"
+                      patternTransform="rotate(45)"
+                    >
+                      <line x1="0" y1="0" x2="0" y2="4" stroke="#292929" strokeWidth="1" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill={`url(#legendHatch-${entry.label})`} />
+                </svg>
+              )}
+            </span>
+            <span
+              style={{
+                fontFamily: "'Oswald', Impact, sans-serif",
+                fontSize: 11,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: '#292929',
+              }}
+            >
+              {entry.label}
+            </span>
+          </span>
+        ))}
       </div>
     </div>
   );

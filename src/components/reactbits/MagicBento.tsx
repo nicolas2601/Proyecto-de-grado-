@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from 'react';
 
 /**
- * MagicBento — wrapper que añade spotlight radial siguiendo el mouse a CADA card hija.
+ * MagicBento · wrapper que añade spotlight radial siguiendo el mouse a CADA card hija.
  * Las cards deben tener `data-bento` para ser tracked. Usa CSS custom props.
  */
 export default function MagicBento({
@@ -47,7 +47,7 @@ export default function MagicBento({
 }
 
 /**
- * BentoCard — card con spotlight radial nativo. Usa CSS vars del parent MagicBento.
+ * BentoCard · card con spotlight radial nativo. Usa CSS vars del parent MagicBento.
  */
 export function BentoCard({
   children,

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
 
 /**
- * CountUp — cuenta de 0 al valor objetivo cuando entra en viewport.
+ * CountUp · cuenta de 0 al valor objetivo cuando entra en viewport.
  * Soporta decimales, separador miles y sufijos.
  */
 export default function CountUp({

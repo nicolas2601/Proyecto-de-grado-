@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 
 /**
- * ShinyText — gradient con shine sweep infinito. CSS puro.
+ * ShinyText · gradient con shine sweep infinito. CSS puro.
  * Útil para subtítulos / eyebrows que necesiten un toque premium.
  */
 export default function ShinyText({

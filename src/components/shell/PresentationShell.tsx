@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { TOTAL_SECONDS, slideTimings } from '@/data/eda';
 import { cn } from '@/lib/utils';
-import SpotlightCursor from '@/components/reactbits/SpotlightCursor';
 import ClickSpark from '@/components/reactbits/ClickSpark';
 import BlobCursor from '@/components/reactbits/BlobCursor';
 import SlideProgress from '@/components/reactbits/SlideProgress';
@@ -42,13 +41,19 @@ export default function PresentationShell() {
   const [showNotes, setShowNotes] = useState(false);
   const startRef = useRef<number | null>(null);
 
-  // Lenis smooth scroll — mount/unmount lifecycle
   useEffect(() => {
+    // Reset scroll to top on mount — prevents browser scroll-restoration from
+    // dropping the user into a half-loaded mid-slide on hot reload / refresh.
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    }
     getLenis();
     return () => destroyLenis();
   }, []);
 
-  // Scroll-driven slide tracking
   useEffect(() => {
     const slides = document.querySelectorAll('[data-slide-idx]');
     const io = new IntersectionObserver(
@@ -70,7 +75,6 @@ export default function PresentationShell() {
     return () => io.disconnect();
   }, []);
 
-  // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const goTo = (idx: number) => scrollToSlide(idx);
@@ -119,7 +123,6 @@ export default function PresentationShell() {
     return () => window.removeEventListener('keydown', handler);
   }, [current, running, elapsed]);
 
-  // Timer
   useEffect(() => {
     if (!running) return;
     const interval = setInterval(() => {
@@ -132,33 +135,43 @@ export default function PresentationShell() {
 
   const slideMeta = slideTimings[current];
   const cumulativeTarget = slideTimings.slice(0, current + 1).reduce((a, s) => a + s.seconds, 0);
-  const progress = (elapsed / TOTAL_SECONDS) * 100;
   const overdue = elapsed > cumulativeTarget;
 
   return (
     <>
-      {/* Global motion layer — cursor spotlight + blob + click sparks + scroll progress */}
-      <SpotlightCursor color="rgba(186, 80, 49, 0.18)" size={480} />
+      {/* Difference-blend MONO cursor — inverts content for visibility on light & dark zones */}
       <BlobCursor />
-      <ClickSpark sparkColor="#ba5031" sparkCount={12} sparkRadius={22} duration={520} />
+      {/* Click sparks · ink black only */}
+      <ClickSpark sparkColor="#292929" sparkCount={10} sparkRadius={18} duration={420} />
       <SlideProgress />
 
-      {/* Timer overlay marker (kept only as visual ref for cumulative-target) */}
-      <div className="no-print fixed top-[3px] left-0 right-0 z-50 h-[2px] pointer-events-none">
+      {/* Cumulative-target marker · 1px black tick on a 1px grey track */}
+      <div className="no-print fixed top-0 left-0 right-0 z-50 h-px pointer-events-none border-b border-grey-100">
         <div
-          className="absolute top-0 h-full w-px bg-terracotta"
+          className="absolute top-0 h-full w-px bg-ink-black"
           style={{ left: `${(cumulativeTarget / TOTAL_SECONDS) * 100}%` }}
         />
       </div>
 
-      {/* Top-right control cluster */}
-      <div className="no-print fixed top-5 right-5 z-50 flex items-center gap-2">
-        <div className="glass rounded-full px-4 py-1.5 text-xs font-medium text-muted-stone flex items-center gap-3 shadow-sm">
-          <span>
-            <span className="font-display italic text-ink text-base">{current + 1}</span>
-            <span className="text-light-steel"> / {slideTimings.length}</span>
+      {/* Top-right control cluster · 1px ink border, no blur */}
+      <div className="no-print fixed top-5 right-5 z-50 flex items-stretch gap-0">
+        <div
+          className="flex items-center gap-3 px-3 py-1.5 text-[12px]"
+          style={{
+            background: '#ffffff',
+            border: '1px solid #292929',
+            borderRadius: 0,
+            fontFamily: 'Oswald, Impact, sans-serif',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: '#292929',
+          }}
+        >
+          <span className="tabular-nums">
+            <span className="font-medium">{String(current + 1).padStart(2, '0')}</span>
+            <span className="opacity-50"> / {String(slideTimings.length).padStart(2, '0')}</span>
           </span>
-          <span className="h-3 w-px bg-light-steel/30" />
+          <span className="h-3 w-px bg-ink-black/40" />
           <button
             type="button"
             onClick={() => {
@@ -168,51 +181,88 @@ export default function PresentationShell() {
               });
             }}
             className={cn(
-              'font-mono tabular-nums',
-              overdue ? 'text-risk-high' : 'text-ink',
+              'tabular-nums',
               running && 'animate-pulse'
             )}
+            style={{
+              fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+              letterSpacing: 0,
+              color: overdue ? '#000000' : '#292929',
+              fontWeight: overdue ? 500 : 400,
+            }}
             title="Toggle timer (T)"
           >
             {formatTime(elapsed)}
           </button>
-          <span className="text-light-steel">/ {formatTime(TOTAL_SECONDS)}</span>
+          <span style={{ fontFamily: 'JetBrains Mono, ui-monospace, monospace', letterSpacing: 0, color: '#b4b8b4' }}>
+            / {formatTime(TOTAL_SECONDS)}
+          </span>
         </div>
         <button
           type="button"
           onClick={() => setShowNotes((v) => !v)}
-          className={cn(
-            'glass rounded-full w-8 h-8 flex items-center justify-center text-xs font-medium transition-all shadow-sm hover:scale-105',
-            showNotes && 'bg-warm-mist text-terracotta'
-          )}
+          className="w-9 flex items-center justify-center transition-colors"
+          style={{
+            background: showNotes ? '#292929' : '#ffffff',
+            color: showNotes ? '#ffffff' : '#292929',
+            border: '1px solid #292929',
+            borderLeft: 'none',
+            borderRadius: 0,
+            fontFamily: 'Oswald, Impact, sans-serif',
+            letterSpacing: '0.1em',
+            fontSize: 12,
+          }}
           title="Toggle presenter notes (N)"
         >
           N
         </button>
       </div>
 
-      {/* Slide name (bottom-left) */}
-      <div className="no-print fixed bottom-5 left-5 z-40 text-xs text-light-steel font-medium pointer-events-none">
-        <span className="eyebrow text-light-steel">{slideMeta?.name}</span>
+      {/* Slide name (bottom-left) · Oswald label */}
+      <div className="no-print fixed bottom-5 left-5 z-40 pointer-events-none">
+        <span
+          style={{
+            fontFamily: 'Oswald, Impact, sans-serif',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            fontSize: 11,
+            color: '#292929',
+          }}
+        >
+          {String(current).padStart(2, '0')} · {slideMeta?.name}
+        </span>
       </div>
 
-      {/* Slide thumbnails (bottom-right) */}
-      <nav className="no-print fixed bottom-5 right-5 z-40 flex gap-1.5 glass rounded-full px-3 py-2 shadow-sm">
-        {slideTimings.map((s) => (
+      {/* Slide thumbnails (bottom-right) · pure ink numeric chips */}
+      <nav
+        className="no-print fixed bottom-5 right-5 z-40 flex gap-0"
+        style={{ border: '1px solid #292929', background: '#ffffff' }}
+      >
+        {slideTimings.map((s, idx) => (
           <button
             key={s.id}
             type="button"
             onClick={() => scrollToSlide(s.id)}
-            className={cn(
-              'h-1.5 rounded-full transition-all',
-              current === s.id ? 'w-8 bg-ink' : 'w-3 bg-ink/20 hover:bg-ink/40'
-            )}
+            className="tabular-nums flex items-center justify-center transition-colors"
+            style={{
+              width: 28,
+              height: 28,
+              fontFamily: 'Oswald, Impact, sans-serif',
+              fontSize: 11,
+              letterSpacing: '0.1em',
+              background: current === s.id ? '#292929' : '#ffffff',
+              color: current === s.id ? '#ffffff' : '#292929',
+              borderRight: idx < slideTimings.length - 1 ? '1px solid #292929' : 'none',
+              borderRadius: 0,
+            }}
             title={s.name}
-          />
+          >
+            {String(s.id).padStart(2, '0')}
+          </button>
         ))}
       </nav>
 
-      {/* Presenter notes overlay */}
+      {/* Presenter notes overlay · white card 1px ink border */}
       {showNotes && (
         <PresenterNotes
           slideIdx={current}
@@ -221,7 +271,7 @@ export default function PresentationShell() {
         />
       )}
 
-      {/* Slides */}
+      {/* Slides + vertical section indicator (left rail) */}
       <main className="relative">
         {SLIDE_COMPONENTS.map((Slide, idx) => (
           <section
@@ -230,15 +280,18 @@ export default function PresentationShell() {
             className="slide relative"
             id={`slide-${idx}`}
           >
-            {/* Section-indicator dot — vertical guide */}
-            <div className="no-print absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-3 pointer-events-none">
+            <div className="no-print absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2 pointer-events-none">
               {SLIDE_COMPONENTS.map((_, j) => (
-                <div
+                <span
                   key={j}
-                  className={cn(
-                    'h-1.5 w-1.5 rounded-full transition-all duration-500',
-                    j === idx ? 'bg-terracotta scale-150 shadow-[0_0_0_4px_rgba(186,80,49,0.15)]' : 'bg-ink/15'
-                  )}
+                  className="transition-all duration-300"
+                  style={{
+                    display: 'block',
+                    width: j === idx ? 14 : 6,
+                    height: 1,
+                    background: '#292929',
+                    opacity: j === idx ? 1 : 0.25,
+                  }}
                 />
               ))}
             </div>
@@ -263,20 +316,60 @@ function PresenterNotes({
   const delta = elapsed - cumulativeTarget;
   const onTrack = Math.abs(delta) < 30;
   return (
-    <div className="no-print fixed bottom-16 left-1/2 -translate-x-1/2 z-50 max-w-2xl w-[92vw] card bg-ink text-canvas/90">
-      <div className="flex items-center justify-between mb-3">
-        <span className="eyebrow text-canvas/40">Notas · slide {slideIdx + 1}</span>
+    <div
+      className="no-print fixed bottom-16 left-1/2 -translate-x-1/2 z-50 max-w-2xl w-[92vw]"
+      style={{
+        background: '#ffffff',
+        border: '1px solid #292929',
+        borderRadius: 0,
+        padding: 20,
+      }}
+    >
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-grey-100">
         <span
-          className={cn(
-            'text-xs font-mono',
-            onTrack ? 'text-chart-3' : delta > 0 ? 'text-risk-medium' : 'text-light-steel'
-          )}
+          style={{
+            fontFamily: 'Oswald, Impact, sans-serif',
+            textTransform: 'uppercase',
+            letterSpacing: '0.2em',
+            fontSize: 11,
+            color: '#292929',
+          }}
+        >
+          Notas · slide {String(slideIdx).padStart(2, '0')}
+        </span>
+        <span
+          className={cn('tabular-nums')}
+          style={{
+            fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+            fontSize: 11,
+            color: onTrack ? '#292929' : delta > 0 ? '#000000' : '#646464',
+            fontWeight: onTrack ? 400 : 500,
+          }}
         >
           {delta > 0 ? `+${delta}s atrasado` : delta < 0 ? `${delta}s margen` : 'en tiempo'}
         </span>
       </div>
-      <p className="text-sm leading-relaxed text-canvas/85">{notes}</p>
-      <p className="mt-3 text-[10px] text-canvas/40 font-mono">
+      <p
+        style={{
+          fontFamily: 'Inter, Helvetica Neue, sans-serif',
+          fontWeight: 400,
+          fontSize: 15,
+          lineHeight: 1.5,
+          letterSpacing: '-0.02em',
+          color: '#292929',
+        }}
+      >
+        {notes}
+      </p>
+      <p
+        className="mt-3 pt-2 border-t border-grey-100"
+        style={{
+          fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+          fontSize: 10,
+          color: '#646464',
+          letterSpacing: 0,
+        }}
+      >
         ← / → navegar · espacio avanzar · 6 saltar a EDA · T timer · R reset · N notas
       </p>
     </div>
@@ -287,10 +380,10 @@ const SLIDE_NOTES: Record<number, string> = {
   0: 'Saludo breve. Nombre del proyecto, autores y rol de Karen Sánchez como asesora desde KAUST. 20 segundos máximo.',
   1: 'Establece la motivación clínica. Tres datos clave: CBC 124,2/100k (Uribe 2018), 15 % del HIC, brote de leishmaniasis +338 %. No te quedes en cifras, conecta con el problema diagnóstico.',
   2: 'Lee la pregunta literal. Pausa de 2 segundos. Lee la hipótesis. Conecta: "para responderla decidimos…" → siguiente slide.',
-  3: 'Justificación rápida (epidemio + escasez de etiquetas + apoyo regional). Alcance: NO clínico, NO recolección. Cuatro objetivos en orden — destaca que el 1 ya está terminado.',
+  3: 'Justificación rápida (epidemio + escasez de etiquetas + apoyo regional). Alcance: NO clínico, NO recolección. Cuatro objetivos en orden · destaca que el 1 ya está terminado.',
   4: 'No leas todo. Habla de SSL como familia (contrastive vs generative). Menciona Grad-CAM como explicabilidad. Normativa: di "GDPR + AI Act + Helsinki + cuatro normas colombianas". Antecedentes: dos tesis UIS + Sánchez 2023.',
   5: 'CRISP-DM circular: fases 1-2 hechas, 3-6 por hacer. Gantt: tres semestres. No te detengas en detalles.',
-  6: 'PLATO FUERTE — 4:30 disponibles. Cuenta la historia: 3 datasets analizados, 13 figuras generadas. Para cada dataset menciona N, balance y un hallazgo. Conclusión: HAM+BCN núcleo, CO2Wounds-V2 trabajo futuro.',
+  6: 'PLATO FUERTE · 4:30 disponibles. Cuenta la historia: 3 datasets analizados, 13 figuras generadas. Para cada dataset menciona N, balance y un hallazgo. Conclusión: HAM+BCN núcleo, CO2Wounds-V2 trabajo futuro.',
   7: 'TRL 4 como objetivo, TRL 5 como stretch. Cuatro entregables. Riesgos: R1 y R2 son los críticos.',
   8: 'Agradecer brevemente al director y a Karen. "Quedo atento a sus preguntas."',
 };

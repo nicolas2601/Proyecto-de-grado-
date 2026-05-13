@@ -1,475 +1,1053 @@
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { useMemo, useRef } from 'react';
-import { epidemioKPIs, problemTree } from '@/data/eda';
-import { cn } from '@/lib/utils';
-import { AlertCircle, TrendingUp, Activity } from 'lucide-react';
-import SplitText from '@/components/reactbits/SplitText';
-import ScrollReveal from '@/components/reactbits/ScrollReveal';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useRef, useState } from 'react';
 import CountUp from '@/components/reactbits/CountUp';
-import TiltedCard from '@/components/reactbits/TiltedCard';
-import MagicBento, { BentoCard } from '@/components/reactbits/MagicBento';
 
-// ─────────────────────────────────────────────────────────────────
-// KPI card with parsed numeric + suffix for CountUp
-// ─────────────────────────────────────────────────────────────────
-function parseValue(v: string): { num: number; suffix: string; prefix: string; decimals: number } {
-  // Examples: "124,2", "15 %", "+338 %", "54 %", "67,5 %", "GPC 2024"
-  const m = v.match(/^(\+?)([\d.,]+)\s*(.*)$/);
-  if (!m) return { num: 0, suffix: v, prefix: '', decimals: 0 };
-  const prefix = m[1] || '';
-  const raw = m[2].replace(/\./g, '').replace(',', '.');
-  const num = parseFloat(raw);
-  if (Number.isNaN(num)) return { num: 0, suffix: v, prefix: '', decimals: 0 };
-  const decimals = (raw.split('.')[1] || '').length;
-  return { num, suffix: m[3].trim(), prefix, decimals };
-}
+const EASE = [0.16, 1, 0.3, 1] as const;
 
-function KpiCard({ kpi, idx }: { kpi: (typeof epidemioKPIs)[number]; idx: number }) {
-  const parsed = useMemo(() => parseValue(kpi.value), [kpi.value]);
-  const accent =
-    kpi.severity === 'high'
-      ? 'border-l-terracotta'
-      : kpi.severity === 'medium'
-      ? 'border-l-chart-2'
-      : 'border-l-chart-3';
-  const Icon = kpi.severity === 'high' ? AlertCircle : kpi.severity === 'medium' ? TrendingUp : Activity;
-  const glow =
-    kpi.severity === 'high'
-      ? '186, 80, 49'
-      : kpi.severity === 'medium'
-      ? '202, 130, 60'
-      : '93, 130, 80';
+type LensId = 'sexo' | 'edad' | 'localizacion' | 'periodo';
 
+const LENS_OPTIONS: { id: LensId; label: string }[] = [
+  { id: 'sexo', label: 'POR SEXO' },
+  { id: 'edad', label: 'POR EDAD' },
+  { id: 'localizacion', label: 'POR LOCALIZACIÓN' },
+  { id: 'periodo', label: 'POR PERÍODO' },
+];
+
+// ──────────────────────────────────────────────────────────────────────────
+// MINI CHARTS · MONO, sin color, hatch para diferenciar
+// ──────────────────────────────────────────────────────────────────────────
+
+function ChartSexo() {
+  const max = 140;
+  const men = 133;
+  const women = 118.2;
+  const w = (v: number) => `${(v / max) * 100}%`;
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.05 * idx, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      viewport={{ once: true }}
-      className="h-full"
-    >
-      <TiltedCard intensity={6} glare={false} scale={1.012} className="h-full">
-        <BentoCard
-          className={cn('card border-l-4 p-4 h-full cursor-default rounded-xl bg-canvas', accent)}
-          style={{ ['--bento-glow' as any]: glow }}
+    <div className="w-full">
+      <div className="grid grid-cols-12 items-center" style={{ minHeight: '40px' }}>
+        <div
+          className="col-span-2 font-condensed uppercase"
+          style={{ fontSize: '13px', letterSpacing: '0.18em', color: '#292929' }}
         >
-          <Icon
-            size={120}
-            strokeWidth={1.2}
-            className="absolute -top-6 -right-6 opacity-[0.04] pointer-events-none"
-          />
-
-          <span className="eyebrow text-[10px]">{kpi.region}</span>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-display text-[clamp(28px,3.4vw,40px)] leading-none text-ink tabular-nums">
-              {parsed.num > 0 ? (
-                <CountUp
-                  value={parsed.num}
-                  decimals={parsed.decimals}
-                  prefix={parsed.prefix}
-                  separator=","
-                  duration={1.4}
-                />
-              ) : (
-                kpi.value
-              )}
-            </span>
-            <span className="text-xs text-muted-stone">{parsed.suffix || kpi.unit}</span>
-          </div>
-          <p className="mt-2 text-sm font-medium text-ink leading-snug">{kpi.label}</p>
-          <p className="mt-1.5 text-xs text-muted-stone leading-snug">{kpi.detail}</p>
-          <p className="mt-3 text-[10px] text-light-steel font-mono">Fuente · {kpi.source}</p>
-        </BentoCard>
-      </TiltedCard>
-    </motion.div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────
-// FISHBONE DIAGRAM — causas (izq) → problema (centro) → consecuencias (der)
-// ─────────────────────────────────────────────────────────────────
-
-function FishboneItem({
-  text,
-  side,
-  delay,
-  accent,
-}: {
-  text: string;
-  side: 'left' | 'right';
-  delay: number;
-  accent: 'warm' | 'cool' | 'warm-strong' | 'cool-strong';
-}) {
-  const TONES = {
-    warm: 'border-chart-2/30 hover:border-chart-2/70 hover:bg-chart-2/5',
-    'warm-strong': 'border-terracotta/30 hover:border-terracotta/70 hover:bg-warm-mist/50',
-    cool: 'border-chart-1/30 hover:border-chart-1/70 hover:bg-chart-1/5',
-    'cool-strong': 'border-chart-4/30 hover:border-chart-4/70 hover:bg-chart-4/5',
-  };
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: side === 'left' ? -28 : 28 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ delay, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-      viewport={{ once: true }}
-      whileHover={{ x: side === 'left' ? -6 : 6, scale: 1.015 }}
-      className={cn(
-        'group relative rounded-lg border bg-canvas/95 backdrop-blur-sm p-2.5 text-[11.5px] leading-snug cursor-default text-ink/90 shadow-sm transition-colors',
-        TONES[accent],
-        side === 'left' ? 'text-right' : 'text-left'
-      )}
-    >
-      {text}
-    </motion.div>
-  );
-}
-
-function GroupLabel({
-  title,
-  sub,
-  accent,
-  side,
-  delay,
-}: {
-  title: string;
-  sub: string;
-  accent: 'warm' | 'cool' | 'warm-strong' | 'cool-strong';
-  side: 'left' | 'right';
-  delay: number;
-}) {
-  const COLOR = {
-    warm: 'text-chart-2',
-    'warm-strong': 'text-terracotta',
-    cool: 'text-chart-1',
-    'cool-strong': 'text-chart-4',
-  };
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -6 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
-      viewport={{ once: true }}
-      className={cn(
-        'mb-2 flex items-baseline gap-2',
-        side === 'left' ? 'justify-end' : 'justify-start'
-      )}
-    >
-      <span className={cn('eyebrow text-[10px]', COLOR[accent])}>{title}</span>
-      <span className="text-[9px] text-light-steel italic font-normal hidden md:inline">— {sub}</span>
-    </motion.div>
-  );
-}
-
-function FishboneDiagram() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '0px 0px -15% 0px' });
-
-  return (
-    <div ref={ref} className="relative w-full">
-      {/* SVG connectors layer */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        viewBox="0 0 1000 600"
-        preserveAspectRatio="none"
-        aria-hidden
-      >
-        <defs>
-          <linearGradient id="lineWarm" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ba5031" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#ba5031" stopOpacity="0.12" />
-          </linearGradient>
-          <linearGradient id="lineCool" x1="100%" y1="0%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor="#0173b2" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#0173b2" stopOpacity="0.12" />
-          </linearGradient>
-          <filter id="glowCenter" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* LEFT side connectors — causas → centro */}
-        {[100, 175, 250, 325, 425, 500].map((y, i) => (
-          <motion.path
-            key={`L${i}`}
-            d={`M 200 ${y} C 350 ${y}, 400 300, 500 300`}
-            stroke="url(#lineWarm)"
-            strokeWidth="1.2"
-            fill="none"
-            initial={{ pathLength: 0 }}
-            animate={inView ? { pathLength: 1 } : {}}
-            transition={{ duration: 1.2, delay: 0.4 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-          />
-        ))}
-
-        {/* RIGHT side connectors — centro → consecuencias */}
-        {[100, 175, 250, 325, 425, 500].map((y, i) => (
-          <motion.path
-            key={`R${i}`}
-            d={`M 500 300 C 600 300, 650 ${y}, 800 ${y}`}
-            stroke="url(#lineCool)"
-            strokeWidth="1.2"
-            fill="none"
-            initial={{ pathLength: 0 }}
-            animate={inView ? { pathLength: 1 } : {}}
-            transition={{ duration: 1.2, delay: 0.4 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-          />
-        ))}
-
-        {/* Central glow */}
-        <motion.circle
-          cx="500"
-          cy="300"
-          r="60"
-          fill="#ba5031"
-          fillOpacity="0.06"
-          initial={{ scale: 0 }}
-          animate={inView ? { scale: 1 } : {}}
-          transition={{ duration: 1, delay: 0.2 }}
-          filter="url(#glowCenter)"
-        />
-      </svg>
-
-      {/* 3-column layout: causas | problema | consecuencias */}
-      <div className="relative grid grid-cols-12 gap-3 md:gap-5 items-stretch min-h-[600px]">
-        {/* LEFT — Causas */}
-        <div className="col-span-12 md:col-span-4 flex flex-col gap-6 justify-center">
-          <div>
-            <GroupLabel
-              title="Causas indirectas"
-              sub="condiciones estructurales"
-              accent="warm-strong"
-              side="left"
-              delay={0.1}
-            />
-            <div className="flex flex-col gap-1.5">
-              {problemTree.causasIndirectas.map((c, i) => (
-                <FishboneItem
-                  key={`ci-${i}`}
-                  text={c}
-                  side="left"
-                  delay={0.2 + i * 0.06}
-                  accent="warm-strong"
-                />
-              ))}
-            </div>
-          </div>
-          <div>
-            <GroupLabel
-              title="Causas directas"
-              sub="factores inmediatos"
-              accent="warm"
-              side="left"
-              delay={0.5}
-            />
-            <div className="flex flex-col gap-1.5">
-              {problemTree.causasDirectas.map((c, i) => (
-                <FishboneItem
-                  key={`cd-${i}`}
-                  text={c}
-                  side="left"
-                  delay={0.55 + i * 0.06}
-                  accent="warm"
-                />
-              ))}
-            </div>
-          </div>
+          HOMBRES
         </div>
-
-        {/* CENTER — Problema */}
-        <div className="col-span-12 md:col-span-4 flex items-center justify-center relative">
+        <div className="col-span-8 relative" style={{ height: '28px' }}>
           <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            {/* Pulsing rings */}
-            <motion.div
-              animate={{ scale: [1, 1.25, 1], opacity: [0.4, 0, 0.4] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeOut' }}
-              className="absolute inset-0 rounded-full border-2 border-terracotta/40"
-              aria-hidden
-            />
-            <motion.div
-              animate={{ scale: [1, 1.4, 1], opacity: [0.25, 0, 0.25] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeOut', delay: 0.6 }}
-              className="absolute inset-0 rounded-full border border-terracotta/30"
-              aria-hidden
-            />
-            <motion.div
-              animate={{ scale: [1, 1.06, 1] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -inset-6 rounded-full bg-terracotta/15 blur-2xl"
-              aria-hidden
-            />
-
-            <div className="relative w-[260px] h-[260px] rounded-full bg-ink text-canvas shadow-2xl flex flex-col items-center justify-center text-center p-7">
-              <div className="h-10 w-10 rounded-full bg-warm-mist/95 flex items-center justify-center mb-3">
-                <AlertCircle className="text-terracotta" size={20} strokeWidth={2} />
-              </div>
-              <span className="text-[9px] uppercase tracking-[0.25em] text-warm-mist/80 font-medium">
-                Problema central
-              </span>
-              <p className="mt-2 font-display text-[13px] leading-[1.25] text-canvas italic">
-                {problemTree.problemaCentral}
-              </p>
-            </div>
-          </motion.div>
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.9, ease: EASE }}
+            className="hatch-ink absolute inset-y-0 left-0 origin-left"
+            style={{ width: w(men), border: '1px solid #292929' }}
+          />
         </div>
-
-        {/* RIGHT — Consecuencias */}
-        <div className="col-span-12 md:col-span-4 flex flex-col gap-6 justify-center">
-          <div>
-            <GroupLabel
-              title="Consecuencias directas"
-              sub="efectos inmediatos"
-              accent="cool"
-              side="right"
-              delay={0.1}
-            />
-            <div className="flex flex-col gap-1.5">
-              {problemTree.consecuenciasDirectas.map((c, i) => (
-                <FishboneItem
-                  key={`cd2-${i}`}
-                  text={c}
-                  side="right"
-                  delay={0.2 + i * 0.06}
-                  accent="cool"
-                />
-              ))}
-            </div>
-          </div>
-          <div>
-            <GroupLabel
-              title="Consecuencias indirectas"
-              sub="impacto sistémico"
-              accent="cool-strong"
-              side="right"
-              delay={0.5}
-            />
-            <div className="flex flex-col gap-1.5">
-              {problemTree.consecuenciasIndirectas.map((c, i) => (
-                <FishboneItem
-                  key={`ci2-${i}`}
-                  text={c}
-                  side="right"
-                  delay={0.55 + i * 0.06}
-                  accent="cool-strong"
-                />
-              ))}
-            </div>
-          </div>
+        <div
+          className="col-span-2 text-right font-mono tabular-nums"
+          style={{ fontSize: '15px', color: '#292929', fontWeight: 500 }}
+        >
+          133,0
         </div>
+      </div>
+      <div className="grid grid-cols-12 items-center mt-3" style={{ minHeight: '40px' }}>
+        <div
+          className="col-span-2 font-condensed uppercase"
+          style={{ fontSize: '13px', letterSpacing: '0.18em', color: '#292929' }}
+        >
+          MUJERES
+        </div>
+        <div className="col-span-8 relative" style={{ height: '28px' }}>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.9, delay: 0.08, ease: EASE }}
+            className="absolute inset-y-0 left-0 origin-left bg-ink-black"
+            style={{ width: w(women) }}
+          />
+        </div>
+        <div
+          className="col-span-2 text-right font-mono tabular-nums"
+          style={{ fontSize: '15px', color: '#292929', fontWeight: 500 }}
+        >
+          118,2
+        </div>
+      </div>
+      <div className="mt-5 flex items-baseline justify-between">
+        <span
+          className="font-condensed uppercase"
+          style={{ fontSize: '11px', letterSpacing: '0.2em', color: '#646464' }}
+        >
+          DELTA H − M
+        </span>
+        <span
+          className="font-mono tabular-nums"
+          style={{ fontSize: '13px', color: '#292929', letterSpacing: '0.02em' }}
+        >
+          + 14,8 /100K · AÑO
+        </span>
       </div>
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
-// ─────────────────────────────────────────────────────────────────
+function ChartEdad() {
+  // grupos sintetizados · el dominante 70-79 con 26.6 %
+  const groups = [
+    { label: '40-49', pct: 9.6 },
+    { label: '50-59', pct: 15.4 },
+    { label: '60-69', pct: 22.1 },
+    { label: '70-79', pct: 26.6 },
+    { label: '80+', pct: 18.3 },
+  ];
+  const max = 28;
+  return (
+    <div className="w-full">
+      <div className="grid grid-cols-5 items-end gap-0" style={{ height: '160px' }}>
+        {groups.map((g, i) => {
+          const dominant = g.label === '70-79';
+          return (
+            <div
+              key={g.label}
+              className="relative flex items-end justify-center h-full"
+              style={{
+                borderRight: i === groups.length - 1 ? 'none' : '1px solid #e6e6e6',
+              }}
+            >
+              <motion.div
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: 0.7, delay: 0.05 * i, ease: EASE }}
+                className="w-[70%] origin-bottom"
+                style={{
+                  height: `${(g.pct / max) * 100}%`,
+                  background: dominant ? '#292929' : '#b4b8b4',
+                  border: dominant ? '2px solid #292929' : '1px solid #292929',
+                }}
+              />
+              <span
+                className="absolute top-1 left-1/2 -translate-x-1/2 font-mono tabular-nums"
+                style={{
+                  fontSize: '12px',
+                  color: dominant ? '#292929' : '#646464',
+                  fontWeight: dominant ? 500 : 400,
+                }}
+              >
+                {g.pct}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div
+        className="mt-2 grid grid-cols-5 gap-0"
+        style={{ borderTop: '1px solid #292929' }}
+      >
+        {groups.map((g) => (
+          <div
+            key={g.label}
+            className="text-center font-condensed uppercase py-2"
+            style={{
+              fontSize: '12px',
+              letterSpacing: '0.16em',
+              color: g.label === '70-79' ? '#292929' : '#646464',
+              fontWeight: g.label === '70-79' ? 500 : 400,
+            }}
+          >
+            {g.label}
+          </div>
+        ))}
+      </div>
+      <div className="mt-4 flex items-baseline justify-between">
+        <span
+          className="font-condensed uppercase"
+          style={{ fontSize: '11px', letterSpacing: '0.2em', color: '#646464' }}
+        >
+          GRUPO DOMINANTE
+        </span>
+        <span
+          className="font-mono tabular-nums"
+          style={{ fontSize: '13px', color: '#292929', letterSpacing: '0.02em' }}
+        >
+          70-79 AÑOS · 26,6 % · EDAD MEDIA 68,2
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function ChartLocalizacion() {
+  const head = 86.8;
+  const other = 13.2;
+  const size = 180;
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = 72;
+  const stroke = 26;
+  const circ = 2 * Math.PI * r;
+  const headLen = (head / 100) * circ;
+  const otherLen = (other / 100) * circ;
+
+  return (
+    <div className="w-full grid grid-cols-12 items-center gap-6">
+      <div className="col-span-5 flex justify-center">
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+          <defs>
+            <pattern
+              id="hatchGrey"
+              patternUnits="userSpaceOnUse"
+              width="6"
+              height="6"
+              patternTransform="rotate(45)"
+            >
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#b4b8b4" strokeWidth="1" />
+            </pattern>
+          </defs>
+          {/* base ring */}
+          <circle
+            cx={cx}
+            cy={cy}
+            r={r}
+            fill="none"
+            stroke="#e6e6e6"
+            strokeWidth={stroke}
+          />
+          {/* head + neck · solid ink */}
+          <motion.circle
+            cx={cx}
+            cy={cy}
+            r={r}
+            fill="none"
+            stroke="#292929"
+            strokeWidth={stroke}
+            strokeDasharray={`${headLen} ${circ}`}
+            transform={`rotate(-90 ${cx} ${cy})`}
+            initial={{ strokeDashoffset: circ }}
+            animate={{ strokeDashoffset: 0 }}
+            transition={{ duration: 1.2, ease: EASE }}
+          />
+          {/* others · hatch grey */}
+          <motion.circle
+            cx={cx}
+            cy={cy}
+            r={r}
+            fill="none"
+            stroke="url(#hatchGrey)"
+            strokeWidth={stroke}
+            strokeDasharray={`${otherLen} ${circ}`}
+            strokeDashoffset={-headLen}
+            transform={`rotate(-90 ${cx} ${cy})`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.1 }}
+          />
+          <text
+            x={cx}
+            y={cy - 4}
+            textAnchor="middle"
+            fontFamily="Bebas Neue, Impact, sans-serif"
+            fontSize="42"
+            fill="#292929"
+          >
+            86,8
+          </text>
+          <text
+            x={cx}
+            y={cy + 16}
+            textAnchor="middle"
+            fontFamily="Oswald, sans-serif"
+            fontSize="11"
+            letterSpacing="2.5"
+            fill="#646464"
+          >
+            % CARA + CUELLO
+          </text>
+        </svg>
+      </div>
+      <div className="col-span-7">
+        <div className="flex items-center gap-3" style={{ minHeight: '32px' }}>
+          <span
+            className="block bg-ink-black"
+            style={{ width: '20px', height: '12px' }}
+            aria-hidden
+          />
+          <span
+            className="font-condensed uppercase"
+            style={{ fontSize: '13px', letterSpacing: '0.16em', color: '#292929' }}
+          >
+            CARA + CUELLO
+          </span>
+          <span
+            className="ml-auto font-mono tabular-nums"
+            style={{ fontSize: '14px', color: '#292929', fontWeight: 500 }}
+          >
+            86,8 %
+          </span>
+        </div>
+        <div
+          className="flex items-center gap-3 mt-2"
+          style={{ minHeight: '32px', borderTop: '1px solid #e6e6e6', paddingTop: '8px' }}
+        >
+          <span
+            className="block hatch-grey"
+            style={{ width: '20px', height: '12px', border: '1px solid #b4b8b4' }}
+            aria-hidden
+          />
+          <span
+            className="font-condensed uppercase"
+            style={{ fontSize: '13px', letterSpacing: '0.16em', color: '#646464' }}
+          >
+            OTRAS LOCALIZACIONES
+          </span>
+          <span
+            className="ml-auto font-mono tabular-nums"
+            style={{ fontSize: '14px', color: '#646464' }}
+          >
+            13,2 %
+          </span>
+        </div>
+        <p
+          className="mt-5 font-nh"
+          style={{
+            fontSize: '14px',
+            lineHeight: 1.4,
+            color: '#646464',
+            fontWeight: 300,
+            letterSpacing: '-0.01em',
+            maxWidth: '36ch',
+          }}
+        >
+          Zona fotoexpuesta dominante · coherente con etiología solar acumulada en
+          climas tropicales de altura.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ChartPeriodo() {
+  // serie sintetizada · tendencia ascendente 2000–2014 (Uribe 2018 reporta período)
+  const points = [
+    { y: 2000, v: 18 },
+    { y: 2002, v: 24 },
+    { y: 2004, v: 32 },
+    { y: 2006, v: 41 },
+    { y: 2008, v: 53 },
+    { y: 2010, v: 68 },
+    { y: 2012, v: 89 },
+    { y: 2014, v: 118 },
+  ];
+  const w = 560;
+  const h = 160;
+  const padX = 32;
+  const padY = 18;
+  const maxV = 125;
+  const xs = points.map(
+    (_, i) => padX + (i * (w - padX * 2)) / (points.length - 1),
+  );
+  const ys = points.map((p) => h - padY - (p.v / maxV) * (h - padY * 2));
+  const path = xs
+    .map((x, i) => `${i === 0 ? 'M' : 'L'} ${x} ${ys[i]}`)
+    .join(' ');
+
+  return (
+    <div className="w-full">
+      <svg
+        viewBox={`0 0 ${w} ${h}`}
+        preserveAspectRatio="none"
+        style={{ width: '100%', height: '160px' }}
+      >
+        {/* axes */}
+        <line
+          x1={padX}
+          y1={h - padY}
+          x2={w - padX}
+          y2={h - padY}
+          stroke="#292929"
+          strokeWidth="1"
+        />
+        <line
+          x1={padX}
+          y1={padY}
+          x2={padX}
+          y2={h - padY}
+          stroke="#292929"
+          strokeWidth="1"
+        />
+        {/* grid horizontals */}
+        {[0.25, 0.5, 0.75].map((p) => (
+          <line
+            key={p}
+            x1={padX}
+            y1={h - padY - p * (h - padY * 2)}
+            x2={w - padX}
+            y2={h - padY - p * (h - padY * 2)}
+            stroke="#e6e6e6"
+            strokeWidth="1"
+          />
+        ))}
+        {/* trend line */}
+        <motion.path
+          d={path}
+          fill="none"
+          stroke="#292929"
+          strokeWidth="2"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.4, ease: EASE }}
+        />
+        {/* dots */}
+        {xs.map((x, i) => (
+          <motion.circle
+            key={i}
+            cx={x}
+            cy={ys[i]}
+            r="3"
+            fill="#292929"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 + i * 0.04, duration: 0.3 }}
+          />
+        ))}
+        {/* axis labels */}
+        {points.map((p, i) => (
+          <text
+            key={p.y}
+            x={xs[i]}
+            y={h - 4}
+            textAnchor="middle"
+            fontFamily="JetBrains Mono, monospace"
+            fontSize="10"
+            fill="#646464"
+          >
+            {p.y}
+          </text>
+        ))}
+      </svg>
+      <div className="mt-2 flex items-baseline justify-between">
+        <span
+          className="font-condensed uppercase"
+          style={{ fontSize: '11px', letterSpacing: '0.2em', color: '#646464' }}
+        >
+          CASOS ESTIMADOS · BUCARAMANGA AMB
+        </span>
+        <span
+          className="font-mono tabular-nums"
+          style={{ fontSize: '13px', color: '#292929', letterSpacing: '0.02em' }}
+        >
+          ↑ ASCENDENTE SOSTENIDO · 2000–2014
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// KPI CARDS · hover-reveal + invert
+// ──────────────────────────────────────────────────────────────────────────
+
+type Kpi = {
+  big: string;
+  bigDecimals: number;
+  bigPrefix?: string;
+  bigSuffix?: string;
+  label: string;
+  detail: string;
+  meta: string;
+};
+
+const SECONDARY_KPIS: Kpi[] = [
+  {
+    big: '15',
+    bigDecimals: 0,
+    bigSuffix: '%',
+    label: 'CÁNCER DE PIEL · CARGA ONCOLÓGICA',
+    detail: '3.060 / 19.764 diagnósticos · pico en 2021',
+    meta: 'FCV / HIC · 2016 – 2023',
+  },
+  {
+    big: '338',
+    bigDecimals: 0,
+    bigPrefix: '+',
+    bigSuffix: '%',
+    label: 'LEISHMANIASIS · BROTE LANDÁZURI',
+    detail: '114 casos en 21 semanas epidemiológicas · 63,9 % hombres · mediana 20 años',
+    meta: 'SIVIGILA / INS · 2025',
+  },
+  {
+    big: '54',
+    bigDecimals: 0,
+    bigSuffix: '%',
+    label: 'MELANOMA · INVASIVO',
+    detail: '5.255 casos nuevos · 80 % de la mortalidad por cáncer de piel',
+    meta: 'INC · Colombia 2019',
+  },
+];
+
+function SecondaryKpi({ kpi, idx, total }: { kpi: Kpi; idx: number; total: number }) {
+  const isLast = idx === total - 1;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.06 * idx, ease: EASE }}
+      viewport={{ once: true }}
+      className="hover-reveal invert-on-hover relative flex flex-col bg-canvas-white"
+      style={{
+        borderTop: '1px solid #292929',
+        borderBottom: '1px solid #292929',
+        borderLeft: '1px solid #292929',
+        borderRight: isLast ? '1px solid #292929' : 'none',
+        padding: '28px 24px',
+        minHeight: '280px',
+      }}
+      tabIndex={0}
+    >
+      <span
+        className="font-mono"
+        style={{
+          fontSize: '12px',
+          letterSpacing: '0.04em',
+          color: '#646464',
+        }}
+        data-mute
+      >
+        KPI · {String(idx + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+      </span>
+
+      <div className="mt-3 flex items-baseline gap-2">
+        <span className="metric-display tabular-nums">
+          {kpi.bigPrefix ?? ''}
+          <CountUp
+            value={parseFloat(kpi.big)}
+            decimals={kpi.bigDecimals}
+            duration={1.6}
+          />
+          {kpi.bigSuffix ?? ''}
+        </span>
+      </div>
+
+      <div className="mt-3 h-px bg-ink-black" aria-hidden />
+
+      <span
+        className="mt-3 font-condensed uppercase"
+        style={{
+          fontSize: '13px',
+          letterSpacing: '0.18em',
+          fontWeight: 500,
+        }}
+      >
+        {kpi.label}
+      </span>
+
+      <div className="mt-auto" style={{ paddingTop: '20px', minHeight: '64px' }}>
+        <p
+          data-reveal
+          className="font-nh"
+          style={{
+            fontSize: '15px',
+            lineHeight: 1.45,
+            fontWeight: 300,
+            letterSpacing: '-0.01em',
+          }}
+        >
+          {kpi.detail}
+        </p>
+        <p
+          data-reveal
+          className="mt-3 font-mono"
+          style={{
+            fontSize: '11px',
+            letterSpacing: '0.04em',
+          }}
+        >
+          {kpi.meta}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// MAIN SLIDE
+// ──────────────────────────────────────────────────────────────────────────
 
 export default function Slide01Context() {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '35%']);
-  const titleY = useTransform(scrollYProgress, [0, 1], ['0%', '-25%']);
+  const [lens, setLens] = useState<LensId>('sexo');
+  const reduced = useReducedMotion();
 
   return (
-    <div ref={ref} className="relative w-full overflow-hidden">
-      {/* Parallax background shapes */}
-      <motion.div
-        style={{ y: bgY }}
-        className="absolute inset-0 pointer-events-none"
+    <div
+      ref={ref}
+      className="relative w-full overflow-hidden bg-canvas-white text-ink-black"
+    >
+      {/* Vertical rules */}
+      <div
+        className="absolute top-0 bottom-0 left-[clamp(24px,5vw,80px)] w-px bg-grey-100 pointer-events-none"
         aria-hidden
-      >
-        <div className="absolute top-[12%] right-[6%] w-[420px] h-[420px] rounded-full bg-warm-mist/40 blur-3xl" />
-        <div className="absolute bottom-[20%] left-[3%] w-[360px] h-[360px] rounded-full bg-chart-1/10 blur-3xl" />
-        <div className="absolute top-[55%] right-[35%] w-[280px] h-[280px] rounded-full bg-terracotta/8 blur-3xl" />
-      </motion.div>
+      />
+      <div
+        className="absolute top-0 bottom-0 right-[clamp(24px,5vw,80px)] w-px bg-grey-100 pointer-events-none"
+        aria-hidden
+      />
 
-      <div className="absolute inset-0 grain pointer-events-none opacity-60" aria-hidden />
+      <div className="relative mx-auto w-full max-w-[1600px] px-[clamp(40px,7vw,120px)] py-[clamp(56px,8vw,96px)]">
+        {/* ── EYEBROW + INDEX ─────────────────────────────────────────── */}
+        <div className="flex items-baseline justify-between">
+          <motion.span
+            initial={{ opacity: 0, y: 6 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE }}
+            viewport={{ once: true }}
+            className="eyebrow"
+            style={{ fontSize: '13px' }}
+          >
+            01 · CONTEXTO CLÍNICO · SANTANDER
+          </motion.span>
+          <span
+            className="font-mono uppercase"
+            style={{
+              fontSize: '12px',
+              letterSpacing: '0.18em',
+              color: '#646464',
+            }}
+          >
+            §01 / 09
+          </span>
+        </div>
 
-      <div className="relative w-full max-w-[1600px] mx-auto px-[clamp(24px,5vw,80px)] py-20">
-        {/* Header */}
-        <motion.div style={{ y: titleY }} className="mb-14 max-w-4xl">
-          <span className="eyebrow">1 · Planteamiento del problema</span>
-          <h2 className="mt-3 font-display text-[clamp(38px,5.4vw,80px)] leading-[1.02] tracking-tight text-ink">
-            <SplitText text="Las lesiones cutáneas " as="span" trigger="scroll" stagger={0.012} />
-            <span className="italic text-terracotta">
-              <SplitText text="se diagnostican tarde" as="span" trigger="scroll" stagger={0.012} delay={0.15} />
-            </span>{' '}
-            <SplitText text="en Santander." as="span" trigger="scroll" stagger={0.012} delay={0.35} />
-          </h2>
-          <ScrollReveal delay={0.4} direction="up" distance={16}>
-            <p className="mt-5 text-[15px] text-muted-stone leading-relaxed max-w-2xl">
-              La detección oportuna depende de la experiencia clínica (62–80 % de
-              exactitud con el método ABCDE), de la biopsia —invasiva y costosa— y de
-              la disponibilidad regional de dermatólogos. La IA aplicada a imágenes
-              sigue siendo marginal en la región.
-            </p>
-          </ScrollReveal>
+        <div className="mt-4 h-px bg-ink-black" aria-hidden />
+
+        {/* ── TITULAR ────────────────────────────────────────────────── */}
+        <motion.h2
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+          viewport={{ once: true }}
+          className="mt-10 font-nh max-w-[22ch]"
+          style={{
+            fontSize: 'clamp(44px, 5.4vw, 72px)',
+            lineHeight: 1.02,
+            letterSpacing: '-0.025em',
+            fontWeight: 300,
+            color: '#292929',
+          }}
+        >
+          En Bucaramanga, el carcinoma basocelular ya no es una excepción.
+        </motion.h2>
+
+        {/* ── HERO METRIC ROW ────────────────────────────────────────── */}
+        <div className="mt-16 grid grid-cols-12 gap-0 items-start">
+          {/* Big number · left */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: EASE }}
+            viewport={{ once: true }}
+            className="col-span-12 lg:col-span-5 flex flex-col"
+          >
+            <span
+              className="font-condensed uppercase"
+              style={{
+                fontSize: '12px',
+                letterSpacing: '0.22em',
+                color: '#646464',
+              }}
+            >
+              TASA ESTANDARIZADA · CBC
+            </span>
+            <div className="mt-2 flex items-baseline">
+              <span className={reduced ? '' : 'number-rise'}>
+                <span className="metric-mega" style={{ fontSize: 'clamp(140px, 18vw, 220px)' }}>
+                  <CountUp value={124.2} decimals={1} duration={2.0} />
+                </span>
+              </span>
+            </div>
+            <span
+              className="mt-1 font-condensed uppercase"
+              style={{
+                fontSize: '14px',
+                letterSpacing: '0.22em',
+                color: '#292929',
+                fontWeight: 500,
+              }}
+            >
+              / 100K · PERSONAS · AÑO
+            </span>
+            <span
+              className="mt-3 font-mono"
+              style={{
+                fontSize: '12px',
+                letterSpacing: '0.04em',
+                color: '#646464',
+              }}
+            >
+              URIBE ET AL. · 2018 · n = 1.669
+            </span>
+          </motion.div>
+
+          {/* Vertical rule + reading */}
+          <div className="col-span-12 lg:col-span-7 mt-12 lg:mt-0 lg:pl-[clamp(24px,3vw,56px)]">
+            <div
+              className="lg:border-l lg:pl-[clamp(24px,3vw,56px)]"
+              style={{ borderColor: '#292929' }}
+            >
+              <motion.span
+                initial={{ opacity: 0, y: 6 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
+                viewport={{ once: true }}
+                className="font-condensed uppercase"
+                style={{
+                  fontSize: '12px',
+                  letterSpacing: '0.22em',
+                  color: '#292929',
+                  fontWeight: 500,
+                }}
+              >
+                ── LECTURA EXPLICATIVA
+              </motion.span>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
+                viewport={{ once: true }}
+                className="mt-4 font-nh"
+                style={{
+                  fontSize: 'clamp(18px, 1.5vw, 22px)',
+                  lineHeight: 1.45,
+                  color: '#292929',
+                  fontWeight: 300,
+                  letterSpacing: '-0.015em',
+                  maxWidth: '40ch',
+                }}
+              >
+                124 casos por cada 100.000 habitantes-año. Tasa estandarizada por
+                edad sobre <span style={{ fontWeight: 500 }}>1.669 pacientes</span>{' '}
+                seguidos en el área metropolitana · la cohorte más amplia jamás
+                documentada en el AMB.
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.7, ease: EASE }}
+                viewport={{ once: true }}
+                className="mt-6 grid grid-cols-2 gap-0"
+                style={{ borderTop: '1px solid #292929' }}
+              >
+                <div
+                  className="py-3 pr-4"
+                  style={{ borderRight: '1px solid #292929' }}
+                >
+                  <span
+                    className="font-condensed uppercase block"
+                    style={{
+                      fontSize: '11px',
+                      letterSpacing: '0.22em',
+                      color: '#646464',
+                    }}
+                  >
+                    EDAD MEDIA
+                  </span>
+                  <span
+                    className="mt-1 inline-block font-display tabular-nums"
+                    style={{ fontSize: '32px', lineHeight: 1, color: '#292929' }}
+                  >
+                    68,2
+                  </span>
+                  <span
+                    className="ml-2 font-condensed uppercase"
+                    style={{
+                      fontSize: '11px',
+                      letterSpacing: '0.18em',
+                      color: '#646464',
+                    }}
+                  >
+                    AÑOS
+                  </span>
+                </div>
+                <div className="py-3 pl-4">
+                  <span
+                    className="font-condensed uppercase block"
+                    style={{
+                      fontSize: '11px',
+                      letterSpacing: '0.22em',
+                      color: '#646464',
+                    }}
+                  >
+                    DISTRIBUCIÓN
+                  </span>
+                  <span
+                    className="mt-1 inline-block font-display tabular-nums"
+                    style={{ fontSize: '32px', lineHeight: 1, color: '#292929' }}
+                  >
+                    54,5
+                  </span>
+                  <span
+                    className="ml-2 font-condensed uppercase"
+                    style={{
+                      fontSize: '11px',
+                      letterSpacing: '0.18em',
+                      color: '#646464',
+                    }}
+                  >
+                    % MUJERES
+                  </span>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── INTERACTIVE LENS ROW ───────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
+          viewport={{ once: true }}
+          className="mt-20"
+        >
+          <div className="flex items-baseline justify-between flex-wrap gap-y-3">
+            <span
+              className="font-condensed uppercase"
+              style={{
+                fontSize: '13px',
+                letterSpacing: '0.22em',
+                color: '#292929',
+                fontWeight: 500,
+              }}
+            >
+              ── DESGLOSE DE LA TASA
+            </span>
+            <div className="seg" role="group" aria-label="Cambiar lente">
+              {LENS_OPTIONS.map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  aria-pressed={lens === opt.id}
+                  onClick={() => setLens(opt.id)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div
+            className="mt-6"
+            style={{
+              border: '1px solid #292929',
+              padding: 'clamp(24px, 3vw, 40px)',
+              minHeight: '280px',
+            }}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={lens}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4, ease: EASE }}
+              >
+                {lens === 'sexo' && <ChartSexo />}
+                {lens === 'edad' && <ChartEdad />}
+                {lens === 'localizacion' && <ChartLocalizacion />}
+                {lens === 'periodo' && <ChartPeriodo />}
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </motion.div>
 
-        {/* Fishbone — causas / problema / consecuencias */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="relative card-fog p-6 md:p-10 mb-16"
-        >
-          <div className="flex items-baseline justify-between mb-6">
-            <span className="eyebrow">Causas · problema · consecuencias</span>
-            <span className="text-[10px] text-light-steel font-mono hidden md:inline">
-              ← causas estructurales · efectos sistémicos →
+        {/* ── SECONDARY KPIs ─────────────────────────────────────────── */}
+        <div className="mt-20">
+          <div className="flex items-baseline justify-between">
+            <span
+              className="font-condensed uppercase"
+              style={{
+                fontSize: '13px',
+                letterSpacing: '0.22em',
+                color: '#292929',
+                fontWeight: 500,
+              }}
+            >
+              ── CARGA SECUNDARIA · MÁS ALLÁ DEL CBC
+            </span>
+            <span
+              className="font-mono uppercase"
+              style={{
+                fontSize: '11px',
+                letterSpacing: '0.18em',
+                color: '#646464',
+              }}
+            >
+              HOVER · 3 FUENTES
             </span>
           </div>
-          <FishboneDiagram />
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-0">
+            {SECONDARY_KPIS.map((k, i) => (
+              <SecondaryKpi
+                key={k.label}
+                kpi={k}
+                idx={i}
+                total={SECONDARY_KPIS.length}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* ── VACÍOS IDENTIFICADOS ───────────────────────────────────── */}
+        <div className="mt-20">
+          <span
+            className="font-condensed uppercase"
+            style={{
+              fontSize: '13px',
+              letterSpacing: '0.22em',
+              color: '#292929',
+              fontWeight: 500,
+            }}
+          >
+            ── VACÍOS IDENTIFICADOS
+          </span>
+          <div className="mt-4" style={{ borderTop: '1px solid #292929' }}>
+            {[
+              {
+                title: 'CERO INVESTIGACIONES SSL EN COLOMBIA',
+                meta: 'Torres Ospina et al. 2025 · revisión PRISMA · n = 25 papers',
+              },
+              {
+                title: 'SESGO HACIA FOTOTIPOS IV-V EN DATASETS PÚBLICOS',
+                meta: 'Daneshjou et al. 2022 · auditoría ISIC',
+              },
+              {
+                title: 'PANDERM (2 M IMÁGENES) FUERA DE ALCANCE REGIONAL',
+                meta: 'Yan et al. 2025 · Nature Medicine',
+              },
+            ].map((row, i) => (
+              <motion.div
+                key={row.title}
+                initial={{ opacity: 0, x: -8 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.05 * i, ease: EASE }}
+                viewport={{ once: true }}
+                className="grid grid-cols-12 items-center"
+                style={{
+                  borderBottom: '1px solid #292929',
+                  minHeight: '64px',
+                }}
+              >
+                <div
+                  className="col-span-1 flex items-center justify-center font-mono"
+                  style={{
+                    fontSize: '12px',
+                    color: '#646464',
+                    borderRight: '1px solid #292929',
+                    alignSelf: 'stretch',
+                    display: 'flex',
+                  }}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <div
+                  className="col-span-7 px-5 font-condensed uppercase"
+                  style={{
+                    fontSize: '16px',
+                    letterSpacing: '0.14em',
+                    color: '#292929',
+                    fontWeight: 500,
+                  }}
+                >
+                  ── {row.title}
+                </div>
+                <div
+                  className="col-span-4 px-5 font-mono text-right"
+                  style={{
+                    fontSize: '12px',
+                    letterSpacing: '0.02em',
+                    color: '#646464',
+                    borderLeft: '1px solid #e6e6e6',
+                    alignSelf: 'stretch',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  {row.meta}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── CIERRE NARRATIVO ───────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE }}
+          viewport={{ once: true }}
+          className="mt-16 card-dark"
+          style={{ padding: 'clamp(32px, 4vw, 56px)' }}
+        >
+          <span
+            className="font-condensed uppercase block"
+            style={{
+              fontSize: '12px',
+              letterSpacing: '0.22em',
+              color: '#b4b8b4',
+              fontWeight: 400,
+            }}
+          >
+            ── DECISIÓN
+          </span>
+          <p
+            className="mt-5 font-display"
+            style={{
+              fontSize: 'clamp(56px, 6vw, 72px)',
+              lineHeight: 0.98,
+              color: '#ffffff',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            HAY DATOS. HAY CARGA. FALTA EL MÉTODO.
+          </p>
+          <p
+            className="mt-6 font-nh max-w-3xl"
+            style={{
+              fontSize: 'clamp(18px, 1.5vw, 22px)',
+              lineHeight: 1.45,
+              color: '#ffffff',
+              fontWeight: 300,
+              letterSpacing: '-0.015em',
+            }}
+          >
+            Un modelo autosupervisado puede aprender de imágenes{' '}
+            <span style={{ fontWeight: 500 }}>sin etiquetar</span> · exactamente lo
+            que sobra en Santander.
+          </p>
         </motion.div>
 
-        {/* Pregunta problema */}
-        <ScrollReveal direction="up" delay={0} distance={28}>
-          <motion.div
-            whileHover={{ scale: 1.005 }}
-            transition={{ duration: 0.3 }}
-            className="card-warm relative overflow-hidden p-8 md:p-12 mb-16 cursor-default"
+        {/* ── FOOTER ─────────────────────────────────────────────────── */}
+        <div className="mt-12 flex items-baseline justify-between flex-wrap gap-y-3">
+          <span
+            className="font-mono"
+            style={{
+              fontSize: '12px',
+              letterSpacing: '0.04em',
+              color: '#646464',
+            }}
           >
-            <motion.div
-              animate={{ rotate: [0, 8, 0] }}
-              transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-0 right-0 font-display italic text-terracotta/15 text-[180px] leading-none pointer-events-none select-none"
-            >
-              ?
-            </motion.div>
-            <span className="eyebrow text-terracotta">Pregunta problema</span>
-            <p className="relative mt-4 font-display text-[clamp(20px,2.4vw,32px)] leading-[1.2] text-ink max-w-5xl">
-              <span className="italic">¿Cómo diseñar</span> un algoritmo de inteligencia
-              artificial basado en{' '}
-              <span className="italic text-terracotta">aprendizaje autosupervisado</span>{' '}
-              para la detección de lesiones cutáneas a partir de imágenes dermatológicas
-              que apoye el diagnóstico clínico en{' '}
-              <span className="italic">centros médicos del departamento de Santander</span>?
-            </p>
-          </motion.div>
-        </ScrollReveal>
-
-        {/* KPIs */}
-        <div>
-          <div className="flex items-baseline justify-between mb-5">
-            <span className="eyebrow">Evidencia epidemiológica · Santander</span>
-            <span className="text-[10px] text-light-steel font-mono">6 fuentes · 2018 – 2025</span>
-          </div>
-          <MagicBento className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {epidemioKPIs.map((k, i) => (
-              <KpiCard key={k.id} kpi={k} idx={i} />
-            ))}
-          </MagicBento>
+            END OF SECTION 01 · GOTO §02
+          </span>
+          <span
+            className="inline-flex items-center font-condensed uppercase"
+            style={{
+              fontSize: '12px',
+              letterSpacing: '0.2em',
+              color: '#292929',
+            }}
+          >
+            <span className="kbd">←</span>
+            <span className="kbd">→</span>
+            <span className="ml-2">PARA NAVEGAR</span>
+          </span>
         </div>
       </div>
     </div>

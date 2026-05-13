@@ -6,7 +6,7 @@ let lenisInstance: Lenis | null = null;
 let initialized = false;
 
 /**
- * Singleton Lenis instance — solo se monta una vez por sesión.
+ * Singleton Lenis instance · solo se monta una vez por sesión.
  * Wires GSAP ScrollTrigger ticker para que ambas librerías compartan el frame loop.
  */
 export function getLenis(): Lenis | null {
@@ -36,7 +36,7 @@ export function getLenis(): Lenis | null {
 }
 
 /**
- * Smooth scroll a un slide específico — usa Lenis si está activo, fallback nativo.
+ * Smooth scroll a un slide específico · usa Lenis si está activo, fallback nativo.
  */
 export function scrollToSlide(idx: number) {
   if (typeof document === 'undefined') return;

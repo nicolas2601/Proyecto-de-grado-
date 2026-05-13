@@ -84,8 +84,8 @@ function Blob({ mouseRef }: { mouseRef: React.MutableRefObject<{ x: number; y: n
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uColorA: { value: new THREE.Color('#ba5031') },
-      uColorB: { value: new THREE.Color('#fbe1d1') },
+      uColorA: { value: new THREE.Color('#0081c0') },
+      uColorB: { value: new THREE.Color('#41a1cf') },
     }),
     []
   );

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Global cursor spotlight — radial gradient sigue el mouse.
+ * Global cursor spotlight · radial gradient sigue el mouse.
  * Se monta una vez en el shell. Respeta prefers-reduced-motion.
  */
 export default function SpotlightCursor({

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Aurora — fondo WebGL con bandas de luz que ondulan.
- * Shader inspirado en reactbits.dev/Aurora — adaptado a paleta terracotta/canvas.
+ * Aurora · fondo WebGL con bandas de luz que ondulan.
+ * Shader inspirado en reactbits.dev/Aurora · adaptado a paleta terracotta/canvas.
  */
 const VERT = /* glsl */ `
   attribute vec2 a_position;
@@ -78,7 +78,7 @@ function hexToVec3(hex: string): [number, number, number] {
 }
 
 export default function Aurora({
-  colorStops = ['#fbe1d1', '#ba5031', '#5d2a1a'],
+  colorStops = ['#41a1cf', '#0081c0', '#1f1f29'],
   amplitude = 0.9,
   blend = 0.55,
   className = '',

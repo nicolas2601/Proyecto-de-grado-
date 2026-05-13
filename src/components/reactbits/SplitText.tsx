@@ -7,7 +7,7 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * SplitText — char-by-char reveal con GSAP, trigger por scroll o mount.
+ * SplitText · char-by-char reveal con GSAP, trigger por scroll o mount.
  * Preserva spans para subrayados/italics interpolados (children as ReactNode).
  */
 export default function SplitText({

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { motion, type Variants } from 'framer-motion';
 
 /**
- * ScrollReveal — wrapper unificado. Reveal direccional con stagger nativo.
+ * ScrollReveal · wrapper unificado. Reveal direccional con stagger nativo.
  * `as` permite usar section/div/li/etc. `delay` y `direction` opcionales.
  */
 export default function ScrollReveal({

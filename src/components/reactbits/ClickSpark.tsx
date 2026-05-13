@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * ClickSpark — chispitas radiales al hacer click en cualquier parte.
+ * ClickSpark · chispitas radiales al hacer click en cualquier parte.
  * Canvas overlay global, sin DOM extra por click.
  */
 export default function ClickSpark({
-  sparkColor = '#ba5031',
+  sparkColor = '#0081c0',
   sparkSize = 9,
   sparkRadius = 16,
   sparkCount = 8,

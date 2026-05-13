@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 /**
- * GradientMesh — fondo animado tipo "aurora" de manchas pastel que flotan.
+ * GradientMesh · fondo animado tipo "aurora" de manchas pastel que flotan.
  * Más visible que Aurora WebGL en hardware básico. CSS puro.
  */
 export default function GradientMesh({ className = '' }: { className?: string }) {

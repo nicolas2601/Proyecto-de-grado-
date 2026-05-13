@@ -2,7 +2,7 @@ import { useRef, type ReactNode } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 /**
- * TiltedCard — perspective tilt 3D que sigue al mouse.
+ * TiltedCard · perspective tilt 3D que sigue al mouse.
  * Spring suave + glare opcional. Reactiva por hover.
  */
 export default function TiltedCard({

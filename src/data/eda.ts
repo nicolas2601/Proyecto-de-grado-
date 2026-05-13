@@ -5,7 +5,7 @@
 export const projectMeta = {
   title:
     'Algoritmo de aprendizaje autosupervisado para la detección de lesiones cutáneas en imágenes dermatológicas aplicado al contexto clínico de Santander',
-  shortTitle: 'Aprendizaje autosupervisado para lesiones cutáneas — Santander',
+  shortTitle: 'Aprendizaje autosupervisado para lesiones cutáneas · Santander',
   authors: ['Nicolás Santiago Moreno Monroy', 'María Paula Saavedra Martínez'],
   director: 'Andrés Felipe Jerez Ariza',
   advisor: 'Karen Yaneth Sánchez Quiroga',
@@ -15,7 +15,7 @@ export const projectMeta = {
 };
 
 // ---------------------------------------------------------------------------
-// Slide 1 — Epidemiología Santander
+// Slide 1 · Epidemiología Santander
 // ---------------------------------------------------------------------------
 export const epidemioKPIs = [
   {
@@ -80,12 +80,12 @@ export const epidemioKPIs = [
   },
 ];
 
-// Tabla 9.6 — Ranking de prioridad para el modelo SSL
+// Tabla 9.6 · Ranking de prioridad para el modelo SSL
 export const ssLRanking = [
-  { rank: 1, lesion: 'Carcinoma basocelular',  justification: '124,2/100k + 86,8 % cara y cuello — lesión más frecuente', priority: 'CRÍTICA' as const, category: 'Maligna' },
+  { rank: 1, lesion: 'Carcinoma basocelular',  justification: '124,2/100k + 86,8 % cara y cuello · lesión más frecuente', priority: 'CRÍTICA' as const, category: 'Maligna' },
   { rank: 2, lesion: 'Carcinoma escamocelular', justification: 'Parte del 15 % de cáncer de piel HIC',                    priority: 'CRÍTICA' as const, category: 'Maligna' },
-  { rank: 3, lesion: 'Melanoma',                justification: '54 % invasivo — alta letalidad si tardío',                priority: 'CRÍTICA' as const, category: 'Maligna' },
-  { rank: 4, lesion: 'Leishmaniasis ulcerosa',  justification: 'Brote 2025 +338 % — relevancia regional crítica',          priority: 'ALTA' as const,    category: 'Parasitaria' },
+  { rank: 3, lesion: 'Melanoma',                justification: '54 % invasivo · alta letalidad si tardío',                priority: 'CRÍTICA' as const, category: 'Maligna' },
+  { rank: 4, lesion: 'Leishmaniasis ulcerosa',  justification: 'Brote 2025 +338 % · relevancia regional crítica',          priority: 'ALTA' as const,    category: 'Parasitaria' },
   { rank: 5, lesion: 'Acné inflamatorio',       justification: 'Alta consulta jóvenes · asociación SOP en mujeres',        priority: 'MEDIA' as const,   category: 'Inflamatoria' },
   { rank: 6, lesion: 'Dermatitis atópica',      justification: 'Prevalencia general alta · GPC nacional 2024',             priority: 'MEDIA' as const,   category: 'Inflamatoria' },
   { rank: 7, lesion: 'Lesiones por presión',    justification: 'Carga hospitalaria significativa',                         priority: 'MEDIA' as const,   category: 'Hospitalaria' },
@@ -93,7 +93,7 @@ export const ssLRanking = [
   { rank: 9, lesion: 'Maskné / perioral',       justification: 'Post-COVID, decreciente',                                  priority: 'BAJA' as const,    category: 'Inflamatoria' },
 ];
 
-// Árbol del problema completo — 5 niveles
+// Árbol del problema completo · 5 niveles
 export const problemTree = {
   problemaCentral:
     'Limitaciones en la detección oportuna de lesiones cutáneas en centros clínicos del departamento de Santander',
@@ -124,17 +124,17 @@ export const problemTree = {
 };
 
 // ---------------------------------------------------------------------------
-// Slide 2 — Pregunta + Hipótesis
+// Slide 2 · Pregunta + Hipótesis
 // ---------------------------------------------------------------------------
 export const researchCore = {
   question:
     '¿Cómo diseñar un algoritmo de IA basado en aprendizaje autosupervisado para la detección de lesiones cutáneas a partir de imágenes dermatológicas que apoye el diagnóstico clínico en centros médicos de Santander?',
   hypothesis:
-    'Un algoritmo basado en aprendizaje autosupervisado, entrenado con un corpus combinado HAM10000 + BCN20000, puede alcanzar un desempeño comparable al de un baseline supervisado equivalente para las clases de mayor incidencia epidemiológica en Santander —carcinoma basocelular, escamocelular y melanoma— mitigando la escasez de datos etiquetados característica del contexto regional.',
+    'Un algoritmo basado en aprendizaje autosupervisado, entrenado con un corpus combinado HAM10000 + BCN20000, puede alcanzar un desempeño comparable al de un baseline supervisado equivalente para las clases de mayor incidencia epidemiológica en Santander ·carcinoma basocelular, escamocelular y melanoma· mitigando la escasez de datos etiquetados característica del contexto regional.',
 };
 
 // ---------------------------------------------------------------------------
-// Slide 3 — Objetivos
+// Slide 3 · Objetivos
 // ---------------------------------------------------------------------------
 export const objetivoGeneral =
   'Desarrollar un algoritmo de IA basado en aprendizaje autosupervisado (SSL) para la detección de lesiones cutáneas a partir de imágenes dermatológicas, orientado al apoyo del diagnóstico clínico en Santander.';
@@ -167,7 +167,7 @@ export const objetivosEspecificos = [
 ];
 
 // ---------------------------------------------------------------------------
-// Slide 4 — Marco de Referencia
+// Slide 4 · Marco de Referencia
 // ---------------------------------------------------------------------------
 export const sslConstellation = [
   { id: 'simclr',   name: 'SimCLR',   family: 'Contrastive',  detail: 'NT-Xent loss · augmentations · projection head' },
@@ -181,18 +181,18 @@ export const sslConstellation = [
 
 export const normativeFramework = [
   { region: 'Internacional', items: ['GDPR (UE)', 'Declaración de Helsinki', 'AI Act (UE 2024)'] },
-  { region: 'Colombia',      items: ['Ley 1581/2012 — datos personales', 'Ley 1419/2010 — telesalud', 'Resolución 2654/2019', 'Marco Ético IA 2021', 'CONPES 4144'] },
+  { region: 'Colombia',      items: ['Ley 1581/2012 · datos personales', 'Ley 1419/2010 · telesalud', 'Resolución 2654/2019', 'Marco Ético IA 2021', 'CONPES 4144'] },
 ];
 
 export const antecedents = [
-  { author: 'Rueda Rivera',     year: 2024, contribution: 'SSL para HAM10000 con SimCLR — UIS' },
-  { author: 'González & Rivera', year: 2022, contribution: 'CNN supervisada — comparativo HAM10000' },
-  { author: 'Díaz, Camargo, Peña', year: 2024, contribution: 'Dermatoscopio comercial portátil — UIS' },
-  { author: 'Sánchez Quiroga',  year: 2023, contribution: 'Transferencia de dominio en imágenes médicas — Doctorado UIS' },
+  { author: 'Rueda Rivera',     year: 2024, contribution: 'SSL para HAM10000 con SimCLR · UIS' },
+  { author: 'González & Rivera', year: 2022, contribution: 'CNN supervisada · comparativo HAM10000' },
+  { author: 'Díaz, Camargo, Peña', year: 2024, contribution: 'Dermatoscopio comercial portátil · UIS' },
+  { author: 'Sánchez Quiroga',  year: 2023, contribution: 'Transferencia de dominio en imágenes médicas · Doctorado UIS' },
 ];
 
 // ---------------------------------------------------------------------------
-// Slide 5 — Metodología CRISP-DM + Cronograma
+// Slide 5 · Metodología CRISP-DM + Cronograma
 // ---------------------------------------------------------------------------
 export const crispPhases = [
   { n: 1, name: 'Comprensión del problema',  detail: 'Revisión epidemiológica + estado del arte' },
@@ -224,7 +224,7 @@ export const ganttSemesters = [
 export const TOTAL_WEEKS = 32;
 
 // ---------------------------------------------------------------------------
-// Slide 6 — Avances Objetivo 1 (EDA) · PLATO FUERTE
+// Slide 6 · Avances Objetivo 1 (EDA) · PLATO FUERTE
 // ---------------------------------------------------------------------------
 export const ham10000 = {
   name: 'HAM10000',
@@ -331,7 +331,7 @@ export const biasMatrix = [
 ];
 
 // ---------------------------------------------------------------------------
-// Slide 7 — Resultados esperados + Riesgos
+// Slide 7 · Resultados esperados + Riesgos
 // ---------------------------------------------------------------------------
 export const trlLevels = [
   { level: 1, label: 'Principios básicos observados', active: false },
@@ -360,18 +360,18 @@ export const risks = [
 ];
 
 // ---------------------------------------------------------------------------
-// Slide 8 — Referencias
+// Slide 8 · Referencias
 // ---------------------------------------------------------------------------
 export const references = [
   'Uribe CJ et al. (2018). Carcinoma basocelular de piel en el área metropolitana de Bucaramanga, Colombia. Rev Asoc Colomb Dermatol 26(1).',
   'Fundación Cardiovascular de Colombia (2024). Un 15 % de los diagnósticos de cáncer en el HIC son de piel.',
-  'Revista Hospitalaria del Sector Salud — ACHC (2025). Tendencia de cáncer de piel en Colombia. N.° 64.',
+  'Revista Hospitalaria del Sector Salud · ACHC (2025). Tendencia de cáncer de piel en Colombia. N.° 64.',
   'Instituto Nacional de Cancerología (2024). Cáncer en cifras.',
   'Asocolderma (2024). Cáncer de piel en Colombia: cifras del INC.',
   'Revista Salud UIS (2025). La epidemia invisible: Leishmaniasis cutánea en Santander.',
   'INS (2025). Boletín Epidemiológico Semanal, semana 26 / 2025.',
   'Min Salud (2025). Lineamientos clínicos integrales para Leishmaniasis en Colombia.',
-  'Asocolderma (2024). GPC Dermatitis atópica — Actualización 2024.',
+  'Asocolderma (2024). GPC Dermatitis atópica · Actualización 2024.',
   'Asocolderma (2024). Encuesta a dermatólogos sobre dermatitis atópica.',
   'Revista Biomédica (2024). Epidemiología y recursos en dermatitis atópica, 2015-2020.',
   'Asocolderma (2024). Prevalencia SOP en mujeres con acné adulto (UNAB / Foscal).',
@@ -395,7 +395,7 @@ export const slideTimings = [
   { id: 3, name: 'Justificación + Objetivos', seconds: 120 },
   { id: 4, name: 'Marco de Referencia', seconds: 90 },
   { id: 5, name: 'Metodología + Cronograma', seconds: 90 },
-  { id: 6, name: 'Avances Objetivo 1 — EDA', seconds: 270 },
+  { id: 6, name: 'Avances Objetivo 1 · EDA', seconds: 270 },
   { id: 7, name: 'Resultados + Riesgos', seconds: 90 },
   { id: 8, name: 'Cierre + Referencias', seconds: 10 },
 ];
