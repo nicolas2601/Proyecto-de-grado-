@@ -227,9 +227,21 @@ export default function PresentationShell() {
           <section
             key={idx}
             data-slide-idx={idx}
-            className="slide"
+            className="slide relative"
             id={`slide-${idx}`}
           >
+            {/* Section-indicator dot — vertical guide */}
+            <div className="no-print absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-3 pointer-events-none">
+              {SLIDE_COMPONENTS.map((_, j) => (
+                <div
+                  key={j}
+                  className={cn(
+                    'h-1.5 w-1.5 rounded-full transition-all duration-500',
+                    j === idx ? 'bg-terracotta scale-150 shadow-[0_0_0_4px_rgba(186,80,49,0.15)]' : 'bg-ink/15'
+                  )}
+                />
+              ))}
+            </div>
             <Slide />
           </section>
         ))}

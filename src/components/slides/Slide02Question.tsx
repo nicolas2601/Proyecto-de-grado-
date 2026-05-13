@@ -6,6 +6,7 @@ import SplitText from '@/components/reactbits/SplitText';
 import ScrollReveal from '@/components/reactbits/ScrollReveal';
 import TiltedCard from '@/components/reactbits/TiltedCard';
 import MagicBento, { BentoCard } from '@/components/reactbits/MagicBento';
+import GradientMesh from '@/components/reactbits/GradientMesh';
 
 export default function Slide02Question() {
   const ref = useRef<HTMLDivElement>(null);
@@ -40,12 +41,15 @@ export default function Slide02Question() {
         </svg>
       </motion.div>
 
-      {/* Bg gradients */}
+      {/* Bg gradient mesh — animated */}
+      <div className="absolute inset-0 opacity-50 pointer-events-none" aria-hidden>
+        <GradientMesh />
+      </div>
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 70% 30%, rgba(251,225,209,0.35) 0%, transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(1,115,178,0.06) 0%, transparent 45%)',
+            'radial-gradient(ellipse at 70% 30%, rgba(251,225,209,0.30) 0%, transparent 55%)',
         }}
       />
 
