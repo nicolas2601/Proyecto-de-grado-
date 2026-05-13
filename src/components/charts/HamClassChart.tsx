@@ -1,35 +1,39 @@
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell, LabelList } from 'recharts';
 import { ham10000 } from '@/data/eda';
 
-// MONO X7 monochrome ramp · largest class gets max-contrast black, smaller classes fade through ink → grey
-// Order: descending by count → assign ink-black (#000) only to dominant class (nv), then #292929 → #646464 → #b4b8b4
-const MONO_RAMP = ['#000000', '#292929', '#3d3d3d', '#525252', '#646464', '#8a8a8a', '#b4b8b4'];
+// ─────────────────────────────────────────────────────────────────────
+// DAYOS · HAM10000 distribution by class
+// Highlight nevus (dominant) in action-green to emphasize imbalance.
+// Rest of the bars descend through an ink → ash → fog ramp.
+// ─────────────────────────────────────────────────────────────────────
+const ACCENT = '#d1ffca';
+const INK_RAMP = ['#000000', '#2f2f2f', '#444444', '#5a5a5a', '#7a7a7a', '#979797'];
 
 interface TooltipPayload {
-  payload: { label: string; count: number; pct: number };
+  payload: { label: string; count: number; pct: number; code: string };
   value: number;
 }
 
-function MonoTooltip({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) {
+function PaperTooltip({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) {
   if (!active || !payload?.length) return null;
   const p = payload[0].payload;
   return (
     <div
       style={{
         background: '#ffffff',
-        border: '1px solid #292929',
-        borderRadius: 0,
-        padding: '8px 10px',
-        boxShadow: 'none',
+        border: '1px solid rgba(0, 0, 0, 0.08)',
+        borderRadius: 12,
+        padding: '10px 14px',
+        boxShadow: '0 8px 32px -8px rgba(0, 0, 0, 0.12)',
       }}
     >
       <div
         style={{
-          fontFamily: "'Oswald', Impact, sans-serif",
+          fontFamily: "'IBM Plex Mono', monospace",
           fontSize: 11,
-          letterSpacing: '0.2em',
+          letterSpacing: '0.18em',
           textTransform: 'uppercase',
-          color: '#292929',
+          color: '#444444',
           marginBottom: 4,
         }}
       >
@@ -37,14 +41,15 @@ function MonoTooltip({ active, payload }: { active?: boolean; payload?: TooltipP
       </div>
       <div
         style={{
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 12,
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 14,
           fontVariantNumeric: 'tabular-nums',
           color: '#000000',
+          fontWeight: 500,
         }}
       >
         {p.count.toLocaleString('es-CO')}
-        <span style={{ color: '#646464', marginLeft: 6 }}>
+        <span style={{ color: '#979797', marginLeft: 8, fontWeight: 400 }}>
           {p.pct.toFixed(1)}%
         </span>
       </div>
@@ -53,83 +58,121 @@ function MonoTooltip({ active, payload }: { active?: boolean; payload?: TooltipP
 }
 
 export default function HamClassChart() {
-  // Sort ascending for vertical bar chart (largest visible at top would be confusing · keep ascending bottom→top)
+  // Sort ascending so the largest (nevus) sits at the top
   const sorted = [...ham10000.classes].sort((a, b) => a.count - b.count);
-  // Map each row to a fill based on its rank in DESCENDING order (largest = MONO_RAMP[0] = #000)
-  const rankByCount = new Map(
-    [...ham10000.classes]
-      .sort((a, b) => b.count - a.count)
-      .map((row, idx) => [row.label, MONO_RAMP[Math.min(idx, MONO_RAMP.length - 1)]])
-  );
+
+  // Build a fill map: nevus → accent green, rest → ramp by descending rank
+  const fillByLabel = new Map<string, string>();
+  const desc = [...ham10000.classes].sort((a, b) => b.count - a.count);
+  desc.forEach((row, idx) => {
+    if (row.code === 'nv') fillByLabel.set(row.label, ACCENT);
+    else fillByLabel.set(row.label, INK_RAMP[Math.min(idx - 1, INK_RAMP.length - 1)] ?? '#979797');
+  });
 
   return (
     <div className="w-full">
-      <div className="flex items-center gap-2 mb-2 pb-2 border-b border-[#292929]">
-        <span
-          aria-hidden
-          className="block h-px w-6 bg-[#292929]"
-        />
+      <div className="flex items-baseline justify-between gap-3 mb-3">
+        <span className="eyebrow-up">── DISTRIBUCIÓN POR CLASE</span>
         <span
           style={{
-            fontFamily: "'Oswald', Impact, sans-serif",
+            fontFamily: "'IBM Plex Mono', monospace",
             fontSize: 11,
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: '#292929',
+            letterSpacing: '0.1em',
+            color: '#979797',
+            fontVariantNumeric: 'tabular-nums',
           }}
         >
-          Distribución por clase
+          n · {ham10000.size.toLocaleString('es-CO')}
         </span>
       </div>
-      <ResponsiveContainer width="100%" height={240}>
+
+      <ResponsiveContainer width="100%" height={260}>
         <BarChart
           data={sorted}
           layout="vertical"
-          margin={{ top: 4, right: 64, left: 4, bottom: 4 }}
+          margin={{ top: 4, right: 56, left: 4, bottom: 4 }}
+          barCategoryGap={6}
         >
           <XAxis
             type="number"
             tickFormatter={(v) => v.toLocaleString('es-CO')}
-            axisLine={{ stroke: '#292929', strokeWidth: 1 }}
+            axisLine={{ stroke: 'rgba(0,0,0,0.16)', strokeWidth: 1 }}
             tickLine={false}
             tick={{
-              fill: '#292929',
+              fill: '#444444',
               fontSize: 11,
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: "'IBM Plex Mono', monospace",
             }}
           />
           <YAxis
             dataKey="label"
             type="category"
             width={150}
-            axisLine={{ stroke: '#292929', strokeWidth: 1 }}
+            axisLine={{ stroke: 'rgba(0,0,0,0.16)', strokeWidth: 1 }}
             tickLine={false}
             tick={{
-              fill: '#292929',
-              fontSize: 11,
-              fontFamily: "'Oswald', Impact, sans-serif",
-              letterSpacing: '0.1em',
+              fill: '#000000',
+              fontSize: 12,
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontWeight: 500,
             }}
           />
-          <Tooltip cursor={{ fill: '#e6e6e6' }} content={<MonoTooltip />} />
-          <Bar dataKey="count" radius={0} stroke="#292929" strokeWidth={1}>
+          <Tooltip cursor={{ fill: 'rgba(0,0,0,0.04)' }} content={<PaperTooltip />} />
+          <Bar dataKey="count" radius={[4, 4, 4, 4]} stroke="none">
             {sorted.map((row, i) => (
-              <Cell key={i} fill={rankByCount.get(row.label) ?? '#646464'} />
+              <Cell key={i} fill={fillByLabel.get(row.label) ?? '#979797'} />
             ))}
             <LabelList
               dataKey="pct"
               position="right"
               formatter={(v: number) => `${v.toFixed(1)}%`}
               style={{
-                fill: '#292929',
+                fill: '#444444',
                 fontSize: 11,
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: "'IBM Plex Mono', monospace",
                 fontVariantNumeric: 'tabular-nums',
               }}
             />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
+
+      <div className="mt-3 flex items-center gap-3 flex-wrap">
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 11,
+            letterSpacing: '0.05em',
+            color: '#444444',
+          }}
+        >
+          <span
+            aria-hidden
+            style={{
+              display: 'inline-block',
+              width: 12,
+              height: 12,
+              background: ACCENT,
+              borderRadius: 3,
+              border: '1px solid rgba(0,0,0,0.06)',
+            }}
+          />
+          nevus · clase ancla
+        </span>
+        <span style={{ width: 1, height: 12, background: 'rgba(0,0,0,0.12)' }} />
+        <span
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 11,
+            color: '#979797',
+          }}
+        >
+          ramp ink · clases minoritarias
+        </span>
+      </div>
     </div>
   );
 }

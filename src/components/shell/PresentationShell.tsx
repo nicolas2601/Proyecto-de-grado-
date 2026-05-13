@@ -28,6 +28,18 @@ const SLIDE_COMPONENTS = [
   Slide08Closing,
 ];
 
+const NAV_SECTIONS: Array<{ idx: number; label: string }> = [
+  { idx: 0, label: 'Portada' },
+  { idx: 1, label: 'Contexto' },
+  { idx: 2, label: 'Pregunta' },
+  { idx: 3, label: 'Objetivos' },
+  { idx: 4, label: 'Marco' },
+  { idx: 5, label: 'Metodología' },
+  { idx: 6, label: 'EDA' },
+  { idx: 7, label: 'Plan B' },
+  { idx: 8, label: 'Cierre' },
+];
+
 function formatTime(s: number) {
   const m = Math.floor(s / 60);
   const sec = s % 60;
@@ -39,11 +51,10 @@ export default function PresentationShell() {
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const startRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Reset scroll to top on mount — prevents browser scroll-restoration from
-    // dropping the user into a half-loaded mid-slide on hot reload / refresh.
     if (typeof window !== 'undefined') {
       if ('scrollRestoration' in window.history) {
         window.history.scrollRestoration = 'manual';
@@ -77,6 +88,7 @@ export default function PresentationShell() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       const goTo = (idx: number) => scrollToSlide(idx);
       switch (e.key) {
         case 'ArrowRight':
@@ -117,6 +129,14 @@ export default function PresentationShell() {
           e.preventDefault();
           goTo(6);
           break;
+        case 'm':
+        case 'M':
+          setNavOpen((v) => !v);
+          break;
+        case 'Escape':
+          setNavOpen(false);
+          setShowNotes(false);
+          break;
       }
     };
     window.addEventListener('keydown', handler);
@@ -139,39 +159,111 @@ export default function PresentationShell() {
 
   return (
     <>
-      {/* Difference-blend MONO cursor — inverts content for visibility on light & dark zones */}
+      {/* Difference-blend cursor */}
       <BlobCursor />
-      {/* Click sparks · ink black only */}
-      <ClickSpark sparkColor="#292929" sparkCount={10} sparkRadius={18} duration={420} />
+      <ClickSpark sparkColor="#000000" sparkCount={10} sparkRadius={18} duration={420} />
       <SlideProgress />
 
-      {/* Cumulative-target marker · 1px black tick on a 1px grey track */}
-      <div className="no-print fixed top-0 left-0 right-0 z-50 h-px pointer-events-none border-b border-grey-100">
+      {/* ── Sticky top nav · Dayos floating pill ────────── */}
+      <header className="no-print fixed top-4 left-0 right-0 z-50 px-4 md:px-6 pointer-events-none">
         <div
-          className="absolute top-0 h-full w-px bg-ink-black"
-          style={{ left: `${(cumulativeTarget / TOTAL_SECONDS) * 100}%` }}
-        />
-      </div>
-
-      {/* Top-right control cluster · 1px ink border, no blur */}
-      <div className="no-print fixed top-5 right-5 z-50 flex items-stretch gap-0">
-        <div
-          className="flex items-center gap-3 px-3 py-1.5 text-[12px]"
+          className="max-w-[1440px] mx-auto pointer-events-auto"
           style={{
-            background: '#ffffff',
-            border: '1px solid #292929',
-            borderRadius: 0,
-            fontFamily: 'Oswald, Impact, sans-serif',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            color: '#292929',
+            background: 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(14px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+            borderRadius: 9999,
+            border: '1px solid rgba(0, 0, 0, 0.06)',
+            padding: '6px 6px 6px 18px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 18,
           }}
         >
-          <span className="tabular-nums">
-            <span className="font-medium">{String(current + 1).padStart(2, '0')}</span>
-            <span className="opacity-50"> / {String(slideTimings.length).padStart(2, '0')}</span>
-          </span>
-          <span className="h-3 w-px bg-ink-black/40" />
+          {/* Brand */}
+          <a
+            href="#slide-0"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSlide(0);
+            }}
+            className="flex items-center gap-2.5"
+            style={{ color: '#000000', textDecoration: 'none' }}
+          >
+            <span
+              style={{
+                width: 22,
+                height: 22,
+                background: '#000000',
+                borderRadius: 6,
+                display: 'inline-block',
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: '-0.42px',
+                color: '#000000',
+              }}
+            >
+              SSL · UNAB
+            </span>
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                letterSpacing: '-0.33px',
+                color: '#979797',
+                marginLeft: 6,
+              }}
+              className="hidden md:inline"
+            >
+              · 2026
+            </span>
+          </a>
+
+          {/* Section pills */}
+          <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+            {NAV_SECTIONS.map((s) => (
+              <button
+                key={s.idx}
+                onClick={() => scrollToSlide(s.idx)}
+                style={{
+                  appearance: 'none',
+                  background: current === s.idx ? '#000000' : 'transparent',
+                  color: current === s.idx ? '#ffffff' : '#444444',
+                  border: 0,
+                  padding: '8px 14px',
+                  borderRadius: 12,
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  letterSpacing: '-0.39px',
+                  cursor: 'pointer',
+                  transition: 'background-color 200ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+                onMouseEnter={(e) => {
+                  if (current !== s.idx) {
+                    (e.currentTarget as HTMLButtonElement).style.background = '#f3f3f3';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (current !== s.idx) {
+                    (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                  }
+                }}
+              >
+                <span style={{ opacity: 0.7, marginRight: 6, fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>
+                  {String(s.idx).padStart(2, '0')}
+                </span>
+                {s.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Timer cluster */}
           <button
             type="button"
             onClick={() => {
@@ -180,89 +272,174 @@ export default function PresentationShell() {
                 return !v;
               });
             }}
-            className={cn(
-              'tabular-nums',
-              running && 'animate-pulse'
-            )}
+            className="hidden md:flex items-center gap-2"
             style={{
-              fontFamily: 'JetBrains Mono, ui-monospace, monospace',
-              letterSpacing: 0,
-              color: overdue ? '#000000' : '#292929',
-              fontWeight: overdue ? 500 : 400,
+              appearance: 'none',
+              background: 'transparent',
+              border: 0,
+              padding: '6px 12px',
+              borderRadius: 9999,
+              cursor: 'pointer',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 12,
+              letterSpacing: '-0.36px',
+              color: overdue ? '#000000' : '#444444',
             }}
             title="Toggle timer (T)"
           >
-            {formatTime(elapsed)}
+            <span
+              className={cn('pulse-dot', running && 'pulse-dot-ink')}
+              style={{ background: running ? '#000000' : '#d1ffca' }}
+            />
+            <span className="tabular-nums">
+              {formatTime(elapsed)} <span style={{ color: '#979797' }}>/ {formatTime(TOTAL_SECONDS)}</span>
+            </span>
           </button>
-          <span style={{ fontFamily: 'JetBrains Mono, ui-monospace, monospace', letterSpacing: 0, color: '#b4b8b4' }}>
-            / {formatTime(TOTAL_SECONDS)}
+
+          {/* Notes toggle + nav toggle (mobile) */}
+          <button
+            type="button"
+            onClick={() => setShowNotes((v) => !v)}
+            style={{
+              appearance: 'none',
+              background: showNotes ? '#000000' : 'transparent',
+              color: showNotes ? '#ffffff' : '#444444',
+              border: '1px solid ' + (showNotes ? '#000000' : 'rgba(0,0,0,0.08)'),
+              padding: '8px 14px',
+              borderRadius: 9999,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 13,
+              fontWeight: 500,
+              letterSpacing: '-0.39px',
+              cursor: 'pointer',
+              transition: 'all 200ms cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+            title="Toggle presenter notes (N)"
+          >
+            Notas
+          </button>
+
+          {/* Mobile nav toggle */}
+          <button
+            type="button"
+            onClick={() => setNavOpen((v) => !v)}
+            className="lg:hidden"
+            style={{
+              appearance: 'none',
+              background: '#000000',
+              color: '#ffffff',
+              border: 0,
+              padding: '10px 14px',
+              borderRadius: 9999,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 13,
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
+            aria-label="Open navigation menu"
+          >
+            {navOpen ? '✕' : '☰'}
+          </button>
+        </div>
+      </header>
+
+      {/* ── Mobile fullscreen nav ───────────────── */}
+      {navOpen && (
+        <div
+          className="no-print fixed inset-0 z-40 lg:hidden flex flex-col items-stretch p-6"
+          style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(24px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(140%)',
+            paddingTop: 96,
+          }}
+        >
+          <div className="max-w-md mx-auto w-full flex flex-col gap-2">
+            {NAV_SECTIONS.map((s, i) => (
+              <button
+                key={s.idx}
+                onClick={() => {
+                  scrollToSlide(s.idx);
+                  setNavOpen(false);
+                }}
+                style={{
+                  appearance: 'none',
+                  background: current === s.idx ? '#000000' : '#ffffff',
+                  color: current === s.idx ? '#ffffff' : '#000000',
+                  border: '1px solid rgba(0,0,0,0.08)',
+                  padding: '16px 24px',
+                  borderRadius: 16,
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 18,
+                  fontWeight: 500,
+                  letterSpacing: '-0.72px',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  animation: `fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.04}s both`,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 12,
+                    color: current === s.idx ? 'rgba(255,255,255,0.5)' : '#979797',
+                    minWidth: 28,
+                  }}
+                >
+                  {String(s.idx).padStart(2, '0')}
+                </span>
+                <span>{s.label}</span>
+              </button>
+            ))}
+          </div>
+          <style>{`@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+        </div>
+      )}
+
+      {/* Slide indicator bottom-left — Dayos style chip */}
+      <div className="no-print fixed bottom-5 left-5 z-30 pointer-events-none hidden md:block">
+        <div
+          style={{
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid rgba(0, 0, 0, 0.06)',
+            borderRadius: 9999,
+            padding: '8px 14px',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 11,
+              letterSpacing: '-0.33px',
+              color: '#000000',
+              fontWeight: 500,
+            }}
+          >
+            {String(current + 1).padStart(2, '0')} <span style={{ color: '#979797' }}>/ 09</span>
+          </span>
+          <span style={{ width: 1, height: 12, background: 'rgba(0,0,0,0.12)' }} />
+          <span
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 12,
+              color: '#444444',
+              letterSpacing: '-0.36px',
+            }}
+          >
+            {slideMeta?.name}
           </span>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowNotes((v) => !v)}
-          className="w-9 flex items-center justify-center transition-colors"
-          style={{
-            background: showNotes ? '#292929' : '#ffffff',
-            color: showNotes ? '#ffffff' : '#292929',
-            border: '1px solid #292929',
-            borderLeft: 'none',
-            borderRadius: 0,
-            fontFamily: 'Oswald, Impact, sans-serif',
-            letterSpacing: '0.1em',
-            fontSize: 12,
-          }}
-          title="Toggle presenter notes (N)"
-        >
-          N
-        </button>
       </div>
 
-      {/* Slide name (bottom-left) · Oswald label */}
-      <div className="no-print fixed bottom-5 left-5 z-40 pointer-events-none">
-        <span
-          style={{
-            fontFamily: 'Oswald, Impact, sans-serif',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            fontSize: 11,
-            color: '#292929',
-          }}
-        >
-          {String(current).padStart(2, '0')} · {slideMeta?.name}
-        </span>
-      </div>
-
-      {/* Slide thumbnails (bottom-right) · pure ink numeric chips */}
-      <nav
-        className="no-print fixed bottom-5 right-5 z-40 flex gap-0"
-        style={{ border: '1px solid #292929', background: '#ffffff' }}
-      >
-        {slideTimings.map((s, idx) => (
-          <button
-            key={s.id}
-            type="button"
-            onClick={() => scrollToSlide(s.id)}
-            className="tabular-nums flex items-center justify-center transition-colors"
-            style={{
-              width: 28,
-              height: 28,
-              fontFamily: 'Oswald, Impact, sans-serif',
-              fontSize: 11,
-              letterSpacing: '0.1em',
-              background: current === s.id ? '#292929' : '#ffffff',
-              color: current === s.id ? '#ffffff' : '#292929',
-              borderRight: idx < slideTimings.length - 1 ? '1px solid #292929' : 'none',
-              borderRadius: 0,
-            }}
-            title={s.name}
-          >
-            {String(s.id).padStart(2, '0')}
-          </button>
-        ))}
-      </nav>
-
-      {/* Presenter notes overlay · white card 1px ink border */}
+      {/* Presenter notes */}
       {showNotes && (
         <PresenterNotes
           slideIdx={current}
@@ -271,7 +448,7 @@ export default function PresentationShell() {
         />
       )}
 
-      {/* Slides + vertical section indicator (left rail) */}
+      {/* Slides */}
       <main className="relative">
         {SLIDE_COMPONENTS.map((Slide, idx) => (
           <section
@@ -280,21 +457,6 @@ export default function PresentationShell() {
             className="slide relative"
             id={`slide-${idx}`}
           >
-            <div className="no-print absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2 pointer-events-none">
-              {SLIDE_COMPONENTS.map((_, j) => (
-                <span
-                  key={j}
-                  className="transition-all duration-300"
-                  style={{
-                    display: 'block',
-                    width: j === idx ? 14 : 6,
-                    height: 1,
-                    background: '#292929',
-                    opacity: j === idx ? 1 : 0.25,
-                  }}
-                />
-              ))}
-            </div>
             <Slide />
           </section>
         ))}
@@ -317,33 +479,34 @@ function PresenterNotes({
   const onTrack = Math.abs(delta) < 30;
   return (
     <div
-      className="no-print fixed bottom-16 left-1/2 -translate-x-1/2 z-50 max-w-2xl w-[92vw]"
+      className="no-print fixed bottom-16 left-1/2 -translate-x-1/2 z-40 max-w-2xl w-[92vw]"
       style={{
-        background: '#ffffff',
-        border: '1px solid #292929',
-        borderRadius: 0,
-        padding: 20,
+        background: 'rgba(0, 0, 0, 0.92)',
+        backdropFilter: 'blur(20px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+        color: '#ffffff',
+        borderRadius: 24,
+        padding: 24,
       }}
     >
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-grey-100">
+      <div className="flex items-center justify-between mb-3 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
         <span
           style={{
-            fontFamily: 'Oswald, Impact, sans-serif',
-            textTransform: 'uppercase',
-            letterSpacing: '0.2em',
+            fontFamily: "'IBM Plex Mono', monospace",
             fontSize: 11,
-            color: '#292929',
+            letterSpacing: '-0.33px',
+            color: '#979797',
           }}
         >
           Notas · slide {String(slideIdx).padStart(2, '0')}
         </span>
         <span
-          className={cn('tabular-nums')}
+          className="tabular-nums"
           style={{
-            fontFamily: 'JetBrains Mono, ui-monospace, monospace',
+            fontFamily: "'IBM Plex Mono', monospace",
             fontSize: 11,
-            color: onTrack ? '#292929' : delta > 0 ? '#000000' : '#646464',
-            fontWeight: onTrack ? 400 : 500,
+            color: onTrack ? '#d1ffca' : delta > 0 ? '#fff100' : '#979797',
+            fontWeight: 500,
           }}
         >
           {delta > 0 ? `+${delta}s atrasado` : delta < 0 ? `${delta}s margen` : 'en tiempo'}
@@ -351,26 +514,27 @@ function PresenterNotes({
       </div>
       <p
         style={{
-          fontFamily: 'Inter, Helvetica Neue, sans-serif',
+          fontFamily: "'Inter', sans-serif",
           fontWeight: 400,
-          fontSize: 15,
+          fontSize: 16,
           lineHeight: 1.5,
-          letterSpacing: '-0.02em',
-          color: '#292929',
+          letterSpacing: '-0.42px',
+          color: '#ffffff',
         }}
       >
         {notes}
       </p>
       <p
-        className="mt-3 pt-2 border-t border-grey-100"
+        className="mt-4 pt-3"
         style={{
-          fontFamily: 'JetBrains Mono, ui-monospace, monospace',
-          fontSize: 10,
-          color: '#646464',
-          letterSpacing: 0,
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: 11,
+          color: '#979797',
+          letterSpacing: '-0.33px',
+          borderTop: '1px solid rgba(255,255,255,0.12)',
         }}
       >
-        ← / → navegar · espacio avanzar · 6 saltar a EDA · T timer · R reset · N notas
+        ← / → navegar · espacio avanzar · 6 saltar a EDA · T timer · R reset · N notas · M menú
       </p>
     </div>
   );
@@ -380,10 +544,10 @@ const SLIDE_NOTES: Record<number, string> = {
   0: 'Saludo breve. Nombre del proyecto, autores y rol de Karen Sánchez como asesora desde KAUST. 20 segundos máximo.',
   1: 'Establece la motivación clínica. Tres datos clave: CBC 124,2/100k (Uribe 2018), 15 % del HIC, brote de leishmaniasis +338 %. No te quedes en cifras, conecta con el problema diagnóstico.',
   2: 'Lee la pregunta literal. Pausa de 2 segundos. Lee la hipótesis. Conecta: "para responderla decidimos…" → siguiente slide.',
-  3: 'Justificación rápida (epidemio + escasez de etiquetas + apoyo regional). Alcance: NO clínico, NO recolección. Cuatro objetivos en orden · destaca que el 1 ya está terminado.',
+  3: 'Justificación rápida (epidemio + escasez de etiquetas + apoyo regional). Alcance: NO clínico, NO recolección. Cuatro objetivos en orden — destaca que el 1 ya está terminado.',
   4: 'No leas todo. Habla de SSL como familia (contrastive vs generative). Menciona Grad-CAM como explicabilidad. Normativa: di "GDPR + AI Act + Helsinki + cuatro normas colombianas". Antecedentes: dos tesis UIS + Sánchez 2023.',
   5: 'CRISP-DM circular: fases 1-2 hechas, 3-6 por hacer. Gantt: tres semestres. No te detengas en detalles.',
-  6: 'PLATO FUERTE · 4:30 disponibles. Cuenta la historia: 3 datasets analizados, 13 figuras generadas. Para cada dataset menciona N, balance y un hallazgo. Conclusión: HAM+BCN núcleo, CO2Wounds-V2 trabajo futuro.',
+  6: 'PLATO FUERTE — 4:30 disponibles. Cuenta la historia: 3 datasets analizados, 13 figuras generadas. Para cada dataset menciona N, balance y un hallazgo. Conclusión: HAM+BCN núcleo, CO2Wounds-V2 trabajo futuro.',
   7: 'TRL 4 como objetivo, TRL 5 como stretch. Cuatro entregables. Riesgos: R1 y R2 son los críticos.',
   8: 'Agradecer brevemente al director y a Karen. "Quedo atento a sus preguntas."',
 };

@@ -1,0 +1,1708 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic:
+      - generic: 00 %
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - text: "01"
+          - generic [ref=e7]: / 09
+        - button "0:00" [ref=e9]
+        - generic [ref=e10]: / 15:00
+      - button "N" [ref=e11]
+    - generic:
+      - generic: 00 · Portada
+    - navigation [ref=e12]:
+      - button "00" [ref=e13]
+      - button "01" [ref=e14]
+      - button "02" [ref=e15]
+      - button "03" [ref=e16]
+      - button "04" [ref=e17]
+      - button "05" [ref=e18]
+      - button "06" [ref=e19]
+      - button "07" [ref=e20]
+      - button "08" [ref=e21]
+    - main [ref=e22]:
+      - generic [ref=e24]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: UNAB · 2026
+          - generic [ref=e28]: PROYECTO DE GRADO I
+        - generic [ref=e32]: LIVE · SUSTENTACIÓN
+        - generic [ref=e33]:
+          - generic [ref=e34]:
+            - generic [ref=e35]: §00 · MANIFIESTO TÉCNICO
+            - generic [ref=e37]: PAGE 01 / 09
+          - heading "Aprendizaje autosupervisado para lesiones cutáneas en Santander." [level=1] [ref=e38]:
+            - generic "Aprendizaje" [ref=e39]:
+              - generic [ref=e40]:
+                - generic [ref=e41]: A
+                - generic [ref=e42]: p
+                - generic [ref=e43]: r
+                - generic [ref=e44]: e
+                - generic [ref=e45]: "n"
+                - generic [ref=e46]: d
+                - generic [ref=e47]: i
+                - generic [ref=e48]: z
+                - generic [ref=e49]: a
+                - generic [ref=e50]: j
+                - generic [ref=e51]: e
+            - generic "autosupervisado" [ref=e53]:
+              - generic [ref=e54]:
+                - generic [ref=e55]: a
+                - generic [ref=e56]: u
+                - generic [ref=e57]: t
+                - generic [ref=e58]: o
+                - generic [ref=e59]: s
+                - generic [ref=e60]: u
+                - generic [ref=e61]: p
+                - generic [ref=e62]: e
+                - generic [ref=e63]: r
+                - generic [ref=e64]: v
+                - generic [ref=e65]: i
+                - generic [ref=e66]: s
+                - generic [ref=e67]: a
+                - generic [ref=e68]: d
+                - generic [ref=e69]: o
+            - generic "para lesiones cutáneas" [ref=e70]:
+              - generic [ref=e71]:
+                - generic [ref=e72]: p
+                - generic [ref=e73]: a
+                - generic [ref=e74]: r
+                - generic [ref=e75]: a
+              - generic [ref=e76]:
+                - generic [ref=e77]: l
+                - generic [ref=e78]: e
+                - generic [ref=e79]: s
+                - generic [ref=e80]: i
+                - generic [ref=e81]: o
+                - generic [ref=e82]: "n"
+                - generic [ref=e83]: e
+                - generic [ref=e84]: s
+              - generic [ref=e85]:
+                - generic [ref=e86]: c
+                - generic [ref=e87]: u
+                - generic [ref=e88]: t
+                - generic [ref=e89]: á
+                - generic [ref=e90]: "n"
+                - generic [ref=e91]: e
+                - generic [ref=e92]: a
+                - generic [ref=e93]: s
+            - generic [ref=e94]:
+              - generic "en" [ref=e95]:
+                - generic [ref=e96]:
+                  - generic [ref=e97]: e
+                  - generic [ref=e98]: "n"
+              - generic "Santander" [ref=e100]:
+                - generic [ref=e101]:
+                  - generic [ref=e102]: S
+                  - generic [ref=e103]: a
+                  - generic [ref=e104]: "n"
+                  - generic [ref=e105]: t
+                  - generic [ref=e106]: a
+                  - generic [ref=e107]: "n"
+                  - generic [ref=e108]: d
+                  - generic [ref=e109]: e
+                  - generic [ref=e110]: r
+              - generic "." [ref=e111]:
+                - generic [ref=e113]: .
+          - paragraph [ref=e114]: Objetivo 1 · análisis exploratorio de tres datasets dermatológicos como fundamento para el preentrenamiento autosupervisado aplicado al contexto clínico santandereano.
+          - generic [ref=e115]:
+            - generic [ref=e116]:
+              - generic [ref=e117]:
+                - generic [ref=e118]: §00.2 · ESPECIFICACIONES
+                - generic [ref=e119]: TABLE 01
+              - table [ref=e120]:
+                - rowgroup [ref=e121]:
+                  - row "DOC-ID SSL · OBJ-1 · SUSTENTACIÓN" [ref=e122]:
+                    - cell "DOC-ID" [ref=e123]
+                    - cell "SSL · OBJ-1 · SUSTENTACIÓN" [ref=e124]
+                  - row "REV A · 2026.05.12" [ref=e125]:
+                    - cell "REV" [ref=e126]
+                    - cell "A · 2026.05.12" [ref=e127]
+                  - row "CAMPUS UNAB · BUCARAMANGA · SANTANDER" [ref=e128]:
+                    - cell "CAMPUS" [ref=e129]
+                    - cell "UNAB · BUCARAMANGA · SANTANDER" [ref=e130]
+                  - row "CURSO Proyecto de Grado I · 2026-I" [ref=e131]:
+                    - cell "CURSO" [ref=e132]
+                    - cell "Proyecto de Grado I · 2026-I" [ref=e133]
+                  - row "FASE CRISP-DM F3 · PREPARACIÓN · EN CURSO" [ref=e134]:
+                    - cell "FASE CRISP-DM" [ref=e135]
+                    - cell "F3 · PREPARACIÓN · EN CURSO" [ref=e136]
+                  - row "VENTANA 32 SEMANAS · 2 SEMESTRES · 2026-I → 2026-II" [ref=e137]:
+                    - cell "VENTANA" [ref=e138]
+                    - cell "32 SEMANAS · 2 SEMESTRES · 2026-I → 2026-II" [ref=e139]
+                  - row "TRL OBJETIVO TRL 4 · (TRL 5 STRETCH)" [ref=e140]:
+                    - cell "TRL OBJETIVO" [ref=e141]
+                    - cell "TRL 4 · (TRL 5 STRETCH)" [ref=e142]
+                  - row "CORPUS HAM10000 + BCN20000 + CO2WOUNDS-V2" [ref=e143]:
+                    - cell "CORPUS" [ref=e144]
+                    - cell "HAM10000 + BCN20000 + CO2WOUNDS-V2" [ref=e145]
+            - generic [ref=e146]:
+              - generic [ref=e147]:
+                - generic [ref=e148]: §00.3 · ABSTRACT
+                - generic [ref=e149]: EN
+              - generic [ref=e150]:
+                - paragraph [ref=e151]: ">"
+                - paragraph [ref=e153]: · TSCHANDL · ROSENDAHL · KITTLER · 2018 · SCIENTIFIC DATA
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - generic [ref=e156]: §00.4 · MÉTRICAS DEL CORPUS
+              - generic [ref=e157]: LIVE
+            - generic [ref=e158]:
+              - generic [ref=e159]:
+                - generic [ref=e160]: "0"
+                - generic [ref=e161]: CLASES DERMATOLÓGICAS
+              - generic [ref=e162]:
+                - generic [ref=e163]: "0"
+                - generic [ref=e164]: IMÁGENES CURADAS
+              - generic [ref=e165]:
+                - generic [ref=e166]: "0"
+                - generic [ref=e167]: PACIENTES SANTANDER
+          - generic [ref=e168]:
+            - generic [ref=e169]:
+              - generic [ref=e170]: AUTORES · 02
+              - paragraph [ref=e171]: Nicolás Santiago Moreno Monroy
+              - paragraph [ref=e172]: María Paula Saavedra Martínez
+            - generic [ref=e173]:
+              - generic [ref=e174]: DIRECCIÓN · ASESORÍA
+              - paragraph [ref=e175]: Andrés Felipe Jerez Ariza
+              - paragraph [ref=e176]: Karen Yaneth Sánchez Quiroga
+              - paragraph [ref=e177]: King Abdullah University of Science and Technology (KAUST)
+            - button "INICIAR SUSTENTACIÓN ↓" [ref=e179]:
+              - generic [ref=e180]:
+                - text: INICIAR
+                - generic [ref=e181]:
+                  - generic [ref=e182]: SUSTENTACIÓN
+                  - generic [ref=e183]: ↓
+          - generic "Universidad Autónoma de Bucaramanga · Ingeniería de Sistemas · Proyecto de Grado I · 2026" [ref=e186]: ···························································································
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: SSL·
+                - generic: SIMCLR·
+                - generic: DINO·
+                - generic: MAE·
+                - generic: HAM10000·
+                - generic: BCN20000·
+                - generic: CO2WOUNDS-V2·
+                - generic: SANTANDER·
+                - generic: COLOMBIA·
+                - generic: UNAB · 2026·
+                - generic: VISION TRANSFORMER·
+                - generic: DIAGNÓSTICO ASISTIDO·
+                - generic: PROYECTO DE GRADO I·
+              - generic:
+                - generic: SSL·
+                - generic: SIMCLR·
+                - generic: DINO·
+                - generic: MAE·
+                - generic: HAM10000·
+                - generic: BCN20000·
+                - generic: CO2WOUNDS-V2·
+                - generic: SANTANDER·
+                - generic: COLOMBIA·
+                - generic: UNAB · 2026·
+                - generic: VISION TRANSFORMER·
+                - generic: DIAGNÓSTICO ASISTIDO·
+                - generic: PROYECTO DE GRADO I·
+        - button "SCROLL ↓" [ref=e187]:
+          - text: SCROLL
+          - generic [ref=e188]: ↓
+      - generic [ref=e191]:
+        - generic [ref=e192]:
+          - generic [ref=e193]: 01 · CONTEXTO CLÍNICO · SANTANDER
+          - generic [ref=e194]: §01 / 09
+        - heading "En Bucaramanga, el carcinoma basocelular ya no es una excepción." [level=2] [ref=e196]
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]: TASA ESTANDARIZADA · CBC
+            - generic [ref=e202]: "0.0"
+            - generic [ref=e203]: / 100K · PERSONAS · AÑO
+            - generic [ref=e204]: URIBE ET AL. · 2018 · n = 1.669
+          - generic [ref=e206]:
+            - text: ── LECTURA EXPLICATIVA
+            - paragraph [ref=e207]: 124 casos por cada 100.000 habitantes-año. Tasa estandarizada por edad sobre 1.669 pacientes seguidos en el área metropolitana · la cohorte más amplia jamás documentada en el AMB.
+            - generic [ref=e208]:
+              - generic [ref=e209]:
+                - generic [ref=e210]: EDAD MEDIA
+                - generic [ref=e211]: 68,2
+                - text: AÑOS
+              - generic [ref=e212]:
+                - generic [ref=e213]: DISTRIBUCIÓN
+                - generic [ref=e214]: 54,5
+                - text: "% MUJERES"
+        - generic [ref=e215]:
+          - generic [ref=e216]:
+            - generic [ref=e217]: ── DESGLOSE DE LA TASA
+            - group "Cambiar lente" [ref=e218]:
+              - button "POR SEXO" [pressed] [ref=e219] [cursor=pointer]
+              - button "POR EDAD" [ref=e220] [cursor=pointer]
+              - button "POR LOCALIZACIÓN" [ref=e221] [cursor=pointer]
+              - button "POR PERÍODO" [ref=e222] [cursor=pointer]
+          - generic [ref=e225]:
+            - generic [ref=e226]:
+              - generic [ref=e227]: HOMBRES
+              - generic [ref=e229]: 133,0
+            - generic [ref=e230]:
+              - generic [ref=e231]: MUJERES
+              - generic [ref=e233]: 118,2
+            - generic [ref=e234]:
+              - generic [ref=e235]: DELTA H − M
+              - generic [ref=e236]: + 14,8 /100K · AÑO
+        - generic [ref=e237]:
+          - generic [ref=e238]:
+            - generic [ref=e239]: ── CARGA SECUNDARIA · MÁS ALLÁ DEL CBC
+            - generic [ref=e240]: HOVER · 3 FUENTES
+          - generic [ref=e241]:
+            - generic [ref=e242]:
+              - generic [ref=e243]: KPI · 01 / 03
+              - generic [ref=e245]: 0%
+              - generic [ref=e247]: CÁNCER DE PIEL · CARGA ONCOLÓGICA
+              - generic [ref=e248]:
+                - paragraph: 3.060 / 19.764 diagnósticos · pico en 2021
+                - paragraph: FCV / HIC · 2016 – 2023
+            - generic [ref=e249]:
+              - generic [ref=e250]: KPI · 02 / 03
+              - generic [ref=e252]: +0%
+              - generic [ref=e254]: LEISHMANIASIS · BROTE LANDÁZURI
+              - generic [ref=e255]:
+                - paragraph: 114 casos en 21 semanas epidemiológicas · 63,9 % hombres · mediana 20 años
+                - paragraph: SIVIGILA / INS · 2025
+            - generic [ref=e256]:
+              - generic [ref=e257]: KPI · 03 / 03
+              - generic [ref=e259]: 0%
+              - generic [ref=e261]: MELANOMA · INVASIVO
+              - generic [ref=e262]:
+                - paragraph: 5.255 casos nuevos · 80 % de la mortalidad por cáncer de piel
+                - paragraph: INC · Colombia 2019
+        - generic [ref=e263]:
+          - text: ── VACÍOS IDENTIFICADOS
+          - generic [ref=e264]:
+            - generic [ref=e265]:
+              - generic [ref=e266]: "01"
+              - generic [ref=e267]: ── CERO INVESTIGACIONES SSL EN COLOMBIA
+              - generic [ref=e268]: Torres Ospina et al. 2025 · revisión PRISMA · n = 25 papers
+            - generic [ref=e269]:
+              - generic [ref=e270]: "02"
+              - generic [ref=e271]: ── SESGO HACIA FOTOTIPOS IV-V EN DATASETS PÚBLICOS
+              - generic [ref=e272]: Daneshjou et al. 2022 · auditoría ISIC
+            - generic [ref=e273]:
+              - generic [ref=e274]: "03"
+              - generic [ref=e275]: ── PANDERM (2 M IMÁGENES) FUERA DE ALCANCE REGIONAL
+              - generic [ref=e276]: Yan et al. 2025 · Nature Medicine
+        - generic [ref=e277]:
+          - generic [ref=e278]: ── DECISIÓN
+          - paragraph [ref=e279]: HAY DATOS. HAY CARGA. FALTA EL MÉTODO.
+          - paragraph [ref=e280]: Un modelo autosupervisado puede aprender de imágenes sin etiquetar · exactamente lo que sobra en Santander.
+        - generic [ref=e281]:
+          - generic [ref=e282]: END OF SECTION 01 · GOTO §02
+          - generic [ref=e283]:
+            - generic [ref=e284]: ←
+            - generic [ref=e285]: →
+            - generic [ref=e286]: PARA NAVEGAR
+      - generic [ref=e289]:
+        - generic [ref=e290]:
+          - generic [ref=e291]: 02 · PREGUNTA DE INVESTIGACIÓN
+          - generic [ref=e292]: Q.001
+        - generic [ref=e294]:
+          - generic [ref=e295]: FORMULACIÓN · ANTEPROYECTO
+          - paragraph [ref=e299]
+        - generic [ref=e301]:
+          - generic [ref=e302]:
+            - generic [ref=e303]:
+              - generic [ref=e304]: ── HIPÓTESIS · H1
+              - generic [ref=e305]: FALSABLE
+            - paragraph [ref=e308]: Un modelo SSL preentrenado sobre el corpus HAM10000 + BCN20000 supera al baseline supervisado en al menos 5 pp de F1-macro sobre el split clínico.
+            - generic [ref=e309]:
+              - generic [ref=e310]:
+                - generic [ref=e311]: MÉTRICA
+                - generic [ref=e312]: F1-MACRO
+              - generic [ref=e313]:
+                - generic [ref=e314]: DELTA MÍN.
+                - generic [ref=e315]: + 5,00 pp
+              - generic [ref=e316]:
+                - generic [ref=e317]: SPLIT
+                - generic [ref=e318]: CLINICAL
+          - generic [ref=e319]:
+            - generic [ref=e320]:
+              - text: ── FALSACIÓN
+              - paragraph [ref=e321]: Δ < 5,00 PP
+              - paragraph [ref=e322]: Si el delta queda por debajo del umbral en al menos 3 corridas independientes, la hipótesis se rechaza y el proyecto pivotea a fine-tuning supervisado puro.
+            - generic [ref=e323]:
+              - generic [ref=e324]: CORRIDAS INDEPENDIENTES
+              - generic [ref=e325]:
+                - generic [ref=e329]: RUN · 01
+                - generic [ref=e333]: RUN · 02
+                - generic [ref=e337]: RUN · 03
+        - generic:
+          - generic: Δ ≥ 5,00 PP · F1-MACRO · CLINICAL-SPLIT
+          - generic: UMBRAL DE DECISIÓN
+        - generic [ref=e338]:
+          - generic [ref=e339]:
+            - generic [ref=e340]: ── CONCEPTOS CLAVE
+            - generic [ref=e341]: 12 NODOS · LOOP
+          - generic [ref=e344]:
+            - generic [ref=e345]:
+              - generic [ref=e346]: SSL
+              - generic [ref=e348]: CONTRASTIVE LEARNING
+              - generic [ref=e350]: DINO
+              - generic [ref=e352]: MAE
+              - generic [ref=e354]: VISION TRANSFORMER
+              - generic [ref=e356]: DERMATOSCOPIA
+              - generic [ref=e358]: HAM10000
+              - generic [ref=e360]: BCN20000
+              - generic [ref=e362]: F1-MACRO
+              - generic [ref=e364]: CLINICAL-SPLIT
+              - generic [ref=e366]: KAUST
+              - generic [ref=e368]: UNAB
+            - generic [ref=e370]:
+              - generic [ref=e371]: SSL
+              - generic [ref=e373]: CONTRASTIVE LEARNING
+              - generic [ref=e375]: DINO
+              - generic [ref=e377]: MAE
+              - generic [ref=e379]: VISION TRANSFORMER
+              - generic [ref=e381]: DERMATOSCOPIA
+              - generic [ref=e383]: HAM10000
+              - generic [ref=e385]: BCN20000
+              - generic [ref=e387]: F1-MACRO
+              - generic [ref=e389]: CLINICAL-SPLIT
+              - generic [ref=e391]: KAUST
+              - generic [ref=e393]: UNAB
+        - generic [ref=e395]:
+          - generic [ref=e396]: END OF SECTION 02 · GOTO §03 ↓
+          - generic [ref=e397]: → MARCO METODOLÓGICO
+      - generic [ref=e400]:
+        - generic [ref=e401]:
+          - generic [ref=e402]: 03 · OBJETIVOS
+          - generic [ref=e404]: 1 / 4 COMPLETADO
+        - heading "Cuatro objetivos específicos. Una ruta verificable hacia un algoritmo SSL para dermatología." [level=2] [ref=e406]:
+          - text: Cuatro objetivos específicos.
+          - text: Una ruta verificable hacia un algoritmo SSL para dermatología.
+        - generic [ref=e407]:
+          - generic [ref=e408]:
+            - generic [ref=e409]: ── OBJETIVO GENERAL
+            - generic [ref=e410]: OG · MASTER SCOPE
+          - paragraph [ref=e411]: Desarrollar un algoritmo de inteligencia artificial basado en aprendizaje autosupervisado para la detección de lesiones cutáneas a partir de imágenes dermatológicas, orientado al apoyo del diagnóstico clínico en el contexto del departamento de Santander.
+        - generic [ref=e412]:
+          - generic [ref=e413]:
+            - generic [ref=e414]: OBJETIVOS ESPECÍFICOS · OE-01 → OE-04
+            - generic [ref=e415]: 01 DONE · 01 ACTIVE · 02 NEXT
+          - generic [ref=e416]:
+            - button "01 OBJ · F1 Analizar conjuntos de datos dermatológicos DONE Analizar conjuntos de datos de imágenes dermatológicas representativos para el contexto clínico de Santander." [ref=e418]:
+              - generic [ref=e419]:
+                - generic [ref=e420]: "01"
+                - generic [ref=e421]: OBJ · F1
+              - generic [ref=e422]:
+                - generic [ref=e423]:
+                  - generic [ref=e424]: Analizar conjuntos de datos dermatológicos
+                  - generic [ref=e425]: DONE
+                - paragraph [ref=e427]: Analizar conjuntos de datos de imágenes dermatológicas representativos para el contexto clínico de Santander.
+              - generic [ref=e428]: +
+            - generic [ref=e429]:
+              - button "02 OBJ · F2 Diseñar el algoritmo SSL ACTIVE Diseñar un algoritmo de detección de lesiones cutáneas basado en aprendizaje autosupervisado." [expanded] [ref=e430]:
+                - generic [ref=e431]:
+                  - generic [ref=e432]: "02"
+                  - generic [ref=e433]: OBJ · F2
+                - generic [ref=e434]:
+                  - generic [ref=e435]:
+                    - generic [ref=e436]: Diseñar el algoritmo SSL
+                    - generic [ref=e437]: ACTIVE
+                  - paragraph [ref=e439]: Diseñar un algoritmo de detección de lesiones cutáneas basado en aprendizaje autosupervisado.
+                - generic [ref=e440]: −
+              - generic [ref=e442]:
+                - paragraph [ref=e443]: Diseñar un algoritmo de detección de lesiones cutáneas basado en aprendizaje autosupervisado.
+                - generic [ref=e444]:
+                  - text: ── ENTREGABLE
+                  - paragraph [ref=e445]: Algoritmo SSL configurado y reproducible para detección de lesiones cutáneas.
+                  - list [ref=e446]:
+                    - listitem [ref=e447]:
+                      - generic [ref=e448]: "01"
+                      - generic [ref=e449]: Selección de familia SSL (contrastivo · generativo · destilación)
+                    - listitem [ref=e450]:
+                      - generic [ref=e451]: "02"
+                      - generic [ref=e452]: Selección de backbone (ResNet-50 vs EfficientNet vs ViT)
+                    - listitem [ref=e453]:
+                      - generic [ref=e454]: "03"
+                      - generic [ref=e455]: Pipeline de pre-entrenamiento sin etiquetas
+                    - listitem [ref=e456]:
+                      - generic [ref=e457]: "04"
+                      - generic [ref=e458]: Esquema de fine-tuning sobre clases núcleo
+                    - listitem [ref=e459]:
+                      - generic [ref=e460]: "05"
+                      - generic [ref=e461]: Especificación de hiperparámetros y semillas
+                - generic [ref=e462]:
+                  - generic [ref=e463]: ── FASE CRISP-DM
+                  - generic [ref=e464]: F2
+            - button "03 OBJ · F3 Evaluar el desempeño NEXT Evaluar el desempeño del algoritmo propuesto mediante métricas reportadas en la literatura científica." [ref=e466]:
+              - generic [ref=e467]:
+                - generic [ref=e468]: "03"
+                - generic [ref=e469]: OBJ · F3
+              - generic [ref=e470]:
+                - generic [ref=e471]:
+                  - generic [ref=e472]: Evaluar el desempeño
+                  - generic [ref=e473]: NEXT
+                - paragraph [ref=e475]: Evaluar el desempeño del algoritmo propuesto mediante métricas reportadas en la literatura científica.
+              - generic [ref=e476]: +
+            - button "04 OBJ · F4 Implementar prototipo de aplicación NEXT Implementar un prototipo de aplicación que integre el algoritmo desarrollado para apoyo en el análisis de imágenes." [ref=e478]:
+              - generic [ref=e479]:
+                - generic [ref=e480]: "04"
+                - generic [ref=e481]: OBJ · F4
+              - generic [ref=e482]:
+                - generic [ref=e483]:
+                  - generic [ref=e484]: Implementar prototipo de aplicación
+                  - generic [ref=e485]: NEXT
+                - paragraph [ref=e487]: Implementar un prototipo de aplicación que integre el algoritmo desarrollado para apoyo en el análisis de imágenes.
+              - generic [ref=e488]: +
+        - generic [ref=e489]:
+          - generic [ref=e490]:
+            - generic [ref=e491]: ALCANCE · SCOPE
+            - generic [ref=e492]: 5 IN · 5 OUT
+          - generic [ref=e493]:
+            - generic [ref=e494]:
+              - generic [ref=e495]:
+                - generic [ref=e496]: ── INCLUYE
+                - generic [ref=e497]: "+05"
+              - list [ref=e498]:
+                - listitem [ref=e499]:
+                  - generic [ref=e500]: "01"
+                  - generic [ref=e501]: Diseño, implementación y validación del modelo SSL
+                - listitem [ref=e502]:
+                  - generic [ref=e503]: "02"
+                  - generic [ref=e504]: Análisis de lesiones de mayor incidencia en Santander
+                - listitem [ref=e505]:
+                  - generic [ref=e506]: "03"
+                  - generic [ref=e507]: Comparación rigurosa vs. modelo supervisado convencional (misma arquitectura y dataset)
+                - listitem [ref=e508]:
+                  - generic [ref=e509]: "04"
+                  - generic [ref=e510]: Caracterización formal de los datasets seleccionados
+                - listitem [ref=e511]:
+                  - generic [ref=e512]: "05"
+                  - generic [ref=e513]: Prototipo funcional con interfaz para cargar imagen y ver predicción
+            - generic [ref=e514]:
+              - generic [ref=e515]:
+                - generic [ref=e516]: ── NO INCLUYE
+                - generic [ref=e517]: −05
+              - list [ref=e518]:
+                - listitem [ref=e519]:
+                  - generic [ref=e520]: ─
+                  - generic [ref=e521]: Recolección de datos en instituciones clínicas
+                - listitem [ref=e522]:
+                  - generic [ref=e523]: ─
+                  - generic [ref=e524]: Pruebas con pacientes reales
+                - listitem [ref=e525]:
+                  - generic [ref=e526]: ─
+                  - generic [ref=e527]: Implementación en entornos hospitalarios
+                - listitem [ref=e528]:
+                  - generic [ref=e529]: ─
+                  - generic [ref=e530]: Certificación como herramienta médica
+                - listitem [ref=e531]:
+                  - generic [ref=e532]: ─
+                  - generic [ref=e533]: Validación clínica formal
+        - generic [ref=e534]:
+          - generic [ref=e535]:
+            - generic [ref=e536]: Click
+            - generic [ref=e537]: EXPANDIR OBJETIVOS
+          - generic [ref=e538]: 04 / 09 · UNAB · INGENIERÍA DE SISTEMAS
+      - generic [ref=e541]:
+        - generic [ref=e542]:
+          - generic [ref=e543]: 04 · MARCO CONCEPTUAL
+          - generic [ref=e544]: TRES PILARES TÉCNICO-NORMATIVOS
+        - heading "Por qué autosupervisado, por qué ahora, por qué aquí." [level=2] [ref=e545]
+        - generic [ref=e547]:
+          - tablist [ref=e548]:
+            - tab "01 SSL · TÉCNICA" [selected] [ref=e549]:
+              - generic [ref=e550]: "01"
+              - generic [ref=e551]: SSL · TÉCNICA
+            - tab "02 NORMATIVA · 8 INSTRUMENTOS" [ref=e552]:
+              - generic [ref=e553]: "02"
+              - generic [ref=e554]: NORMATIVA · 8 INSTRUMENTOS
+            - tab "03 ANTECEDENTES · 8 ESTUDIOS" [ref=e555]:
+              - generic [ref=e556]: "03"
+              - generic [ref=e557]: ANTECEDENTES · 8 ESTUDIOS
+          - generic [ref=e559]:
+            - generic [ref=e560]:
+              - generic [ref=e561]: PILAR · I · TÉCNICO
+              - generic [ref=e562]: 3 FAMILIAS · 5 BACKBONES CANDIDATOS
+            - paragraph [ref=e563]: Tres familias de pretexto autosupervisado dominan la literatura. El proyecto evaluará un representante por familia y elegirá la combinación familia + backbone con mejor desempeño sobre las clases núcleo identificadas en Santander.
+            - generic [ref=e564]:
+              - generic [ref=e565]:
+                - text: FAMILIA · 01 / 03
+                - generic [ref=e566]:
+                  - text: CONTRASTIVO
+                  - generic [ref=e567]: SimCLR / BYOL
+                - paragraph [ref=e568]: Empareja vistas aumentadas de la misma imagen y separa pares negativos en el espacio latente. Aprende invariancias sin etiquetas.
+                - generic:
+                  - generic: ── PRETEXTO
+                  - img:
+                    - generic: PULL +
+                    - generic: PUSH −
+                    - generic: PUSH −
+              - generic [ref=e569]:
+                - text: FAMILIA · 02 / 03
+                - generic [ref=e570]:
+                  - text: GENERATIVO
+                  - generic [ref=e571]: MAE
+                - paragraph [ref=e572]: Reconstruye porciones enmascaradas de la imagen. La representación emerge del esfuerzo de predecir lo oculto.
+                - generic:
+                  - generic: ── PRETEXTO
+                  - img:
+                    - generic: RECON
+              - generic [ref=e573]:
+                - text: FAMILIA · 03 / 03
+                - generic [ref=e574]:
+                  - text: DESTILACIÓN
+                  - generic [ref=e575]: DINO
+                - paragraph [ref=e576]: Una red estudiante imita un teacher EMA de sí misma. Sin negativos, ViT-friendly, atención semánticamente coherente.
+                - generic:
+                  - generic: ── PRETEXTO
+                  - img:
+                    - generic: TEACHER
+                    - generic: EMA
+                    - generic: DISTILL
+                    - generic: STUDENT
+            - generic [ref=e577]:
+              - generic [ref=e578]:
+                - generic [ref=e579]: ── BACKBONES CANDIDATOS
+                - generic [ref=e580]: 5 ARQUITECTURAS · CNN + VIT
+              - generic [ref=e581]:
+                - generic [ref=e582]: RESNET-50
+                - generic [ref=e583]: EFFICIENTNET-B0
+                - generic [ref=e584]: EFFICIENTNET-B2
+                - generic [ref=e585]: VIT-B/16
+                - generic [ref=e586]: VIT-L/16
+            - generic [ref=e587]:
+              - generic [ref=e588]: ── LAS REPRESENTACIONES SE EXTRAEN SIN INTERVENCIÓN EXPERTA
+              - generic [ref=e589]: “Chaitanya et al., 2023”
+        - generic [ref=e590]:
+          - generic [ref=e591]:
+            - generic [ref=e592]: ←
+            - generic [ref=e593]: →
+            - generic [ref=e594]: NAVEGAR ENTRE TABS
+          - generic [ref=e595]: 05 / 09 · TRES PILARES
+      - generic [ref=e598]:
+        - generic [ref=e599]:
+          - generic [ref=e600]: 05 · METODOLOGÍA · CRISP-DM
+          - generic [ref=e603]: SPRINT ACTIVO · F3
+        - heading "Seis fases canónicas. Cuatro entregables. Una iteración por sprint." [level=2] [ref=e604]
+        - paragraph [ref=e605]: CRISP-DM 1.0 (Wirth & Hipp 2000), adaptado a los cuatro objetivos del proyecto académico de la Universidad Autónoma de Bucaramanga.
+        - generic [ref=e606]:
+          - generic [ref=e607]:
+            - generic [ref=e608]:
+              - generic [ref=e609]: ── CRISP-DM · 6 FASES
+              - generic [ref=e610]: CLICK / 1–6
+            - img [ref=e612]:
+              - button "Fase 1 Comprensión del problema" [ref=e614] [cursor=pointer]:
+                - generic: "01"
+                - generic: BU
+              - button "Fase 2 Comprensión de datos" [ref=e616] [cursor=pointer]:
+                - generic: "02"
+                - generic: DU
+              - button "Fase 3 Preparación de datos" [ref=e618] [cursor=pointer]:
+                - generic: "03"
+                - generic: DP
+              - button "Fase 4 Modelado" [ref=e621] [cursor=pointer]:
+                - generic: "04"
+                - generic: MOD
+              - button "Fase 5 Evaluación" [ref=e624] [cursor=pointer]:
+                - generic: "05"
+                - generic: EV
+              - button "Fase 6 Despliegue" [ref=e626] [cursor=pointer]:
+                - generic: "06"
+                - generic: DEP
+              - generic [ref=e629]: FASE 03
+              - generic [ref=e630]: DP
+              - generic [ref=e631]: Normalización,
+              - generic [ref=e632]: augmentations y partición train/val.
+            - generic [ref=e633]:
+              - generic [ref=e635]: ── 4 OBJETIVOS · MAPEO
+              - list [ref=e636]:
+                - listitem [ref=e637] [cursor=pointer]:
+                  - generic [ref=e638]: "01"
+                  - generic [ref=e639]:
+                    - paragraph [ref=e640]: Identificar conjuntos de datos
+                    - paragraph [ref=e641]: F1·BU · F2·DU · F3·DP
+                    - paragraph: EDA cruzado · 3 datasets · 13 figuras · ranking 9 lesiones
+                  - generic [ref=e642]: DONE
+                - listitem [ref=e643] [cursor=pointer]:
+                  - generic [ref=e644]: "02"
+                  - generic [ref=e645]:
+                    - paragraph [ref=e646]: Diseñar algoritmo SSL
+                    - paragraph [ref=e647]: F4·MOD
+                    - paragraph: SimCLR / BYOL / DINO / MAE · ResNet-50 vs ViT-B/16
+                  - generic [ref=e648]: ACTIVE
+                - listitem [ref=e649] [cursor=pointer]:
+                  - generic [ref=e650]: "03"
+                  - generic [ref=e651]:
+                    - paragraph [ref=e652]: Evaluar el desempeño
+                    - paragraph [ref=e653]: F5·EV
+                    - paragraph: Accuracy · F1 macro · AUC · matriz de confusión
+                  - generic [ref=e654]: NEXT
+                - listitem [ref=e655] [cursor=pointer]:
+                  - generic [ref=e656]: "04"
+                  - generic [ref=e657]:
+                    - paragraph [ref=e658]: Prototipo de aplicación
+                    - paragraph [ref=e659]: F6·DEP
+                    - paragraph: Webapp TRL 4 · carga de imagen + predicción + métricas
+                  - generic [ref=e660]: NEXT
+          - generic [ref=e661]:
+            - generic [ref=e662]:
+              - generic [ref=e663]: ── CRONOGRAMA · 32 SEMANAS · 2 SEMESTRES
+              - generic [ref=e664]: UNAB · 2026-I / 2026-II
+            - paragraph [ref=e665]:
+              - generic [ref=e666]: OBJ 02 →
+              - text: SimCLR / BYOL / DINO / MAE · ResNet-50 vs ViT-B/16
+            - generic [ref=e667]:
+              - generic [ref=e670]:
+                - generic [ref=e672]: S01
+                - generic [ref=e674]: S04
+                - generic [ref=e676]: S08
+                - generic [ref=e678]: S12
+                - generic [ref=e680]: S16
+                - generic [ref=e682]: S20
+                - generic [ref=e684]: S24
+                - generic [ref=e686]: S28
+                - generic [ref=e688]: S32
+              - generic [ref=e691]:
+                - generic [ref=e693]: SEM 14 · AHORA
+                - generic [ref=e695]: ▏2026-II
+              - generic [ref=e696]:
+                - generic [ref=e697] [cursor=pointer]:
+                  - generic [ref=e698]:
+                    - generic [ref=e699]: OBJ · 01
+                    - generic [ref=e700]: EDA cruzado
+                    - generic [ref=e701]: DONE
+                  - generic [ref=e702]:
+                    - generic [ref=e705]: EDA cruzado
+                    - generic [ref=e707]: Marco teórico + estado del arte
+                    - generic [ref=e709]: Redacción anteproyecto + correcciones
+                    - generic [ref=e711]: Sustentación anteproyecto
+                - generic [ref=e712] [cursor=pointer]:
+                  - generic [ref=e713]:
+                    - generic [ref=e714]: OBJ · 02
+                    - generic [ref=e715]: Modelado SSL
+                    - generic [ref=e716]: ACTIVE
+                  - generic [ref=e720]: Diseño algoritmo SSL
+                - generic [ref=e721] [cursor=pointer]:
+                  - generic [ref=e722]:
+                    - generic [ref=e723]: OBJ · 03
+                    - generic [ref=e724]: Evaluación
+                    - generic [ref=e725]: NEXT
+                  - generic [ref=e729]: Entrenamiento + evaluación
+                - generic [ref=e730] [cursor=pointer]:
+                  - generic [ref=e731]:
+                    - generic [ref=e732]: OBJ · 04
+                    - generic [ref=e733]: Prototipo
+                    - generic [ref=e734]: NEXT
+                  - generic [ref=e735]:
+                    - generic [ref=e738]: Prototipo aplicación
+                    - generic [ref=e740]: Documento final + sustentación
+              - generic [ref=e741]:
+                - generic [ref=e742]: DONE
+                - generic [ref=e744]: ACTIVE
+                - generic [ref=e747]: PENDING
+                - generic [ref=e749]: NOW · SEM 14
+            - generic [ref=e751]:
+              - generic [ref=e752]:
+                - generic [ref=e753]: "06"
+                - generic [ref=e754]: FASES CRISP-DM
+              - generic [ref=e755]:
+                - generic [ref=e756]: "32"
+                - generic [ref=e757]: SEMANAS
+              - generic [ref=e758]:
+                - generic [ref=e759]: "04"
+                - generic [ref=e760]: ENTREGABLES
+        - generic [ref=e761]:
+          - generic [ref=e762]: ── PRÓXIMOS HITOS · 2026
+          - generic [ref=e763]:
+            - generic [ref=e764]:
+              - generic [ref=e765]: SEM 16
+              - paragraph [ref=e766]: Sustentación anteproyecto
+              - paragraph [ref=e767]: Cierre 2026-I · jurado UNAB · entrega documento anteproyecto.
+            - generic [ref=e768]:
+              - generic [ref=e769]: SEM 24
+              - paragraph [ref=e770]: Evaluación SSL · F5
+              - paragraph [ref=e771]: Cierre Obj 3 · métricas vs baseline supervisado · matrices de confusión.
+            - generic [ref=e772]:
+              - generic [ref=e773]: SEM 32
+              - paragraph [ref=e774]: Sustentación final
+              - paragraph [ref=e775]: Cierre Obj 4 · prototipo TRL 4 · documento final + defensa.
+        - generic [ref=e776]:
+          - generic [ref=e777]: "1"
+          - generic [ref=e778]: "2"
+          - generic [ref=e779]: "3"
+          - generic [ref=e780]: "4"
+          - generic [ref=e781]: "5"
+          - generic [ref=e782]: "6"
+          - generic [ref=e783]: seleccionar fase CRISP-DM
+      - generic [ref=e785]:
+        - generic [ref=e786]:
+          - generic [ref=e787]:
+            - generic [ref=e788]: 06 · OBJETIVO 1 · ANÁLISIS EXPLORATORIO
+            - generic [ref=e791]: 13 FIGURAS · 3 DATASETS
+          - heading "Tres datasets. Trece figuras." [level=2] [ref=e792]
+          - paragraph [ref=e793]: UNA DECISIÓN.
+          - paragraph [ref=e794]: HAM10000 + BCN20000 forman el núcleo de entrenamiento autosupervisado. CO2Wounds-V2 (Sánchez 2024) entra como trabajo futuro · ancla regional Santander.
+        - generic [ref=e795]:
+          - generic [ref=e796]:
+            - paragraph [ref=e797]: "0"
+            - paragraph [ref=e799]: IMÁGENES NÚCLEO · HAM + BCN
+          - generic [ref=e800]:
+            - paragraph [ref=e801]: "0"
+            - paragraph [ref=e803]: CLASES NÚCLEO · HAM10000
+          - generic [ref=e804]:
+            - paragraph [ref=e805]: "0"
+            - paragraph [ref=e807]: PACIENTES SANTANDER · CO2W
+        - generic [ref=e808]:
+          - generic [ref=e810]:
+            - generic [ref=e812]:
+              - generic [ref=e814]:
+                - generic [ref=e817]: "01"
+                - generic [ref=e818]:
+                  - generic [ref=e819]: STEP 01 · HAM10000
+                  - heading "HAM10000" [level=3] [ref=e820]
+                  - paragraph [ref=e821]: 10.015 imágenes · 7 clases
+                  - paragraph [ref=e822]: Publicado por Tschandl, Rosendahl y Kittler (2018) en Scientific Data. Dermatoscopia estandarizada, 7 clases clínicas, base de prácticamente todo paper de SSL en lesiones cutáneas en los últimos 5 años.
+              - generic [ref=e823]:
+                - generic [ref=e826]: "02"
+                - generic [ref=e827]:
+                  - generic [ref=e828]: STEP 02 · SESGO CRÍTICO
+                  - heading "67 %" [level=3] [ref=e829]
+                  - paragraph [ref=e830]: nevus melanocítico
+                  - paragraph [ref=e831]: Nevus domina HAM. SSL contrastivo necesita esta clase anchor masiva, pero el desbalance se ataca con focal loss y muestreo balanceado durante la fase de modelado.
+              - generic [ref=e832]:
+                - generic [ref=e835]: "03"
+                - generic [ref=e836]:
+                  - generic [ref=e837]: STEP 03 · BCN20000
+                  - heading "BCN20000" [level=3] [ref=e838]
+                  - paragraph [ref=e839]: 18.946 imágenes · binario
+                  - paragraph [ref=e840]: Hospital Clínic Barcelona (2025). Etiquetado binario benigno/maligno cercano a 50/50 · compensa el desbalance nevus de HAM y aporta resolución mediana 1024×1024.
+              - generic [ref=e841]:
+                - generic [ref=e844]: "04"
+                - generic [ref=e845]:
+                  - generic [ref=e846]: STEP 04 · CO2WOUNDS-V2
+                  - heading "96 PACIENTES" [level=3] [ref=e847]
+                  - paragraph [ref=e848]: Santander · cohorte regional
+                  - paragraph [ref=e849]: Cohorte Sánchez et al. 2024 · capturada con celular en Contratación (Santander). Ancla regional invaluable, distribución de dominio distinta al núcleo dermatoscópico. Entra como trabajo futuro de transferencia de dominio.
+              - generic [ref=e850]:
+                - generic [ref=e853]: "05"
+                - generic [ref=e854]:
+                  - generic [ref=e855]: STEP 05 · DECISIÓN NÚCLEO
+                  - heading "HAM + BCN" [level=3] [ref=e856]
+                  - paragraph [ref=e857]: 28.961 imágenes combinadas
+                  - paragraph [ref=e858]: Suficiente para preentrenamiento autosupervisado contrastivo. SimCLR, BYOL, DINO y MAE evaluados sobre ResNet-50 y ViT-B/16 · fase 04 del ciclo CRISP-DM.
+            - generic [ref=e860]:
+              - generic [ref=e861]:
+                - generic [ref=e862]: ── VISUAL · STEP 01 / 05
+                - generic [ref=e863]: S1
+              - generic [ref=e871]: Distribución por clase
+          - generic [ref=e879]:
+            - generic [ref=e880]:
+              - generic [ref=e881]: ── COMPARADOR HAM × BCN
+              - generic [ref=e882]: DRAG · HAM ← → BCN
+            - generic [ref=e883]:
+              - generic [ref=e884]:
+                - generic [ref=e885]:
+                  - generic [ref=e886]: HAM10000 · 10.015 IMG
+                  - generic [ref=e887]: 50%
+                - generic [ref=e891]: Distribución por clase
+              - generic [ref=e893]:
+                - generic [ref=e894]:
+                  - generic [ref=e895]: BCN20000 · 18.946 IMG
+                  - generic [ref=e896]: 50%
+                - generic [ref=e897]:
+                  - generic:
+                    - generic: "18.946"
+                    - generic: Imágenes
+                  - generic [ref=e899]:
+                    - generic [ref=e900]:
+                      - generic [ref=e902]: Benigno
+                      - generic [ref=e903]: 46.8%
+                    - generic [ref=e904]:
+                      - generic [ref=e906]: Maligno
+                      - generic [ref=e907]: 46.8%
+                    - generic [ref=e908]:
+                      - generic [ref=e910]: Indeterminado
+                      - generic [ref=e911]: 5.7%
+            - generic [ref=e913]:
+              - generic [ref=e921]: HAM ◄
+              - generic [ref=e922]: ► BCN
+          - generic [ref=e923]:
+            - generic [ref=e924]: "01"
+            - generic [ref=e925]:
+              - heading "Cobertura cruzada" [level=3] [ref=e926]
+              - paragraph [ref=e927]: ¿qué patologías cubren los datasets?
+          - generic [ref=e928]:
+            - generic [ref=e930]:
+              - generic [ref=e931]:
+                - generic [ref=e933]: HAM
+                - generic [ref=e934]: BCN
+                - generic [ref=e935]: CO2W
+              - generic [ref=e936]:
+                - generic [ref=e938]:
+                  - generic [ref=e939]: Carcinoma basocelular
+                  - generic [ref=e940]: · CRÍTICA
+                - generic [ref=e946]:
+                  - generic [ref=e947]:
+                    - generic [ref=e948]: Carcinoma escamocelular
+                    - generic [ref=e949]: · CRÍTICA
+                  - img [ref=e951]
+                - generic [ref=e957]:
+                  - generic [ref=e958]: Melanoma
+                  - generic [ref=e959]: · CRÍTICA
+                - generic [ref=e966]:
+                  - generic [ref=e967]: Queratosis seborreica
+                  - generic [ref=e968]: · CRÍTICA
+                - generic [ref=e975]:
+                  - generic [ref=e976]: Leishmaniasis cutánea
+                  - generic [ref=e977]: · ALTA
+                - generic [ref=e982]:
+                  - generic [ref=e983]: Acné inflamatorio
+                  - generic [ref=e984]: · MEDIA
+                - generic [ref=e989]:
+                  - generic [ref=e990]: Dermatitis atópica
+                  - generic [ref=e991]: · MEDIA
+                - generic [ref=e995]:
+                  - generic [ref=e996]:
+                    - generic [ref=e997]: Lesiones por presión / LRC
+                    - generic [ref=e998]: · MEDIA
+                  - img [ref=e1002]
+                - generic [ref=e1005]:
+                  - generic [ref=e1006]: Heridas crónicas / lepra
+                  - generic [ref=e1007]: · FUTURO
+                - generic [ref=e1013]:
+                  - generic [ref=e1014]: Hidradenitis supurativa
+                  - generic [ref=e1015]: · BAJA
+              - generic [ref=e1019]:
+                - generic [ref=e1023]: Cubierta
+                - generic [ref=e1024]:
+                  - img [ref=e1026]
+                  - generic [ref=e1028]: Parcial
+                - generic [ref=e1031]: Ausente
+            - generic [ref=e1032]:
+              - generic [ref=e1033]: ── LECTURA CLÍNICA · COBERTURA
+              - paragraph [ref=e1034]:
+                - text: Las cuatro patologías
+                - strong [ref=e1035]: críticas
+                - text: "están cubiertas por HAM y BCN. Las seis ausentes son trabajo futuro: dataset propio o transferencia de dominio."
+              - list [ref=e1037]:
+                - listitem [ref=e1038]:
+                  - generic [ref=e1040]:
+                    - paragraph [ref=e1041]: 4 CRÍTICAS CUBIERTAS
+                    - paragraph: BCC, SCC, melanoma y queratosis seborreica están en HAM y BCN.
+                - listitem [ref=e1042]:
+                  - generic [ref=e1044]:
+                    - paragraph [ref=e1045]: 6 SANTANDEREANAS AUSENTES
+                    - paragraph: Leishmaniasis, dermatitis atópica, acné, LRC, hidradenitis, maskné.
+                - listitem [ref=e1046]:
+                  - generic [ref=e1048]:
+                    - paragraph [ref=e1049]: CO2WOUNDS · HERIDAS CRÓNICAS
+                    - paragraph: Cubre dominio fuera del dermatoscópico · trabajo futuro de transferencia.
+          - generic [ref=e1050]:
+            - generic [ref=e1051]: "02"
+            - generic [ref=e1052]:
+              - heading "Sesgos identificados" [level=3] [ref=e1053]
+              - paragraph [ref=e1054]: siete sesgos · tres de severidad alta
+          - generic [ref=e1055]:
+            - generic [ref=e1057]:
+              - generic [ref=e1060]: Sesgos identificados · Severidad
+              - generic [ref=e1061]:
+                - generic [ref=e1062]:
+                  - generic [ref=e1063]: Adquisición
+                  - generic [ref=e1064]:
+                    - img
+                  - generic [ref=e1065]: Crítico
+                  - generic [ref=e1066]: Dermatoscopia estandarizada vs celular en campo
+                - generic [ref=e1067]:
+                  - generic [ref=e1068]: Fenotípico
+                  - generic [ref=e1069]:
+                    - img
+                  - generic [ref=e1070]: Crítico
+                  - generic [ref=e1071]: Fototipos I-III europeos predominan en HAM/BCN
+                - generic [ref=e1072]:
+                  - generic [ref=e1073]: Cobertura
+                  - generic [ref=e1074]:
+                    - img
+                  - generic [ref=e1075]: Crítico
+                  - generic [ref=e1076]: 6 patologías santandereanas ausentes
+                - generic [ref=e1077]:
+                  - generic [ref=e1078]: Desbalance
+                  - generic [ref=e1079]:
+                    - img
+                  - generic [ref=e1080]: Medio
+                  - generic [ref=e1081]: Nevus = 67 % de HAM10000 · Gini 0,64
+                - generic [ref=e1082]:
+                  - generic [ref=e1083]: Resolución
+                  - generic [ref=e1084]:
+                    - img
+                  - generic [ref=e1085]: Medio
+                  - generic [ref=e1086]: 600×450 uniforme vs heterogénea mediana 1024
+                - generic [ref=e1087]:
+                  - generic [ref=e1088]: Temporal
+                  - generic [ref=e1089]:
+                    - img
+                  - generic [ref=e1090]: Bajo
+                  - generic [ref=e1091]: Imágenes antiguas (HAM 2018) vs realidad 2025
+                - generic [ref=e1092]:
+                  - generic [ref=e1093]: Geográfico
+                  - generic [ref=e1094]:
+                    - img
+                  - generic [ref=e1095]: Medio
+                  - generic [ref=e1096]: Datasets europeos/brasileños vs Santander
+              - generic [ref=e1097]:
+                - generic [ref=e1101]: Crítico
+                - generic [ref=e1102]:
+                  - img [ref=e1104]
+                  - generic [ref=e1106]: Medio
+                - generic [ref=e1110]: Bajo
+            - generic [ref=e1111]:
+              - generic [ref=e1112]: ── RESUMEN
+              - paragraph [ref=e1113]:
+                - text: Tres sesgos de severidad
+                - strong [ref=e1114]: alta
+                - text: · adquisición, fenotípico y cobertura · concentran el riesgo metodológico. Los cuatro restantes se mitigan con augmentación, normalización y reporte desagregado.
+              - generic [ref=e1115]:
+                - generic [ref=e1116]:
+                  - paragraph [ref=e1117]: "03"
+                  - paragraph [ref=e1118]: ALTOS
+                - generic [ref=e1119]:
+                  - paragraph [ref=e1120]: "03"
+                  - paragraph [ref=e1121]: MEDIOS
+                - generic [ref=e1122]:
+                  - paragraph [ref=e1123]: "01"
+                  - paragraph [ref=e1124]: BAJOS
+          - generic [ref=e1125]:
+            - generic [ref=e1126]: "03"
+            - generic [ref=e1127]:
+              - heading "Ranking de prioridad clínica" [level=3] [ref=e1128]
+              - paragraph [ref=e1129]: ── 9 lesiones · jerarquía SSL · click en headers para ordenar
+          - generic [ref=e1130]:
+            - generic [ref=e1131]:
+              - button "# ↑" [ref=e1132]:
+                - text: "#"
+                - generic [ref=e1133]: ↑
+              - button "LESIÓN ↕" [ref=e1134]:
+                - text: LESIÓN
+                - generic [ref=e1135]: ↕
+              - button "PRIORIDAD ↕" [ref=e1136]:
+                - text: PRIORIDAD
+                - generic [ref=e1137]: ↕
+              - button "CATEGORÍA ↕" [ref=e1138]:
+                - text: CATEGORÍA
+                - generic [ref=e1139]: ↕
+            - generic [ref=e1140]:
+              - generic [ref=e1141]:
+                - generic [ref=e1142]: "01"
+                - generic [ref=e1143]:
+                  - paragraph [ref=e1144]: Carcinoma basocelular
+                  - paragraph [ref=e1145]: 124,2/100k + 86,8 % cara y cuello · lesión más frecuente
+                - generic [ref=e1147]: CRÍTICA
+                - generic [ref=e1148]: Maligna
+              - generic [ref=e1149]:
+                - generic [ref=e1150]: "02"
+                - generic [ref=e1151]:
+                  - paragraph [ref=e1152]: Carcinoma escamocelular
+                  - paragraph [ref=e1153]: Parte del 15 % de cáncer de piel HIC
+                - generic [ref=e1155]: CRÍTICA
+                - generic [ref=e1156]: Maligna
+              - generic [ref=e1157]:
+                - generic [ref=e1158]: "03"
+                - generic [ref=e1159]:
+                  - paragraph [ref=e1160]: Melanoma
+                  - paragraph [ref=e1161]: 54 % invasivo · alta letalidad si tardío
+                - generic [ref=e1163]: CRÍTICA
+                - generic [ref=e1164]: Maligna
+              - generic [ref=e1165]:
+                - generic [ref=e1166]: "04"
+                - generic [ref=e1167]:
+                  - paragraph [ref=e1168]: Leishmaniasis ulcerosa
+                  - paragraph [ref=e1169]: Brote 2025 +338 % · relevancia regional crítica
+                - generic [ref=e1171]: ALTA
+                - generic [ref=e1172]: Parasitaria
+              - generic [ref=e1173]:
+                - generic [ref=e1174]: "05"
+                - generic [ref=e1175]:
+                  - paragraph [ref=e1176]: Acné inflamatorio
+                  - paragraph [ref=e1177]: Alta consulta jóvenes · asociación SOP en mujeres
+                - generic [ref=e1179]: MEDIA
+                - generic [ref=e1180]: Inflamatoria
+              - generic [ref=e1181]:
+                - generic [ref=e1182]: "06"
+                - generic [ref=e1183]:
+                  - paragraph [ref=e1184]: Dermatitis atópica
+                  - paragraph [ref=e1185]: Prevalencia general alta · GPC nacional 2024
+                - generic [ref=e1187]: MEDIA
+                - generic [ref=e1188]: Inflamatoria
+              - generic [ref=e1189]:
+                - generic [ref=e1190]: "07"
+                - generic [ref=e1191]:
+                  - paragraph [ref=e1192]: Lesiones por presión
+                  - paragraph [ref=e1193]: Carga hospitalaria significativa
+                - generic [ref=e1195]: MEDIA
+                - generic [ref=e1196]: Hospitalaria
+              - generic [ref=e1197]:
+                - generic [ref=e1198]: "08"
+                - generic [ref=e1199]:
+                  - paragraph [ref=e1200]: Hidradenitis supurativa
+                  - paragraph [ref=e1201]: Crónica, menor frecuencia, alto impacto QoL
+                - generic [ref=e1203]: BAJA
+                - generic [ref=e1204]: Inflamatoria
+              - generic [ref=e1205]:
+                - generic [ref=e1206]: "09"
+                - generic [ref=e1207]:
+                  - paragraph [ref=e1208]: Maskné / perioral
+                  - paragraph [ref=e1209]: Post-COVID, decreciente
+                - generic [ref=e1211]: BAJA
+                - generic [ref=e1212]: Inflamatoria
+          - generic [ref=e1214]:
+            - generic [ref=e1215]:
+              - generic [ref=e1216]: ── DECISIÓN · NÚCLEO DE ENTRENAMIENTO
+              - paragraph [ref=e1217]:
+                - text: HAM10000
+                - text: + BCN20000
+              - paragraph [ref=e1218]: 28.961 imágenes · 7 clases núcleo · balance suficiente para SSL contrastivo. CO2Wounds-V2 entra como trabajo futuro de transferencia de dominio.
+            - generic [ref=e1220]:
+              - generic [ref=e1221]: ── FICHA TÉCNICA
+              - generic [ref=e1222]:
+                - generic [ref=e1223]:
+                  - term [ref=e1224]: IMÁGENES
+                  - definition [ref=e1225]: "28.961"
+                - generic [ref=e1226]:
+                  - term [ref=e1227]: CLASES
+                  - definition [ref=e1228]: 7 núcleo + 1 binaria
+                - generic [ref=e1229]:
+                  - term [ref=e1230]: BACKBONE
+                  - definition [ref=e1231]: ResNet-50 · ViT-B/16
+                - generic [ref=e1232]:
+                  - term [ref=e1233]: PRETEXTO
+                  - definition [ref=e1234]: SimCLR / BYOL / DINO / MAE
+                - generic [ref=e1235]:
+                  - term [ref=e1236]: SPRINT
+                  - definition [ref=e1237]: F4 · MODELADO
+          - generic [ref=e1238]:
+            - generic [ref=e1239]: ↓
+            - generic [ref=e1240]: SCROLL · ACTIVAR STEPS
+            - generic [ref=e1241]: SHIFT
+            - generic [ref=e1242]: +
+            - generic [ref=e1243]: DRAG
+            - generic [ref=e1244]: COMPARADOR HAM × BCN
+          - generic [ref=e1245]:
+            - paragraph [ref=e1246]: ▸ HAM10000 · Tschandl, Rosendahl, Kittler (2018) · Sci. Data
+            - paragraph [ref=e1247]: ▸ BCN20000 · Hospital Clínic Barcelona (2025)
+            - paragraph [ref=e1248]: ▸ CO2Wounds-V2 · Sánchez K. et al. · ICIP 2024
+      - generic [ref=e1251]:
+        - generic [ref=e1252]:
+          - generic [ref=e1253]: 07 · ENTREGABLES + CONTINGENCIA
+          - generic [ref=e1255]: 7 RIESGOS · 4 ENTREGABLES
+        - heading "Cuatro entregables firmes. Siete frentes con plan B sobre la mesa." [level=2] [ref=e1256]:
+          - generic "Cuatro entregables firmes." [ref=e1257]:
+            - generic [ref=e1258]:
+              - generic [ref=e1259]: C
+              - generic [ref=e1260]: u
+              - generic [ref=e1261]: a
+              - generic [ref=e1262]: t
+              - generic [ref=e1263]: r
+              - generic [ref=e1264]: o
+            - generic [ref=e1265]:
+              - generic [ref=e1266]: e
+              - generic [ref=e1267]: "n"
+              - generic [ref=e1268]: t
+              - generic [ref=e1269]: r
+              - generic [ref=e1270]: e
+              - generic [ref=e1271]: g
+              - generic [ref=e1272]: a
+              - generic [ref=e1273]: b
+              - generic [ref=e1274]: l
+              - generic [ref=e1275]: e
+              - generic [ref=e1276]: s
+            - generic [ref=e1277]:
+              - generic [ref=e1278]: f
+              - generic [ref=e1279]: i
+              - generic [ref=e1280]: r
+              - generic [ref=e1281]: m
+              - generic [ref=e1282]: e
+              - generic [ref=e1283]: s
+              - generic [ref=e1284]: .
+          - generic "Siete frentes con plan B sobre la mesa." [ref=e1286]:
+            - generic [ref=e1287]:
+              - generic [ref=e1288]: S
+              - generic [ref=e1289]: i
+              - generic [ref=e1290]: e
+              - generic [ref=e1291]: t
+              - generic [ref=e1292]: e
+            - generic [ref=e1293]:
+              - generic [ref=e1294]: f
+              - generic [ref=e1295]: r
+              - generic [ref=e1296]: e
+              - generic [ref=e1297]: "n"
+              - generic [ref=e1298]: t
+              - generic [ref=e1299]: e
+              - generic [ref=e1300]: s
+            - generic [ref=e1301]:
+              - generic [ref=e1302]: c
+              - generic [ref=e1303]: o
+              - generic [ref=e1304]: "n"
+            - generic [ref=e1305]:
+              - generic [ref=e1306]: p
+              - generic [ref=e1307]: l
+              - generic [ref=e1308]: a
+              - generic [ref=e1309]: "n"
+            - generic [ref=e1311]: B
+            - generic [ref=e1312]:
+              - generic [ref=e1313]: s
+              - generic [ref=e1314]: o
+              - generic [ref=e1315]: b
+              - generic [ref=e1316]: r
+              - generic [ref=e1317]: e
+            - generic [ref=e1318]:
+              - generic [ref=e1319]: l
+              - generic [ref=e1320]: a
+            - generic [ref=e1321]:
+              - generic [ref=e1322]: m
+              - generic [ref=e1323]: e
+              - generic [ref=e1324]: s
+              - generic [ref=e1325]: a
+              - generic [ref=e1326]: .
+        - paragraph [ref=e1328]: Cada riesgo tiene un punto de retorno CRISP-DM ya documentado en el anteproyecto.
+        - generic [ref=e1329]:
+          - generic [ref=e1330]:
+            - generic [ref=e1331]:
+              - generic [ref=e1332]:
+                - generic [ref=e1333]: ── TRL · MADUREZ TECNOLÓGICA
+                - generic [ref=e1334]: 9 NIVELES
+              - generic [ref=e1335]:
+                - generic [ref=e1336]:
+                  - generic [ref=e1337]:
+                    - generic [ref=e1338]: "01"
+                    - generic [ref=e1340]: Principios básicos observados
+                    - generic [ref=e1341]: DONE
+                  - generic:
+                    - paragraph: Observación de fenómenos físicos y reportes iniciales que sustentan la idea. La revisión epidemiológica de Santander cubrió este nivel.
+                - generic [ref=e1342]:
+                  - generic [ref=e1343]:
+                    - generic [ref=e1344]: "02"
+                    - generic [ref=e1346]: Concepto tecnológico formulado
+                    - generic [ref=e1347]: DONE
+                  - generic:
+                    - paragraph: Concepto tecnológico formulado en términos de objetivos, hipótesis y aplicación clínica concreta. Anteproyecto sustenta esta formulación.
+                - generic [ref=e1348]:
+                  - generic [ref=e1349]:
+                    - generic [ref=e1350]: "03"
+                    - generic [ref=e1352]: Prueba experimental de concepto
+                    - generic [ref=e1353]: DONE
+                  - generic:
+                    - paragraph: "Prueba experimental de los principios: EDA cruzado HAM10000 + BCN20000 + CO2Wounds-V2 con 13 figuras y métricas reproducibles."
+                - generic [ref=e1354]:
+                  - generic [ref=e1355]:
+                    - generic [ref=e1356]: "04"
+                    - generic [ref=e1358]: Prototipo validado en laboratorio
+                    - generic [ref=e1359]: TARGET
+                  - generic:
+                    - paragraph: Prototipo SSL entrenado + evaluado + integrado en una app funcional validada en laboratorio. Este es el TRL que comprometemos para PG II.
+                - generic [ref=e1360]:
+                  - generic [ref=e1361]:
+                    - generic [ref=e1362]: "05"
+                    - generic [ref=e1364]: Prototipo validado en entorno relevante
+                    - generic [ref=e1365]: STRETCH
+                  - generic:
+                    - paragraph: Si el prototipo recibe feedback de profesionales en entorno simulado clínico, escalamos a TRL 5 · meta extendida.
+                - generic [ref=e1366]:
+                  - generic [ref=e1367]:
+                    - generic [ref=e1368]: "06"
+                    - generic [ref=e1370]: Sistema demostrado en entorno relevante
+                    - generic [ref=e1371]: ──
+                  - generic:
+                    - paragraph: Sistema demostrado en entorno relevante con datos del Hospital Internacional. Pertenece a un proyecto siguiente.
+                - generic [ref=e1372]:
+                  - generic [ref=e1373]:
+                    - generic [ref=e1374]: "07"
+                    - generic [ref=e1376]: Sistema demostrado en entorno operacional
+                    - generic [ref=e1377]: ──
+                  - generic:
+                    - paragraph: Sistema demostrado en operación real con flujo asistencial. Fuera del alcance de Proyecto de Grado.
+                - generic [ref=e1378]:
+                  - generic [ref=e1379]:
+                    - generic [ref=e1380]: "08"
+                    - generic [ref=e1382]: Sistema completo y calificado
+                    - generic [ref=e1383]: ──
+                  - generic:
+                    - paragraph: Sistema completo, calificado y certificado para uso clínico · requiere INVIMA / certificación regulatoria.
+                - generic [ref=e1384]:
+                  - generic [ref=e1385]:
+                    - generic [ref=e1386]: "09"
+                    - generic [ref=e1388]: Sistema operando en entorno real
+                    - generic [ref=e1389]: ──
+                  - generic:
+                    - paragraph: Sistema en producción dentro de un servicio dermatológico real con seguimiento longitudinal.
+            - generic [ref=e1390]:
+              - generic [ref=e1391]:
+                - generic [ref=e1392]: ── ENTREGABLES · 4
+                - generic [ref=e1394]: UNO POR OBJETIVO
+              - list [ref=e1395]:
+                - listitem [ref=e1396]:
+                  - generic [ref=e1397]:
+                    - generic [ref=e1398]: "01"
+                    - generic [ref=e1400]:
+                      - paragraph [ref=e1401]: Caracterización formal de los datasets
+                      - paragraph [ref=e1402]: HAM10000 + BCN20000 + CO2Wounds-V2 · 13 figuras · entropía / Gini / cobertura
+                    - generic [ref=e1403]: F1
+                - listitem [ref=e1404]:
+                  - generic [ref=e1405]:
+                    - generic [ref=e1406]: "02"
+                    - generic [ref=e1408]:
+                      - paragraph [ref=e1409]: Algoritmo SSL entrenado
+                      - paragraph [ref=e1410]: Backbone + estrategia contrastiva · pesos exportables · reproducible
+                    - generic [ref=e1411]: F2
+                - listitem [ref=e1412]:
+                  - generic [ref=e1413]:
+                    - generic [ref=e1414]: "03"
+                    - generic [ref=e1416]:
+                      - paragraph [ref=e1417]: Evaluación vs línea base supervisada
+                      - paragraph [ref=e1418]: Accuracy · F1 macro · AUC · matriz confusión · análisis desagregado
+                    - generic [ref=e1419]: F3
+                - listitem [ref=e1420]:
+                  - generic [ref=e1421]:
+                    - generic [ref=e1422]: "04"
+                    - generic [ref=e1424]:
+                      - paragraph [ref=e1425]: Prototipo funcional con manual de uso
+                      - paragraph [ref=e1426]: Webapp Streamlit · carga imagen → predicción + Grad-CAM · manual incluido
+                    - generic [ref=e1427]: F4
+          - generic [ref=e1428]:
+            - generic [ref=e1429]:
+              - generic [ref=e1430]: ── 7 FRENTES CON PLAN B
+              - generic [ref=e1432]: HOVER PARA VER PLAN
+            - generic [ref=e1433]:
+              - 'button "Riesgo R1: Desempeño insuficiente del modelo SSL. Click para ver plan de contingencia." [ref=e1434] [cursor=pointer]':
+                - generic [ref=e1435]:
+                  - article [ref=e1436]:
+                    - img
+                    - generic [ref=e1437]:
+                      - generic [ref=e1438]: R1
+                      - generic [ref=e1439]: ALTO
+                    - heading "Desempeño insuficiente del modelo SSL" [level=4] [ref=e1440]
+                    - generic [ref=e1442]:
+                      - generic [ref=e1443]: F3
+                      - generic [ref=e1444]: Fase de retorno CRISP-DM
+                  - article [ref=e1445]:
+                    - text: ── PLAN DE CONTINGENCIA
+                    - paragraph [ref=e1446]: Explorar arquitecturas SSL alternativas; modificar estrategia de aumentación; ajustar curriculum de entrenamiento.
+                    - generic [ref=e1448]: ── RETORNO CRISP-DM
+                    - paragraph [ref=e1449]: F3 → F2
+              - 'button "Riesgo R2: Desbalance severo de clases en el dataset. Click para ver plan de contingencia." [ref=e1450] [cursor=pointer]':
+                - generic [ref=e1451]:
+                  - article [ref=e1452]:
+                    - img
+                    - generic [ref=e1453]:
+                      - generic [ref=e1454]: R2
+                      - generic [ref=e1455]: ALTO
+                    - heading "Desbalance severo de clases en el dataset" [level=4] [ref=e1456]
+                    - generic [ref=e1458]:
+                      - generic [ref=e1459]: F2
+                      - generic [ref=e1460]: Fase de retorno CRISP-DM
+                  - article [ref=e1461]:
+                    - text: ── PLAN DE CONTINGENCIA
+                    - paragraph [ref=e1462]: SMOTE o pesos por clase en la función de pérdida; pondera focal loss; rebalancea batches por sampler estratificado.
+                    - generic [ref=e1464]: ── RETORNO CRISP-DM
+                    - paragraph [ref=e1465]: F2
+              - 'button "Riesgo R3: Limitaciones de cómputo (memoria / GPU). Click para ver plan de contingencia." [ref=e1466] [cursor=pointer]':
+                - generic [ref=e1467]:
+                  - article [ref=e1468]:
+                    - img
+                    - generic [ref=e1469]:
+                      - generic [ref=e1470]: R3
+                      - generic [ref=e1471]: MEDIO
+                    - heading "Limitaciones de cómputo (memoria / GPU)" [level=4] [ref=e1472]
+                    - generic [ref=e1474]:
+                      - generic [ref=e1475]: F2
+                      - generic [ref=e1476]: Fase de retorno CRISP-DM
+                  - article [ref=e1477]:
+                    - text: ── PLAN DE CONTINGENCIA
+                    - paragraph [ref=e1478]: Adoptar arquitecturas más ligeras como backbone (EfficientNet / MobileNet), priorizando viabilidad sobre tamaño.
+                    - generic [ref=e1480]: ── RETORNO CRISP-DM
+                    - paragraph [ref=e1481]: F2
+              - 'button "Riesgo R4: Sesgo de fototipos IV-V en datasets públicos. Click para ver plan de contingencia." [ref=e1482] [cursor=pointer]':
+                - generic [ref=e1483]:
+                  - article [ref=e1484]:
+                    - img
+                    - generic [ref=e1485]:
+                      - generic [ref=e1486]: R4
+                      - generic [ref=e1487]: MEDIO
+                    - heading "Sesgo de fototipos IV-V en datasets públicos" [level=4] [ref=e1488]
+                    - generic [ref=e1490]:
+                      - generic [ref=e1491]: TRANSV
+                      - generic [ref=e1492]: Fase de retorno CRISP-DM
+                  - article [ref=e1493]:
+                    - text: ── PLAN DE CONTINGENCIA
+                    - paragraph [ref=e1494]: Documentar como limitación; reportar desempeño desagregado por fototipo; proponer trabajo futuro con datos regionales de Santander.
+                    - generic [ref=e1496]: ── RETORNO CRISP-DM
+                    - paragraph [ref=e1497]: TRANSV
+              - 'button "Riesgo R5: Cobertura de clases vs perfil epidemiológico regional. Click para ver plan de contingencia." [ref=e1498] [cursor=pointer]':
+                - generic [ref=e1499]:
+                  - article [ref=e1500]:
+                    - img
+                    - generic [ref=e1501]:
+                      - generic [ref=e1502]: R5
+                      - generic [ref=e1503]: MEDIO
+                    - heading "Cobertura de clases vs perfil epidemiológico regional" [level=4] [ref=e1504]
+                    - generic [ref=e1506]:
+                      - generic [ref=e1507]: F1
+                      - generic [ref=e1508]: Fase de retorno CRISP-DM
+                  - article [ref=e1509]:
+                    - text: ── PLAN DE CONTINGENCIA
+                    - paragraph [ref=e1510]: Combinar varios datasets compatibles; ajustar criterios de inclusión; priorizar las 4 patologías críticas de Santander.
+                    - generic [ref=e1512]: ── RETORNO CRISP-DM
+                    - paragraph [ref=e1513]: F1
+              - 'button "Riesgo R6: Pérdida de trazabilidad de experimentos. Click para ver plan de contingencia." [ref=e1514] [cursor=pointer]':
+                - generic [ref=e1515]:
+                  - article [ref=e1516]:
+                    - img
+                    - generic [ref=e1517]:
+                      - generic [ref=e1518]: R6
+                      - generic [ref=e1519]: MEDIO
+                    - heading "Pérdida de trazabilidad de experimentos" [level=4] [ref=e1520]
+                    - generic [ref=e1522]:
+                      - generic [ref=e1523]: TRANSV
+                      - generic [ref=e1524]: Fase de retorno CRISP-DM
+                  - article [ref=e1525]:
+                    - text: ── PLAN DE CONTINGENCIA
+                    - paragraph [ref=e1526]: Registrar en plataforma de seguimiento (MLflow / WandB); versionar código y datasets con Git + DVC.
+                    - generic [ref=e1528]: ── RETORNO CRISP-DM
+                    - paragraph [ref=e1529]: TRANSV
+              - 'button "Riesgo R7: Discrepancia laboratorio vs prototipo. Click para ver plan de contingencia." [ref=e1530] [cursor=pointer]':
+                - generic [ref=e1531]:
+                  - article [ref=e1532]:
+                    - img
+                    - generic [ref=e1533]:
+                      - generic [ref=e1534]: R7
+                      - generic [ref=e1535]: MEDIO
+                    - heading "Discrepancia laboratorio vs prototipo" [level=4] [ref=e1536]
+                    - generic [ref=e1538]:
+                      - generic [ref=e1539]: F4
+                      - generic [ref=e1540]: Fase de retorno CRISP-DM
+                  - article [ref=e1541]:
+                    - text: ── PLAN DE CONTINGENCIA
+                    - paragraph [ref=e1542]: Pruebas funcionales con imágenes externas; alinear pipeline de preprocesamiento entre training y inference.
+                    - generic [ref=e1544]: ── RETORNO CRISP-DM
+                    - paragraph [ref=e1545]: F4 → F3
+        - generic [ref=e1546]:
+          - generic [ref=e1547]:
+            - text: ── COMPROMISO PÚBLICO
+            - paragraph [ref=e1548]: Cada retroceso CRISP-DM está documentado en el anteproyecto. No hay improvisación.
+          - generic [ref=e1549]:
+            - generic [ref=e1550]:
+              - generic [ref=e1551]: "09"
+              - generic [ref=e1552]: SEMANAS COMPLETADAS
+            - generic [ref=e1553]:
+              - generic [ref=e1554]: "32"
+              - generic [ref=e1555]: SEMANAS TOTALES
+            - generic [ref=e1556]:
+              - generic [ref=e1557]: TRL 4
+              - generic [ref=e1558]: OBJETIVO
+            - generic [ref=e1559]:
+              - generic [ref=e1560]: TRL 5
+              - generic [ref=e1561]: STRETCH
+        - generic [ref=e1562]:
+          - generic [ref=e1563]: Hover
+          - generic [ref=e1564]: voltear riesgo
+          - generic [ref=e1565]: Click
+          - generic [ref=e1566]: expandir TRL
+      - generic [ref=e1568]:
+        - generic [ref=e1569]:
+          - generic [ref=e1570]:
+            - generic [ref=e1571]: 08 · CIERRE · Q&A
+            - generic [ref=e1573]: END OF DOCUMENT · 09 / 09
+          - generic [ref=e1574]:
+            - heading "Quedamos atentos a sus preguntas." [level=2] [ref=e1575]:
+              - generic "Quedamos" [ref=e1576]:
+                - generic [ref=e1577]:
+                  - generic [ref=e1578]: Q
+                  - generic [ref=e1579]: u
+                  - generic [ref=e1580]: e
+                  - generic [ref=e1581]: d
+                  - generic [ref=e1582]: a
+                  - generic [ref=e1583]: m
+                  - generic [ref=e1584]: o
+                  - generic [ref=e1585]: s
+              - generic "atentos" [ref=e1586]:
+                - generic [ref=e1587]:
+                  - generic [ref=e1588]: a
+                  - generic [ref=e1589]: t
+                  - generic [ref=e1590]: e
+                  - generic [ref=e1591]: "n"
+                  - generic [ref=e1592]: t
+                  - generic [ref=e1593]: o
+                  - generic [ref=e1594]: s
+              - generic "a sus preguntas." [ref=e1595]:
+                - generic [ref=e1597]: a
+                - generic [ref=e1598]:
+                  - generic [ref=e1599]: s
+                  - generic [ref=e1600]: u
+                  - generic [ref=e1601]: s
+                - generic [ref=e1602]:
+                  - generic [ref=e1603]: p
+                  - generic [ref=e1604]: r
+                  - generic [ref=e1605]: e
+                  - generic [ref=e1606]: g
+                  - generic [ref=e1607]: u
+                  - generic [ref=e1608]: "n"
+                  - generic [ref=e1609]: t
+                  - generic [ref=e1610]: a
+                  - generic [ref=e1611]: s
+                  - generic [ref=e1612]: .
+            - paragraph [ref=e1613]: El primer objetivo deja una base reproducible. Lo que viene se construye sobre estos datos.
+          - generic [ref=e1614]:
+            - generic [ref=e1615]:
+              - generic [ref=e1616]:
+                - generic [ref=e1617]: ── AGRADECIMIENTOS
+                - generic [ref=e1618]: 03 PERSONAS
+              - generic [ref=e1619]:
+                - generic [ref=e1620]:
+                  - paragraph [ref=e1621]: DIRECCIÓN
+                  - paragraph [ref=e1622]: Andrés Felipe Jerez Ariza
+                  - paragraph [ref=e1623]: UNAB · Ingeniería de Sistemas
+                - generic [ref=e1624]:
+                  - paragraph [ref=e1625]: ASESORÍA · CO-DIRECTORA
+                  - paragraph [ref=e1626]: Karen Yaneth Sánchez Quiroga
+                  - paragraph [ref=e1627]: King Abdullah University of Science and Technology (KAUST)
+                - generic [ref=e1628]:
+                  - paragraph [ref=e1629]: JURADO
+                  - paragraph [ref=e1630]: Comité evaluador · Proyecto de Grado I
+                  - paragraph [ref=e1631]: Por la rigurosidad y disponibilidad
+              - generic [ref=e1632]:
+                - text: ── CONTACTO
+                - generic [ref=e1633]:
+                  - paragraph [ref=e1634]:
+                    - generic [ref=e1635]: MAIL.A ·
+                    - text: nmoreno@unab.edu.co
+                  - paragraph [ref=e1636]:
+                    - generic [ref=e1637]: MAIL.B ·
+                    - text: psaavedra@unab.edu.co
+                  - paragraph [ref=e1638]:
+                    - generic [ref=e1639]: REPO ·
+                    - text: github.com/nicomoreno/sustentacion-objetivo1
+                  - paragraph [ref=e1640]:
+                    - generic [ref=e1641]: TEL ·
+                    - text: +57 ·· UNAB Bucaramanga
+            - complementary [ref=e1642]:
+              - generic [ref=e1643]:
+                - generic [ref=e1644]:
+                  - generic [ref=e1645]: ── REPOSITORIO + COLAB
+                  - generic [ref=e1646]: SCAN ↗
+                - img "QR code · github.com/nicomoreno/sustentacion-objetivo1" [ref=e1649]
+                - paragraph [ref=e1651]: github.com/nicomoreno/sustentacion-objetivo1
+                - generic [ref=e1652]:
+                  - generic [ref=e1653]:
+                    - paragraph [ref=e1654]: CODE
+                    - paragraph [ref=e1655]: MIT
+                  - generic [ref=e1656]:
+                    - paragraph [ref=e1657]: DATA
+                    - paragraph [ref=e1658]: CC-BY-NC 4.0
+                  - generic [ref=e1659]:
+                    - paragraph [ref=e1660]: PROTO
+                    - paragraph [ref=e1661]: STREAMLIT
+        - generic [ref=e1662]:
+          - generic [ref=e1663]:
+            - generic [ref=e1664]: ── REFERENCIAS · 20
+            - group "Filtro de referencias" [ref=e1666]:
+              - button "TODAS" [pressed] [ref=e1667] [cursor=pointer]
+              - button "EPIDEMIO" [ref=e1668] [cursor=pointer]
+              - button "SSL" [ref=e1669] [cursor=pointer]
+              - button "NORMATIVA" [ref=e1670] [cursor=pointer]
+          - generic [ref=e1672]:
+            - article [ref=e1673]:
+              - generic [ref=e1674]:
+                - generic [ref=e1675]: "[01]"
+                - generic [ref=e1676]: EPIDEMIO
+              - paragraph [ref=e1678]: Uribe CJ et al. · 2018
+              - paragraph [ref=e1679]: Carcinoma basocelular de piel en el área metropolitana de Bucaramanga
+              - paragraph [ref=e1680]: Rev Asoc Colomb Dermatol Cir Dermatol 26(1)
+              - paragraph [ref=e1681]: asocolderma.org.co
+            - article [ref=e1682]:
+              - generic [ref=e1683]:
+                - generic [ref=e1684]: "[02]"
+                - generic [ref=e1685]: EPIDEMIO
+              - paragraph [ref=e1687]: FCV / HIC · 2024
+              - paragraph [ref=e1688]: El 15 % de los diagnósticos oncológicos del HIC son de piel
+              - paragraph [ref=e1689]: Comunicado de prensa · Fundación Cardiovascular
+              - paragraph [ref=e1690]: fcv.org
+            - article [ref=e1691]:
+              - generic [ref=e1692]:
+                - generic [ref=e1693]: "[03]"
+                - generic [ref=e1694]: EPIDEMIO
+              - paragraph [ref=e1696]: SIVIGILA / INS · 2025
+              - paragraph [ref=e1697]: Boletín Epidemiológico Semana 26 · Leishmaniasis Landázuri
+              - paragraph [ref=e1698]: Instituto Nacional de Salud
+              - paragraph [ref=e1699]: ins.gov.co
+            - article [ref=e1700]:
+              - generic [ref=e1701]:
+                - generic [ref=e1702]: "[04]"
+                - generic [ref=e1703]: DATASET
+              - paragraph [ref=e1705]: Tschandl P, Rosendahl C, Kittler H · 2018
+              - paragraph [ref=e1706]: HAM10000 · Multi-source dermatoscopic images of common pigmented skin lesions
+              - paragraph [ref=e1707]: Scientific Data 5, 180161
+              - paragraph [ref=e1708]: 10.1038/sdata.2018.161
+            - article [ref=e1709]:
+              - generic [ref=e1710]:
+                - generic [ref=e1711]: "[05]"
+                - generic [ref=e1712]: SSL
+              - paragraph [ref=e1714]: Calderón C, Sánchez K, Argüello H · 2021
+              - paragraph [ref=e1715]: Red bilineal convolucional para clasificación HAM10000
+              - paragraph [ref=e1716]: Investigación e Innovación · Colombia
+              - paragraph [ref=e1717]: uis.edu.co
+            - article [ref=e1718]:
+              - generic [ref=e1719]:
+                - generic [ref=e1720]: "[06]"
+                - generic [ref=e1721]: SSL
+              - paragraph [ref=e1723]: Fabian S et al. · 2024
+              - paragraph [ref=e1724]: DINO clustering para detección de ugly duckling en lesiones cutáneas
+              - paragraph [ref=e1725]: Computer Vision · Suiza
+              - paragraph [ref=e1726]: arxiv.org/abs/2403
+            - article [ref=e1727]:
+              - generic [ref=e1728]:
+                - generic [ref=e1729]: "[07]"
+                - generic [ref=e1730]: SSL
+              - paragraph [ref=e1732]: Harczos T et al. · 2024
+              - paragraph [ref=e1733]: Barlow Twins para clasificación dermatológica en ISIC 2019
+              - paragraph [ref=e1734]: Diagnostics 14(6) · MDPI
+              - paragraph [ref=e1735]: 10.3390/diagnostics14060627
+            - article [ref=e1736]:
+              - generic [ref=e1737]:
+                - generic [ref=e1738]: "[08]"
+                - generic [ref=e1739]: SSL
+              - paragraph [ref=e1741]: Yan S et al. · 2025
+              - paragraph [ref=e1742]: PanDerm · Foundation model con 2M imágenes dermatológicas
+              - paragraph [ref=e1743]: Nature Medicine
+              - paragraph [ref=e1744]: 10.1038/s41591-025
+            - article [ref=e1745]:
+              - generic [ref=e1746]:
+                - generic [ref=e1747]: "[09]"
+                - generic [ref=e1748]: SSL
+              - paragraph [ref=e1750]: Ríos-Duarte JA et al. · 2024
+              - paragraph [ref=e1751]: CNNs sobre imágenes clínicas vs dermatoscópicas
+              - paragraph [ref=e1752]: Skin Research and Technology · Uniandes
+              - paragraph [ref=e1753]: 10.1111/srt.13568
+            - article [ref=e1754]:
+              - generic [ref=e1755]:
+                - generic [ref=e1756]: "[10]"
+                - generic [ref=e1757]: SSL
+              - paragraph [ref=e1759]: Flórez Fuentes JS et al. · 2022
+              - paragraph [ref=e1760]: Comparativa SVM / KNN / NN / Trees en HAM10000
+              - paragraph [ref=e1761]: Rev Colombiana de Tec. Avanzada
+              - paragraph [ref=e1762]: unipamplona.edu.co
+            - article [ref=e1763]:
+              - generic [ref=e1764]:
+                - generic [ref=e1765]: "[11]"
+                - generic [ref=e1766]: METODOLOGIA
+              - paragraph [ref=e1768]: Torres Ospina et al. · 2025
+              - paragraph [ref=e1769]: Revisión PRISMA · 25 estudios IA aplicada a piel
+              - paragraph [ref=e1770]: Ibero Ciencias
+              - paragraph [ref=e1771]: iberoamericana.edu.co
+            - article [ref=e1772]:
+              - generic [ref=e1773]:
+                - generic [ref=e1774]: "[12]"
+                - generic [ref=e1775]: SSL
+              - paragraph [ref=e1777]: Himel GMS et al. · 2024
+              - paragraph [ref=e1778]: SkinTrans · Vision Transformer sobre HAM10000
+              - paragraph [ref=e1779]: Sensors 24(3) · MDPI
+              - paragraph [ref=e1780]: 10.3390/s24030781
+            - article [ref=e1781]:
+              - generic [ref=e1782]:
+                - generic [ref=e1783]: "[13]"
+                - generic [ref=e1784]: SSL
+              - paragraph [ref=e1786]: Krishnan R, Rajpurkar P, Topol EJ · 2022
+              - paragraph [ref=e1787]: Self-supervised learning in medicine and healthcare
+              - paragraph [ref=e1788]: Nature Biomedical Engineering
+              - paragraph [ref=e1789]: 10.1038/s41551-022-00914-1
+            - article [ref=e1790]:
+              - generic [ref=e1791]:
+                - generic [ref=e1792]: "[14]"
+                - generic [ref=e1793]: SSL
+              - paragraph [ref=e1795]: Chaitanya K et al. · 2023
+              - paragraph [ref=e1796]: Contrastive self-supervised learning en imagen médica
+              - paragraph [ref=e1797]: Medical Image Analysis
+              - paragraph [ref=e1798]: 10.1016/j.media.2023
+            - article [ref=e1799]:
+              - generic [ref=e1800]:
+                - generic [ref=e1801]: "[15]"
+                - generic [ref=e1802]: NORMATIVA
+              - paragraph [ref=e1804]: Asocolderma · 2024
+              - paragraph [ref=e1805]: Guía de Práctica Clínica · Dermatitis atópica
+              - paragraph [ref=e1806]: Asociación Colombiana de Dermatología
+              - paragraph [ref=e1807]: asocolderma.org.co/gpc
+            - article [ref=e1808]:
+              - generic [ref=e1809]:
+                - generic [ref=e1810]: "[16]"
+                - generic [ref=e1811]: METODOLOGIA
+              - paragraph [ref=e1813]: Wirth R, Hipp J · 2000
+              - paragraph [ref=e1814]: CRISP-DM · Towards a standard process model for data mining
+              - paragraph [ref=e1815]: Proc. PAKDD 2000
+              - paragraph [ref=e1816]: crisp-dm.eu
+            - article [ref=e1817]:
+              - generic [ref=e1818]:
+                - generic [ref=e1819]: "[17]"
+                - generic [ref=e1820]: NORMATIVA
+              - paragraph [ref=e1822]: Parlamento Europeo · 2016
+              - paragraph [ref=e1823]: Reglamento General de Protección de Datos · GDPR
+              - paragraph [ref=e1824]: Diario Oficial UE L 119/1
+              - paragraph [ref=e1825]: eur-lex.europa.eu
+            - article [ref=e1826]:
+              - generic [ref=e1827]:
+                - generic [ref=e1828]: "[18]"
+                - generic [ref=e1829]: NORMATIVA
+              - paragraph [ref=e1831]: Congreso de Colombia · 2012
+              - paragraph [ref=e1832]: Ley 1581 + Decreto 1377 / 2013 · Protección Datos Personales
+              - paragraph [ref=e1833]: República de Colombia
+              - paragraph [ref=e1834]: mintic.gov.co
+            - article [ref=e1835]:
+              - generic [ref=e1836]:
+                - generic [ref=e1837]: "[19]"
+                - generic [ref=e1838]: NORMATIVA
+              - paragraph [ref=e1840]: CONPES 4144 · DNP · 2023
+              - paragraph [ref=e1841]: Política Nacional de Inteligencia Artificial · Colombia
+              - paragraph [ref=e1842]: Departamento Nacional de Planeación
+              - paragraph [ref=e1843]: dnp.gov.co
+            - article [ref=e1844]:
+              - generic [ref=e1845]:
+                - generic [ref=e1846]: "[20]"
+                - generic [ref=e1847]: METODOLOGIA
+              - paragraph [ref=e1849]: Hammimou Y et al. · 2025
+              - paragraph [ref=e1850]: Skin lesion segmentation · revisión sistemática
+              - paragraph [ref=e1851]: Scientific African
+              - paragraph [ref=e1852]: 10.1016/j.sciaf.2025
+          - generic [ref=e1853]:
+            - generic [ref=e1854]: ←
+            - generic [ref=e1855]: →
+            - generic [ref=e1856]: arrastrar para navegar
+            - generic [ref=e1857]: 20 / 20
+          - generic [ref=e1858]:
+            - generic [ref=e1859]:
+              - generic [ref=e1860]: ── UNIVERSIDAD
+              - paragraph [ref=e1861]: Universidad Autónoma de Bucaramanga · Ingeniería de Sistemas
+              - paragraph [ref=e1862]: Proyecto de Grado I · 2026
+            - generic [ref=e1863]:
+              - text: ── FIN DE LA SUSTENTACIÓN
+              - paragraph [ref=e1865]: 01 OBJETIVO COMPLETADO · 03 PENDIENTES
+          - generic [ref=e1866]:
+            - generic [ref=e1867]:
+              - generic [ref=e1868]: "N"
+              - generic [ref=e1869]: notas
+            - generic [ref=e1870]:
+              - generic [ref=e1871]: T
+              - generic [ref=e1872]: timer
+            - generic [ref=e1873]:
+              - generic [ref=e1874]: R
+              - generic [ref=e1875]: reset
+            - generic [ref=e1876]: MONO X7 · 2026
+  - generic [ref=e1879]:
+    - button "Menu" [ref=e1880]:
+      - img [ref=e1882]
+      - generic: Menu
+    - button "Inspect" [ref=e1886]:
+      - img [ref=e1888]
+      - generic: Inspect
+    - button "Audit" [ref=e1890]:
+      - img [ref=e1892]
+      - generic: Audit
+    - button "Settings" [ref=e1895]:
+      - img [ref=e1897]
+      - generic: Settings

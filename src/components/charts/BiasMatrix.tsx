@@ -3,16 +3,21 @@ import { biasMatrix } from '@/data/eda';
 
 type Severity = 'high' | 'medium' | 'low';
 
+// ─────────────────────────────────────────────────────────────────────
+// DAYOS · Bias severity bars
+// high → ink · medium → ash · low → fog
+// Action-green dot marker on every row for visual rhythm.
+// ─────────────────────────────────────────────────────────────────────
 const SEVERITY_FILL: Record<Severity, string> = {
-  high: '#292929',
-  medium: 'url(#biasHatch)',
-  low: '#b4b8b4',
+  high: '#000000',
+  medium: '#444444',
+  low: '#979797',
 };
 
 const SEVERITY_LABEL: Record<Severity, string> = {
-  high: 'Crítico',
-  medium: 'Medio',
-  low: 'Bajo',
+  high: 'alto',
+  medium: 'medio',
+  low: 'bajo',
 };
 
 const SEVERITY_WIDTH: Record<Severity, string> = {
@@ -24,167 +29,116 @@ const SEVERITY_WIDTH: Record<Severity, string> = {
 export default function BiasMatrix() {
   return (
     <div className="w-full">
-      {/* Header rule */}
-      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[#292929]">
-        <span aria-hidden className="block h-px w-6 bg-[#292929]" />
+      <div className="flex items-baseline justify-between gap-3 mb-4">
+        <span className="eyebrow-up">── SESGOS · 7</span>
         <span
           style={{
-            fontFamily: "'Oswald', Impact, sans-serif",
+            fontFamily: "'IBM Plex Mono', monospace",
             fontSize: 11,
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: '#292929',
+            letterSpacing: '0.1em',
+            color: '#979797',
+            fontVariantNumeric: 'tabular-nums',
           }}
         >
-          Sesgos identificados · Severidad
+          severidad · ink ramp
         </span>
       </div>
 
-      {/* Inline SVG defs for hatch pattern (reused per row) */}
-      <svg width="0" height="0" className="absolute" aria-hidden>
-        <defs>
-          <pattern
-            id="biasHatch"
-            patternUnits="userSpaceOnUse"
-            width="6"
-            height="6"
-            patternTransform="rotate(45)"
-          >
-            <rect width="6" height="6" fill="#ffffff" />
-            <line x1="0" y1="0" x2="0" y2="6" stroke="#292929" strokeWidth="1" />
-          </pattern>
-        </defs>
-      </svg>
-
-      <div className="space-y-2.5">
+      <div className="space-y-4">
         {biasMatrix.map((b, i) => {
           const sev = b.severity as Severity;
           return (
             <motion.div
               key={b.bias}
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * i, duration: 0.4 }}
+              transition={{ delay: 0.04 * i, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
-              className="grid grid-cols-[110px_1fr_70px] items-center gap-3"
             >
-              {/* Bias name */}
-              <span
-                style={{
-                  fontFamily: "'Oswald', Impact, sans-serif",
-                  fontSize: 11,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#292929',
-                  lineHeight: 1.15,
-                }}
-              >
-                {b.bias}
-              </span>
-
-              {/* Severity bar · 1px ink frame, hard-edged fill */}
-              <div
-                className="relative h-3 border border-[#292929]"
-                style={{ borderRadius: 0, background: '#ffffff' }}
-              >
-                <motion.svg
-                  initial={{ width: 0 }}
-                  whileInView={{ width: SEVERITY_WIDTH[sev] }}
-                  transition={{ delay: 0.2 + i * 0.05, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  viewport={{ once: true }}
-                  className="absolute inset-y-0 left-0 h-full"
-                  preserveAspectRatio="none"
-                >
-                  <rect
-                    width="100%"
-                    height="100%"
-                    fill={SEVERITY_FILL[sev]}
-                    style={{ borderRadius: 0 }}
+              {/* Row header */}
+              <div className="flex items-baseline justify-between gap-3 mb-1.5">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span
+                    aria-hidden
+                    style={{
+                      display: 'inline-block',
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      background: sev === 'high' ? '#000000' : '#d1ffca',
+                      flexShrink: 0,
+                    }}
                   />
-                </motion.svg>
+                  <span
+                    style={{
+                      fontFamily: "'Inter', system-ui, sans-serif",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: '#000000',
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    {b.bias}
+                  </span>
+                </div>
+                <span
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    color: SEVERITY_FILL[sev],
+                    fontVariantNumeric: 'tabular-nums',
+                  }}
+                >
+                  {SEVERITY_LABEL[sev]}
+                </span>
               </div>
 
-              {/* Severity label */}
-              <span
-                className="text-right"
+              {/* Severity bar */}
+              <div
+                className="relative w-full"
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 10,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#292929',
-                  fontVariantNumeric: 'tabular-nums',
+                  height: 8,
+                  borderRadius: 4,
+                  background: '#ffffff',
+                  border: '1px solid rgba(0, 0, 0, 0.04)',
+                  overflow: 'hidden',
                 }}
               >
-                {SEVERITY_LABEL[sev]}
-              </span>
+                <motion.div
+                  initial={{ width: 0 }}
+                  whileInView={{ width: SEVERITY_WIDTH[sev] }}
+                  transition={{
+                    delay: 0.2 + i * 0.04,
+                    duration: 0.7,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  viewport={{ once: true }}
+                  style={{
+                    height: '100%',
+                    background: SEVERITY_FILL[sev],
+                    borderRadius: 4,
+                  }}
+                />
+              </div>
 
-              {/* Description spans full row */}
-              <span
-                className="col-span-3 -mt-1"
+              {/* Description */}
+              <p
+                className="mt-2"
                 style={{
                   fontFamily: "'Inter', system-ui, sans-serif",
-                  fontSize: 11,
-                  color: '#292929',
+                  fontSize: 12,
+                  color: '#444444',
                   lineHeight: 1.4,
+                  letterSpacing: '-0.01em',
                 }}
               >
                 {b.desc}
-              </span>
+              </p>
             </motion.div>
           );
         })}
-      </div>
-
-      {/* Legend */}
-      <div className="mt-5 flex flex-wrap items-center gap-4">
-        {(['high', 'medium', 'low'] as Severity[]).map((sev) => (
-          <span
-            key={sev}
-            className="inline-flex items-center gap-2 px-2 py-1 border border-[#292929]"
-            style={{ borderRadius: 0 }}
-          >
-            <span
-              aria-hidden
-              className="relative block h-3 w-4 border border-[#292929]"
-              style={{ borderRadius: 0 }}
-            >
-              {sev === 'high' && (
-                <span className="absolute inset-0" style={{ background: '#292929' }} />
-              )}
-              {sev === 'medium' && (
-                <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern
-                      id={`biasLegendHatch-${sev}`}
-                      patternUnits="userSpaceOnUse"
-                      width="4"
-                      height="4"
-                      patternTransform="rotate(45)"
-                    >
-                      <line x1="0" y1="0" x2="0" y2="4" stroke="#292929" strokeWidth="1" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill={`url(#biasLegendHatch-${sev})`} />
-                </svg>
-              )}
-              {sev === 'low' && (
-                <span className="absolute inset-0" style={{ background: '#b4b8b4' }} />
-              )}
-            </span>
-            <span
-              style={{
-                fontFamily: "'Oswald', Impact, sans-serif",
-                fontSize: 11,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#292929',
-              }}
-            >
-              {SEVERITY_LABEL[sev]}
-            </span>
-          </span>
-        ))}
       </div>
     </div>
   );

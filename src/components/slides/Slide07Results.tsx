@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { trlLevels, risks } from '@/data/eda';
+import { trlLevels } from '@/data/eda';
 import {
   Cpu,
   BarChart3,
@@ -16,7 +16,9 @@ import ScrollReveal from '@/components/reactbits/ScrollReveal';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-// ── TRL · labels textbook (verbatim de PG)
+// ─────────────────────────────────────────────────────────────────────
+// TRL · labels textbook + detail
+// ─────────────────────────────────────────────────────────────────────
 const TRL_LABELS = [
   'Principios básicos observados',
   'Concepto tecnológico formulado',
@@ -30,22 +32,24 @@ const TRL_LABELS = [
 ];
 
 const TRL_DETAIL = [
-  'Observación de fenómenos físicos y reportes iniciales que sustentan la idea. La revisión epidemiológica de Santander cubrió este nivel.',
-  'Concepto tecnológico formulado en términos de objetivos, hipótesis y aplicación clínica concreta. Anteproyecto sustenta esta formulación.',
-  'Prueba experimental de los principios: EDA cruzado HAM10000 + BCN20000 + CO2Wounds-V2 con 13 figuras y métricas reproducibles.',
-  'Prototipo SSL entrenado + evaluado + integrado en una app funcional validada en laboratorio. Este es el TRL que comprometemos para PG II.',
-  'Si el prototipo recibe feedback de profesionales en entorno simulado clínico, escalamos a TRL 5 · meta extendida.',
-  'Sistema demostrado en entorno relevante con datos del Hospital Internacional. Pertenece a un proyecto siguiente.',
+  'Observación de fenómenos físicos y reportes iniciales. La revisión epidemiológica de Santander cubrió este nivel.',
+  'Concepto tecnológico formulado: hipótesis y aplicación clínica concreta documentadas en el anteproyecto.',
+  'Prueba experimental de principios: EDA cruzado HAM + BCN + CO2W con 13 figuras y métricas reproducibles.',
+  'Prototipo SSL entrenado + evaluado + integrado en app funcional validada en laboratorio. Objetivo PG II.',
+  'Si el prototipo recibe feedback de profesionales en entorno simulado, escalamos a TRL 5 — meta extendida.',
+  'Sistema demostrado en entorno relevante con datos del Hospital Internacional. Proyecto siguiente.',
   'Sistema demostrado en operación real con flujo asistencial. Fuera del alcance de Proyecto de Grado.',
-  'Sistema completo, calificado y certificado para uso clínico · requiere INVIMA / certificación regulatoria.',
+  'Sistema completo, calificado y certificado para uso clínico — requiere INVIMA / certificación.',
   'Sistema en producción dentro de un servicio dermatológico real con seguimiento longitudinal.',
 ];
 
-// ── Entregables firmes (1 por objetivo)
+// ─────────────────────────────────────────────────────────────────────
+// ENTREGABLES · 4 por objetivo
+// ─────────────────────────────────────────────────────────────────────
 const DELIVERABLES = [
   {
     n: 1,
-    title: 'Caracterización formal de los datasets',
+    title: 'Caracterización formal de datasets',
     detail: 'HAM10000 + BCN20000 + CO2Wounds-V2 · 13 figuras · entropía / Gini / cobertura',
     phase: 'F1',
   },
@@ -58,25 +62,27 @@ const DELIVERABLES = [
   {
     n: 3,
     title: 'Evaluación vs línea base supervisada',
-    detail: 'Accuracy · F1 macro · AUC · matriz confusión · análisis desagregado',
+    detail: 'Accuracy · F1 macro · AUC · matriz de confusión · análisis desagregado',
     phase: 'F3',
   },
   {
     n: 4,
-    title: 'Prototipo funcional con manual de uso',
+    title: 'Prototipo funcional con manual',
     detail: 'Webapp Streamlit · carga imagen → predicción + Grad-CAM · manual incluido',
     phase: 'F4',
   },
 ];
 
-// ── Risk metadata enriquecida
+// ─────────────────────────────────────────────────────────────────────
+// RIESGOS
+// ─────────────────────────────────────────────────────────────────────
 type Severity = 'ALTO' | 'MEDIO' | 'BAJO';
 type RiskMeta = {
   id: string;
   name: string;
   severity: Severity;
-  phaseLabel: string; // F1 / F2 / F3 / F4 / TRANSV
-  returnArrow: string; // 'F3 → F2' etc.
+  phaseLabel: string;
+  returnArrow: string;
   plan: string;
   icon: LucideIcon;
 };
@@ -93,11 +99,11 @@ const RISK_META: RiskMeta[] = [
   },
   {
     id: 'R2',
-    name: 'Desbalance severo de clases en el dataset',
+    name: 'Desbalance severo de clases',
     severity: 'ALTO',
     phaseLabel: 'F2',
     returnArrow: 'F2',
-    plan: 'SMOTE o pesos por clase en la función de pérdida; pondera focal loss; rebalancea batches por sampler estratificado.',
+    plan: 'SMOTE o pesos por clase en la pérdida; focal loss; batches estratificados por sampler balanceado.',
     icon: BarChart3,
   },
   {
@@ -106,25 +112,25 @@ const RISK_META: RiskMeta[] = [
     severity: 'MEDIO',
     phaseLabel: 'F2',
     returnArrow: 'F2',
-    plan: 'Adoptar arquitecturas más ligeras como backbone (EfficientNet / MobileNet), priorizando viabilidad sobre tamaño.',
+    plan: 'Adoptar arquitecturas más ligeras como backbone (EfficientNet · MobileNet), priorizando viabilidad sobre tamaño.',
     icon: Server,
   },
   {
     id: 'R4',
-    name: 'Sesgo de fototipos IV-V en datasets públicos',
+    name: 'Sesgo fototipos IV-V en datasets',
     severity: 'MEDIO',
     phaseLabel: 'TRANSV',
     returnArrow: 'TRANSV',
-    plan: 'Documentar como limitación; reportar desempeño desagregado por fototipo; proponer trabajo futuro con datos regionales de Santander.',
+    plan: 'Documentar como limitación; reporte desagregado por fototipo; trabajo futuro con datos regionales de Santander.',
     icon: Eye,
   },
   {
     id: 'R5',
-    name: 'Cobertura de clases vs perfil epidemiológico regional',
+    name: 'Cobertura vs perfil epidemiológico',
     severity: 'MEDIO',
     phaseLabel: 'F1',
     returnArrow: 'F1',
-    plan: 'Combinar varios datasets compatibles; ajustar criterios de inclusión; priorizar las 4 patologías críticas de Santander.',
+    plan: 'Combinar varios datasets compatibles; ajustar criterios de inclusión; priorizar las 4 patologías críticas.',
     icon: Database,
   },
   {
@@ -147,7 +153,6 @@ const RISK_META: RiskMeta[] = [
   },
 ];
 
-// ── Map data file → display status
 function trlStatus(level: number): 'done' | 'target' | 'stretch' | 'future' {
   const t = trlLevels.find((x) => x.level === level);
   if (level <= 3) return 'done';
@@ -156,6 +161,9 @@ function trlStatus(level: number): 'done' | 'target' | 'stretch' | 'future' {
   return 'future';
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// SLIDE 07
+// ─────────────────────────────────────────────────────────────────────
 export default function Slide07Results() {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -171,40 +179,40 @@ export default function Slide07Results() {
   }
 
   return (
-    <div ref={ref} className="slide relative w-full overflow-hidden bg-canvas-white">
+    <div
+      ref={ref}
+      className="slide relative w-full"
+      style={{ overflow: 'clip', background: '#e5e7eb' }}
+    >
       <div className="slide-narrow relative">
-        {/* ── Header ─────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-4">
-          <span className="eyebrow">07 · ENTREGABLES + CONTINGENCIA</span>
-          <span className="flex-1 h-px" style={{ background: '#292929' }} />
-          <span
-            className="font-condensed text-ink-black"
-            style={{ fontSize: 13, letterSpacing: '0.2em', textTransform: 'uppercase' }}
-          >
-            7 RIESGOS · 4 ENTREGABLES
-          </span>
+        {/* HEADER ────────────────────────────────────────────── */}
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <span className="eyebrow-up">07 · ENTREGABLES + CONTINGENCIA</span>
+          <span className="pill-yellow">7 riesgos · 4 entregables</span>
         </div>
 
-        {/* ── Headline ───────────────────────────────────────────────── */}
+        {/* HEADLINE ──────────────────────────────────────────── */}
         <h2
-          className="mt-10 font-nh font-light text-ink-black"
+          className="mt-12"
           style={{
-            fontSize: 'clamp(44px, 5.4vw, 72px)',
-            lineHeight: 1.02,
-            letterSpacing: '-0.025em',
-            maxWidth: '24ch',
+            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: 'clamp(56px, 7vw, 112px)',
+            lineHeight: 0.92,
+            letterSpacing: '-0.03em',
+            color: '#000000',
+            maxWidth: '20ch',
           }}
         >
           <SplitText
-            text="Cuatro entregables firmes."
+            text="CUATRO ENTREGABLES FIRMES."
             as="span"
             trigger="scroll"
             stagger={0.014}
           />
           <br />
-          <span style={{ fontStyle: 'italic', fontWeight: 200 }}>
+          <span style={{ color: '#444444', fontWeight: 400 }}>
             <SplitText
-              text="Siete frentes con plan B sobre la mesa."
+              text="SIETE FRENTES CON PLAN B."
               as="span"
               trigger="scroll"
               stagger={0.014}
@@ -215,35 +223,55 @@ export default function Slide07Results() {
 
         <ScrollReveal delay={0.35} direction="up" distance={12}>
           <p
-            className="mt-6 font-nh font-light text-ink-black"
-            style={{ fontSize: 22, lineHeight: 1.4, maxWidth: '60ch' }}
+            className="mt-8"
+            style={{
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontWeight: 300,
+              fontSize: 22,
+              lineHeight: 1.45,
+              color: '#000000',
+              maxWidth: '60ch',
+              letterSpacing: '-0.01em',
+            }}
           >
-            Cada riesgo tiene un punto de retorno CRISP-DM ya documentado en el anteproyecto.
+            Cada riesgo tiene un punto de retorno CRISP-DM documentado en el anteproyecto.
           </p>
         </ScrollReveal>
 
-        {/* ── Body grid ─────────────────────────────────────────────── */}
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-          {/* ── LEFT · TRL ladder + entregables (5/12) ───────────── */}
-          <div className="lg:col-span-5 space-y-10">
-            {/* ── TRL ladder ─────────────────────────────── */}
+        {/* BENTO 5 + 7 ────────────────────────────────────── */}
+        <div className="bento mt-16">
+          {/* LEFT col 5 · TRL ladder + entregables */}
+          <div
+            style={{
+              gridColumn: 'span 5',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 24,
+            }}
+          >
+            {/* TRL ladder card */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, ease: EASE }}
               viewport={{ once: true }}
-              style={{ border: '1px solid #292929' }}
+              className="card"
+              style={{ padding: 0, overflow: 'hidden' }}
             >
               <div
                 className="flex items-baseline justify-between"
-                style={{ padding: '14px 18px', borderBottom: '1px solid #292929' }}
+                style={{ padding: '20px 24px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
               >
-                <span className="eyebrow">── TRL · MADUREZ TECNOLÓGICA</span>
+                <span className="eyebrow-up">── TRL · MADUREZ TECNOLÓGICA</span>
                 <span
-                  className="font-condensed text-ink-black"
-                  style={{ fontSize: 13, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 11,
+                    letterSpacing: '0.04em',
+                    color: '#979797',
+                  }}
                 >
-                  9 NIVELES
+                  9 niveles
                 </span>
               </div>
 
@@ -255,7 +283,6 @@ export default function Slide07Results() {
                   const isStretch = status === 'stretch';
                   const isDone = status === 'done';
                   const isFuture = status === 'future';
-                  const opacity = isFuture ? 0.46 : 1;
 
                   const statusLabel =
                     status === 'target'
@@ -266,78 +293,84 @@ export default function Slide07Results() {
                       ? 'DONE'
                       : '──';
 
-                  // Row border logic · target is band-wrapped with 2px ink rules
-                  const borderTop = isTarget
-                    ? '2px solid #292929'
-                    : level === 1
-                    ? '1px solid #e6e6e6'
-                    : '1px solid #e6e6e6';
-                  const borderBottom = isTarget ? '2px solid #292929' : 'none';
-
                   return (
                     <motion.div
                       key={level}
                       initial={{ opacity: 0, x: -6 }}
-                      whileInView={{ opacity, x: 0 }}
-                      transition={{ delay: 0.04 * idx, duration: 0.4, ease: EASE }}
+                      whileInView={{ opacity: isFuture ? 0.5 : 1, x: 0 }}
+                      transition={{ delay: 0.03 * idx, duration: 0.4, ease: EASE }}
                       viewport={{ once: true }}
                       className="hover-reveal"
                       style={{
-                        borderTop,
-                        borderBottom,
-                        background: isTarget ? '#f4f4f4' : 'transparent',
+                        borderTop: '1px solid rgba(0,0,0,0.04)',
+                        background: isTarget ? '#f3f3f3' : 'transparent',
                         cursor: 'default',
                       }}
                     >
                       <div
                         className="grid items-center"
                         style={{
-                          gridTemplateColumns: '56px 1px 1fr auto',
+                          gridTemplateColumns: '48px 1px 1fr auto',
                           gap: 14,
-                          padding: '12px 18px',
+                          padding: '14px 24px',
                         }}
                       >
                         <span
-                          className="font-display text-ink-black leading-none tabular-nums"
-                          style={{ fontSize: 32, letterSpacing: 0 }}
+                          style={{
+                            fontFamily: "'Bebas Neue', sans-serif",
+                            fontSize: 32,
+                            lineHeight: 0.9,
+                            color: '#000000',
+                            fontVariantNumeric: 'tabular-nums',
+                            letterSpacing: '-0.01em',
+                          }}
                         >
                           {String(level).padStart(2, '0')}
                         </span>
-                        <span style={{ width: 1, height: 26, background: '#292929' }} />
                         <span
-                          className="font-condensed text-ink-black"
+                          style={{ width: 1, height: 24, background: 'rgba(0,0,0,0.08)' }}
+                        />
+                        <span
                           style={{
+                            fontFamily: "'Inter', system-ui, sans-serif",
                             fontSize: 14,
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
+                            color: '#000000',
+                            fontWeight: 500,
                             lineHeight: 1.2,
+                            letterSpacing: '-0.01em',
                           }}
                         >
                           {label}
                         </span>
                         <span
-                          className="font-condensed whitespace-nowrap"
                           style={{
-                            border:
-                              isTarget
-                                ? '1px solid #292929'
-                                : isStretch
-                                ? '1px dashed #292929'
-                                : isDone
-                                ? '1px solid #292929'
-                                : 'none',
-                            background: isTarget ? '#292929' : 'transparent',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            padding: isDone || isTarget || isStretch ? '4px 12px' : '4px 0',
+                            borderRadius: 9999,
+                            fontFamily: "'IBM Plex Mono', monospace",
+                            fontSize: 10,
+                            letterSpacing: '0.16em',
+                            textTransform: 'uppercase',
+                            background: isTarget
+                              ? '#000000'
+                              : isDone
+                              ? '#d1ffca'
+                              : 'transparent',
                             color: isTarget
                               ? '#ffffff'
-                              : isStretch
-                              ? '#292929'
                               : isDone
-                              ? '#292929'
-                              : '#b4b8b4',
-                            padding: isTarget || isStretch || isDone ? '4px 10px' : '4px 0',
-                            fontSize: 10,
-                            letterSpacing: '0.2em',
-                            textTransform: 'uppercase',
+                              ? '#000000'
+                              : isStretch
+                              ? '#000000'
+                              : '#979797',
+                            border: isTarget
+                              ? 'none'
+                              : isStretch
+                              ? '1px dashed rgba(0,0,0,0.4)'
+                              : isDone
+                              ? '1px solid rgba(0,0,0,0.04)'
+                              : 'none',
                             minWidth: 76,
                             textAlign: 'center',
                           }}
@@ -349,13 +382,18 @@ export default function Slide07Results() {
                       <div
                         data-reveal
                         style={{
-                          padding: '0 18px 14px 88px',
+                          padding: '0 24px 14px 86px',
                           maxWidth: '50ch',
                         }}
                       >
                         <p
-                          className="font-nh text-ink-black"
-                          style={{ fontSize: 14, lineHeight: 1.5 }}
+                          style={{
+                            fontFamily: "'Inter', system-ui, sans-serif",
+                            fontSize: 13,
+                            lineHeight: 1.5,
+                            color: '#444444',
+                            letterSpacing: '-0.01em',
+                          }}
                         >
                           {TRL_DETAIL[idx]}
                         </p>
@@ -366,21 +404,29 @@ export default function Slide07Results() {
               </div>
             </motion.div>
 
-            {/* ── Entregables · 4 numbered ─────────────── */}
+            {/* Entregables card */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.12, duration: 0.55, ease: EASE }}
               viewport={{ once: true }}
+              className="card"
+              style={{ padding: 0, overflow: 'hidden' }}
             >
-              <div className="flex items-baseline gap-4 mb-3">
-                <span className="eyebrow">── ENTREGABLES · 4</span>
-                <span className="flex-1 h-px" style={{ background: '#292929' }} />
+              <div
+                className="flex items-baseline justify-between"
+                style={{ padding: '20px 24px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
+              >
+                <span className="eyebrow-up">── ENTREGABLES · 4</span>
                 <span
-                  className="font-condensed text-ink-black"
-                  style={{ fontSize: 13, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 11,
+                    letterSpacing: '0.04em',
+                    color: '#979797',
+                  }}
                 >
-                  UNO POR OBJETIVO
+                  uno por objetivo
                 </span>
               </div>
 
@@ -393,44 +439,64 @@ export default function Slide07Results() {
                     transition={{ delay: 0.06 * i, duration: 0.4, ease: EASE }}
                     viewport={{ once: true }}
                     style={{
-                      padding: '18px 0',
-                      borderTop: i === 0 ? '1px solid #292929' : '1px solid #e6e6e6',
-                      borderBottom: i === DELIVERABLES.length - 1 ? '1px solid #292929' : 'none',
+                      padding: '20px 24px',
+                      borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.04)',
                     }}
                   >
                     <div
                       className="grid items-start"
-                      style={{ gridTemplateColumns: '80px 1px 1fr auto', gap: 16 }}
+                      style={{ gridTemplateColumns: '72px 1px 1fr auto', gap: 16 }}
                     >
                       <span
-                        className="font-display text-ink-black leading-none tabular-nums"
-                        style={{ fontSize: 64, letterSpacing: 0 }}
+                        style={{
+                          fontFamily: "'Bebas Neue', sans-serif",
+                          fontSize: 48,
+                          lineHeight: 0.9,
+                          color: '#000000',
+                          fontVariantNumeric: 'tabular-nums',
+                          letterSpacing: '-0.02em',
+                        }}
                       >
                         {String(d.n).padStart(2, '0')}
                       </span>
-                      <span style={{ width: 1, height: 56, background: '#292929' }} />
+                      <span
+                        style={{ width: 1, height: 44, background: 'rgba(0,0,0,0.08)' }}
+                      />
                       <div>
                         <p
-                          className="font-nh text-ink-black"
-                          style={{ fontSize: 18, lineHeight: 1.3, fontWeight: 500 }}
+                          style={{
+                            fontFamily: "'Inter', system-ui, sans-serif",
+                            fontSize: 16,
+                            lineHeight: 1.3,
+                            fontWeight: 500,
+                            color: '#000000',
+                            letterSpacing: '-0.01em',
+                          }}
                         >
                           {d.title}
                         </p>
                         <p
-                          className="mt-2 font-nh text-ink-black"
-                          style={{ fontSize: 14, lineHeight: 1.45, opacity: 0.78 }}
+                          className="mt-1.5"
+                          style={{
+                            fontFamily: "'Inter', system-ui, sans-serif",
+                            fontSize: 13,
+                            lineHeight: 1.45,
+                            color: '#444444',
+                            letterSpacing: '-0.01em',
+                          }}
                         >
                           {d.detail}
                         </p>
                       </div>
                       <span
-                        className="font-mono text-ink-black"
                         style={{
+                          fontFamily: "'IBM Plex Mono', monospace",
                           fontSize: 11,
-                          letterSpacing: '0.18em',
-                          textTransform: 'uppercase',
-                          border: '1px solid #292929',
-                          padding: '3px 8px',
+                          letterSpacing: '0.04em',
+                          color: '#000000',
+                          padding: '4px 12px',
+                          borderRadius: 9999,
+                          background: '#f3f3f3',
                           alignSelf: 'start',
                         }}
                       >
@@ -443,24 +509,26 @@ export default function Slide07Results() {
             </motion.div>
           </div>
 
-          {/* ── RIGHT · Risk flip grid (7/12) ───────────────────── */}
-          <div className="lg:col-span-7">
-            <div className="flex items-baseline gap-4 mb-5">
-              <span className="eyebrow">── 7 FRENTES CON PLAN B</span>
-              <span className="flex-1 h-px" style={{ background: '#292929' }} />
+          {/* RIGHT col 7 · Risk flip cards */}
+          <div style={{ gridColumn: 'span 7' }}>
+            <div className="flex items-baseline justify-between gap-3 mb-5 flex-wrap">
+              <span className="eyebrow-up">── 7 FRENTES CON PLAN B</span>
               <span
-                className="font-condensed text-ink-black"
-                style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 11,
+                  letterSpacing: '0.04em',
+                  color: '#979797',
+                }}
               >
-                HOVER PARA VER PLAN
+                hover · ver plan
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {RISK_META.map((r, i) => {
                 const Icon = r.icon;
                 const isHigh = r.severity === 'ALTO';
-                const isMedium = r.severity === 'MEDIO';
                 const isLast = i === RISK_META.length - 1;
                 const isFlipped = flipped.has(r.id);
 
@@ -474,7 +542,7 @@ export default function Slide07Results() {
                     className={`flip-3d ${isFlipped ? 'is-flipped' : ''}`}
                     style={{
                       gridColumn: isLast ? '1 / -1' : 'auto',
-                      minHeight: 220,
+                      minHeight: 240,
                       cursor: 'pointer',
                     }}
                     onClick={() => toggleFlip(r.id)}
@@ -487,46 +555,54 @@ export default function Slide07Results() {
                       }
                     }}
                     aria-pressed={isFlipped}
-                    aria-label={`Riesgo ${r.id}: ${r.name}. Click para ver plan de contingencia.`}
+                    aria-label={`Riesgo ${r.id}: ${r.name}.`}
                   >
-                    <div className="flip-3d-inner" style={{ minHeight: 220 }}>
-                      {/* ── FRONT ─────────────────────────── */}
+                    <div className="flip-3d-inner" style={{ minHeight: 240 }}>
+                      {/* FRONT */}
                       <article
-                        className="flip-3d-front overflow-hidden"
-                        style={{ padding: 18 }}
+                        className="flip-3d-front"
+                        style={{ padding: 24, overflow: 'hidden' }}
                       >
                         <Icon
-                          size={64}
+                          size={120}
                           strokeWidth={1}
-                          className="absolute pointer-events-none text-ink-black"
                           style={{
-                            opacity: 0.08,
-                            bottom: 14,
-                            right: 14,
+                            position: 'absolute',
+                            opacity: 0.05,
+                            bottom: -8,
+                            right: -8,
+                            color: '#000000',
+                            pointerEvents: 'none',
                           }}
                         />
 
                         <div className="relative flex items-start justify-between gap-2">
                           <span
-                            className="font-display text-ink-black leading-none"
-                            style={{ fontSize: 32, letterSpacing: 0 }}
+                            style={{
+                              fontFamily: "'Bebas Neue', sans-serif",
+                              fontSize: 32,
+                              lineHeight: 0.9,
+                              color: '#000000',
+                              letterSpacing: '-0.02em',
+                            }}
                           >
                             {r.id}
                           </span>
                           <span
-                            className="font-condensed whitespace-nowrap"
                             style={{
-                              border: isHigh
-                                ? '1px solid #292929'
-                                : isMedium
-                                ? '1px solid #292929'
-                                : '1px dashed #b4b8b4',
-                              background: isHigh ? '#292929' : 'transparent',
-                              color: isHigh ? '#ffffff' : isMedium ? '#292929' : '#646464',
-                              padding: '3px 9px',
-                              fontSize: 11,
-                              letterSpacing: '0.2em',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              padding: '4px 12px',
+                              borderRadius: 9999,
+                              fontFamily: "'IBM Plex Mono', monospace",
+                              fontSize: 10,
+                              letterSpacing: '0.16em',
                               textTransform: 'uppercase',
+                              background: isHigh ? '#000000' : 'transparent',
+                              color: isHigh ? '#ffffff' : '#000000',
+                              border: isHigh
+                                ? 'none'
+                                : '1px solid rgba(0,0,0,0.16)',
                             }}
                           >
                             {r.severity}
@@ -534,93 +610,106 @@ export default function Slide07Results() {
                         </div>
 
                         <h4
-                          className="relative mt-4 font-nh font-medium text-ink-black"
-                          style={{ fontSize: 18, lineHeight: 1.25, maxWidth: '26ch' }}
+                          className="relative mt-5"
+                          style={{
+                            fontFamily: "'Inter', system-ui, sans-serif",
+                            fontSize: 18,
+                            lineHeight: 1.25,
+                            fontWeight: 500,
+                            color: '#000000',
+                            maxWidth: '26ch',
+                            letterSpacing: '-0.01em',
+                          }}
                         >
                           {r.name}
                         </h4>
 
                         <div
-                          className="relative mt-5 h-px w-full"
-                          style={{ background: '#292929' }}
+                          className="relative mt-6"
+                          style={{ height: 1, background: 'rgba(0,0,0,0.08)' }}
                         />
 
                         <div className="relative mt-4 flex items-center gap-2">
                           <span
-                            className="font-condensed text-ink-black"
                             style={{
-                              border: '1px solid #292929',
-                              padding: '3px 9px',
+                              fontFamily: "'IBM Plex Mono', monospace",
                               fontSize: 11,
-                              letterSpacing: '0.2em',
-                              textTransform: 'uppercase',
+                              letterSpacing: '0.04em',
+                              color: '#000000',
+                              padding: '4px 12px',
+                              borderRadius: 9999,
+                              background: '#f3f3f3',
                             }}
                           >
                             {r.phaseLabel}
                           </span>
                           <span
-                            className="font-condensed text-ink-black"
                             style={{
+                              fontFamily: "'IBM Plex Mono', monospace",
                               fontSize: 10,
-                              letterSpacing: '0.18em',
-                              textTransform: 'uppercase',
-                              opacity: 0.55,
+                              letterSpacing: '0.04em',
+                              color: '#979797',
                             }}
                           >
-                            Fase de retorno CRISP-DM
+                            fase de retorno
                           </span>
                         </div>
                       </article>
 
-                      {/* ── BACK ─────────────────────────── */}
+                      {/* BACK */}
                       <article
-                        className="flip-3d-back overflow-hidden"
-                        style={{ padding: 18 }}
+                        className="flip-3d-back"
+                        style={{ padding: 24, overflow: 'hidden' }}
                       >
                         <span
-                          className="font-condensed"
                           style={{
-                            fontSize: 12,
-                            letterSpacing: '0.2em',
+                            fontFamily: "'IBM Plex Mono', monospace",
+                            fontSize: 11,
+                            letterSpacing: '0.18em',
                             textTransform: 'uppercase',
-                            color: '#ffffff',
+                            color: 'rgba(255,255,255,0.55)',
                           }}
                         >
                           ── PLAN DE CONTINGENCIA
                         </span>
                         <p
-                          className="mt-3 font-nh"
+                          className="mt-3"
                           style={{
-                            fontSize: 16,
-                            lineHeight: 1.4,
+                            fontFamily: "'Inter', system-ui, sans-serif",
+                            fontSize: 15,
+                            lineHeight: 1.45,
                             color: '#ffffff',
                             maxWidth: '34ch',
+                            letterSpacing: '-0.01em',
                           }}
                         >
                           {r.plan}
                         </p>
                         <div
-                          className="mt-5 h-px w-full"
-                          style={{ background: '#b4b8b4', opacity: 0.5 }}
+                          className="mt-5"
+                          style={{ height: 1, background: 'rgba(255,255,255,0.16)' }}
                         />
                         <span
-                          className="mt-4 block font-condensed"
+                          className="mt-4 block"
                           style={{
-                            fontSize: 12,
-                            letterSpacing: '0.2em',
+                            fontFamily: "'IBM Plex Mono', monospace",
+                            fontSize: 11,
+                            letterSpacing: '0.18em',
                             textTransform: 'uppercase',
-                            color: '#b4b8b4',
+                            color: 'rgba(255,255,255,0.55)',
                           }}
                         >
                           ── RETORNO CRISP-DM
                         </span>
                         <p
-                          className="mt-2 font-display tabular-nums"
+                          className="mt-2"
                           style={{
+                            fontFamily: "'Bebas Neue', sans-serif",
                             fontSize: 32,
-                            letterSpacing: 0,
-                            color: '#ffffff',
                             lineHeight: 1,
+                            color: '#d1ffca',
+                            fontVariantNumeric: 'tabular-nums',
+                            letterSpacing: '-0.02em',
                           }}
                         >
                           {r.returnArrow}
@@ -634,37 +723,39 @@ export default function Slide07Results() {
           </div>
         </div>
 
-        {/* ── Commitment band ───────────────────────────────────────── */}
+        {/* CIERRE · compromiso público ────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.15, ease: EASE }}
           viewport={{ once: true }}
-          className="mt-16 card-dark"
-          style={{ padding: 0, border: 'none' }}
+          className="card-hero-top mt-16"
+          style={{ padding: 0, overflow: 'hidden' }}
         >
           <div
             style={{
-              padding: 'clamp(22px, 3vw, 32px) clamp(28px, 4vw, 44px)',
-              borderBottom: '1px solid #ffffff',
+              padding: 'clamp(28px, 4vw, 48px)',
+              borderBottom: '1px solid rgba(255,255,255,0.16)',
             }}
           >
             <span
-              className="font-condensed"
               style={{
-                fontSize: 13,
-                letterSpacing: '0.2em',
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                color: '#ffffff',
+                color: 'rgba(255,255,255,0.55)',
               }}
             >
               ── COMPROMISO PÚBLICO
             </span>
             <p
-              className="mt-4 font-nh font-light italic"
+              className="mt-5"
               style={{
-                fontSize: 24,
-                lineHeight: 1.3,
+                fontFamily: "'Instrument Serif', serif",
+                fontStyle: 'italic',
+                fontSize: 'clamp(24px, 3.2vw, 36px)',
+                lineHeight: 1.25,
                 letterSpacing: '-0.02em',
                 color: '#ffffff',
                 maxWidth: '52ch',
@@ -676,36 +767,42 @@ export default function Slide07Results() {
 
           <div className="grid grid-cols-2 md:grid-cols-4">
             {[
-              { value: '09', label: 'SEMANAS COMPLETADAS' },
-              { value: '32', label: 'SEMANAS TOTALES' },
-              { value: 'TRL 4', label: 'OBJETIVO' },
-              { value: 'TRL 5', label: 'STRETCH' },
+              { value: '09', label: 'semanas completadas' },
+              { value: '32', label: 'semanas totales' },
+              { value: 'TRL 4', label: 'objetivo' },
+              { value: 'TRL 5', label: 'stretch' },
             ].map((s, i) => (
               <div
                 key={s.label}
                 style={{
-                  padding: 'clamp(20px, 2.8vw, 30px) clamp(24px, 3.4vw, 36px)',
-                  borderLeft: i === 0 ? 'none' : '1px solid #ffffff',
+                  padding: 'clamp(24px, 3vw, 36px) clamp(20px, 3vw, 32px)',
+                  borderLeft: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.16)',
+                  borderTop:
+                    i >= 2 && typeof window !== 'undefined' && window.innerWidth < 768
+                      ? '1px solid rgba(255,255,255,0.16)'
+                      : 'none',
                 }}
               >
                 <div
-                  className="font-display tabular-nums"
                   style={{
-                    fontSize: 56,
-                    letterSpacing: 0,
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: 'clamp(48px, 6vw, 72px)',
+                    lineHeight: 0.9,
                     color: '#ffffff',
-                    lineHeight: 0.92,
+                    fontVariantNumeric: 'tabular-nums',
+                    letterSpacing: '-0.02em',
                   }}
                 >
                   {s.value}
                 </div>
                 <div
-                  className="mt-3 font-condensed"
+                  className="mt-3"
                   style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
                     fontSize: 11,
-                    letterSpacing: '0.2em',
+                    letterSpacing: '0.18em',
                     textTransform: 'uppercase',
-                    color: '#ffffff',
+                    color: 'rgba(255,255,255,0.7)',
                   }}
                 >
                   {s.label}
@@ -715,27 +812,44 @@ export default function Slide07Results() {
           </div>
         </motion.div>
 
-        {/* ── Footer hints ──────────────────────────────────────── */}
-        <div className="mt-10 flex flex-wrap items-center gap-3">
-          <span className="kbd">Hover</span>
-          <span
-            className="font-condensed text-ink-black"
-            style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
-          >
-            voltear riesgo
-          </span>
-          <span style={{ width: 18 }} />
-          <span className="kbd">Click</span>
-          <span
-            className="font-condensed text-ink-black"
-            style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
-          >
-            expandir TRL
-          </span>
+        {/* FOOTER ────────────────────────────────────────── */}
+        <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="kbd">hover</span>
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 12,
+                color: '#444444',
+                letterSpacing: '0.04em',
+              }}
+            >
+              voltear riesgo
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="kbd">click</span>
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 12,
+                color: '#444444',
+                letterSpacing: '0.04em',
+              }}
+            >
+              expandir TRL
+            </span>
+          </div>
           {reduced && (
             <span
-              className="ml-auto font-condensed text-ink-black"
-              style={{ fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', opacity: 0.55 }}
+              className="ml-auto"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                color: '#979797',
+                letterSpacing: '0.04em',
+                opacity: 0.7,
+              }}
             >
               reduced-motion · estado estático
             </span>

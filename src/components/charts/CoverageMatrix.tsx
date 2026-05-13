@@ -3,15 +3,23 @@ import { coverageMatrix } from '@/data/eda';
 
 type CoverageValue = 'covered' | 'partial' | 'absent';
 
-// MONO X7 cell renderer · solid black, diagonal hatch pattern, or empty
-function CoverageCell({ value }: { value: CoverageValue }) {
+// ─────────────────────────────────────────────────────────────────────
+// DAYOS · Coverage matrix
+// covered → ink solid · partial → green hatch · absent → empty paper
+// Rounded 6px cells, 1px hairline borders.
+// ─────────────────────────────────────────────────────────────────────
+function Cell({ value }: { value: CoverageValue }) {
   return (
     <div
-      className="relative h-7 w-full border border-[#292929] overflow-hidden transition-[outline] duration-150 hover:outline hover:outline-2 hover:outline-black"
-      style={{ borderRadius: 0 }}
+      className="relative h-9 w-full overflow-hidden transition-transform duration-200 hover:scale-105"
+      style={{
+        borderRadius: 6,
+        border: '1px solid rgba(0, 0, 0, 0.08)',
+        background: '#ffffff',
+      }}
     >
       {value === 'covered' && (
-        <div className="absolute inset-0" style={{ background: '#292929' }} />
+        <div className="absolute inset-0" style={{ background: '#000000', borderRadius: 5 }} />
       )}
       {value === 'partial' && (
         <svg
@@ -21,30 +29,48 @@ function CoverageCell({ value }: { value: CoverageValue }) {
         >
           <defs>
             <pattern
-              id="coverageHatch"
+              id="covHatch"
               patternUnits="userSpaceOnUse"
               width="6"
               height="6"
               patternTransform="rotate(45)"
             >
-              <line x1="0" y1="0" x2="0" y2="6" stroke="#292929" strokeWidth="1" />
+              <rect width="6" height="6" fill="#d1ffca" />
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#000000" strokeWidth="0.8" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#coverageHatch)" />
+          <rect width="100%" height="100%" fill="url(#covHatch)" rx="5" ry="5" />
         </svg>
       )}
-      {/* absent → empty white, no fill */}
     </div>
   );
 }
 
 export default function CoverageMatrix() {
   return (
-    <div className="w-full font-[Oswald]">
-      {/* Column header · ink bottom border */}
+    <div className="w-full">
+      <div className="flex items-baseline justify-between gap-3 mb-4">
+        <span className="eyebrow-up">── COBERTURA · 10 PATOLOGÍAS × 3 DATASETS</span>
+        <span
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 11,
+            letterSpacing: '0.1em',
+            color: '#979797',
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >
+          {coverageMatrix.length} · ROW
+        </span>
+      </div>
+
+      {/* Column header */}
       <div
-        className="grid grid-cols-[1fr_repeat(3,68px)] gap-1 pb-1.5 mb-1.5 border-b"
-        style={{ borderColor: '#292929', borderWidth: '0 0 1px 0' }}
+        className="grid gap-2 pb-3 mb-2"
+        style={{
+          gridTemplateColumns: '1fr 70px 70px 70px',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+        }}
       >
         <div />
         {['HAM', 'BCN', 'CO2W'].map((label) => (
@@ -52,11 +78,11 @@ export default function CoverageMatrix() {
             key={label}
             className="text-center"
             style={{
-              fontFamily: "'Oswald', Impact, sans-serif",
+              fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 11,
-              letterSpacing: '0.1em',
+              letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: '#292929',
+              color: '#444444',
             }}
           >
             {label}
@@ -64,93 +90,88 @@ export default function CoverageMatrix() {
         ))}
       </div>
 
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         {coverageMatrix.map((row, i) => (
           <motion.div
             key={row.pathology}
-            initial={{ opacity: 0, x: -8 }}
+            initial={{ opacity: 0, x: -6 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.04, duration: 0.4 }}
+            transition={{ delay: i * 0.03, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="grid grid-cols-[1fr_repeat(3,68px)] gap-1 items-center"
+            className="grid gap-2 items-center"
+            style={{ gridTemplateColumns: '1fr 70px 70px 70px' }}
           >
-            {/* Row label · ink right border */}
-            <div
-              className="flex items-center gap-2 pr-2 border-r"
-              style={{ borderColor: '#292929', borderWidth: '0 1px 0 0', minHeight: 28 }}
-            >
+            <div className="flex items-baseline justify-between pr-3 min-w-0">
               <span
                 style={{
-                  fontFamily: "'Oswald', Impact, sans-serif",
-                  fontSize: 11,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#292929',
-                  lineHeight: 1.1,
+                  fontFamily: "'Inter', system-ui, sans-serif",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: '#000000',
+                  letterSpacing: '-0.01em',
+                  lineHeight: 1.2,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {row.pathology}
               </span>
               <span
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 9,
-                  letterSpacing: '0.1em',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 10,
+                  letterSpacing: '0.05em',
+                  color: '#979797',
                   textTransform: 'uppercase',
-                  color: '#646464',
-                  marginLeft: 'auto',
+                  marginLeft: 8,
+                  flexShrink: 0,
                 }}
               >
                 · {row.priority}
               </span>
             </div>
             {(['ham', 'bcn', 'co2'] as const).map((col) => (
-              <CoverageCell key={col} value={row[col] as CoverageValue} />
+              <Cell key={col} value={row[col] as CoverageValue} />
             ))}
           </motion.div>
         ))}
       </div>
 
       {/* Legend */}
-      <div className="mt-4 flex flex-wrap items-center gap-5">
+      <div
+        className="mt-5 pt-4 flex flex-wrap items-center gap-4"
+        style={{ borderTop: '1px solid rgba(0, 0, 0, 0.06)' }}
+      >
         {[
-          { label: 'Cubierta', kind: 'solid' as const },
-          { label: 'Parcial', kind: 'hatch' as const },
-          { label: 'Ausente', kind: 'empty' as const },
+          { label: 'cubierta', kind: 'solid' as const },
+          { label: 'parcial',  kind: 'hatch' as const },
+          { label: 'ausente',  kind: 'empty' as const },
         ].map((entry) => (
           <span key={entry.label} className="inline-flex items-center gap-2">
             <span
               aria-hidden
-              className="relative block h-3 w-4 border border-[#292929]"
-              style={{ borderRadius: 0 }}
-            >
-              {entry.kind === 'solid' && (
-                <span className="absolute inset-0" style={{ background: '#292929' }} />
-              )}
-              {entry.kind === 'hatch' && (
-                <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern
-                      id={`legendHatch-${entry.label}`}
-                      patternUnits="userSpaceOnUse"
-                      width="4"
-                      height="4"
-                      patternTransform="rotate(45)"
-                    >
-                      <line x1="0" y1="0" x2="0" y2="4" stroke="#292929" strokeWidth="1" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill={`url(#legendHatch-${entry.label})`} />
-                </svg>
-              )}
-            </span>
+              style={{
+                position: 'relative',
+                display: 'inline-block',
+                width: 16,
+                height: 12,
+                borderRadius: 4,
+                border: '1px solid rgba(0,0,0,0.08)',
+                background:
+                  entry.kind === 'solid'
+                    ? '#000000'
+                    : entry.kind === 'hatch'
+                    ? 'repeating-linear-gradient(45deg, #d1ffca 0 2px, #000000 2px 3px)'
+                    : '#ffffff',
+              }}
+            />
             <span
               style={{
-                fontFamily: "'Oswald', Impact, sans-serif",
+                fontFamily: "'IBM Plex Mono', monospace",
                 fontSize: 11,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#292929',
+                letterSpacing: '0.05em',
+                color: '#444444',
               }}
             >
               {entry.label}

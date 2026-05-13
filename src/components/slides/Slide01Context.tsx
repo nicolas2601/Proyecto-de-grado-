@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import CountUp from '@/components/reactbits/CountUp';
 
@@ -7,14 +7,14 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 type LensId = 'sexo' | 'edad' | 'localizacion' | 'periodo';
 
 const LENS_OPTIONS: { id: LensId; label: string }[] = [
-  { id: 'sexo', label: 'POR SEXO' },
-  { id: 'edad', label: 'POR EDAD' },
-  { id: 'localizacion', label: 'POR LOCALIZACIÓN' },
-  { id: 'periodo', label: 'POR PERÍODO' },
+  { id: 'sexo', label: 'Sexo' },
+  { id: 'edad', label: 'Edad' },
+  { id: 'localizacion', label: 'Localización' },
+  { id: 'periodo', label: 'Período' },
 ];
 
 // ──────────────────────────────────────────────────────────────────────────
-// MINI CHARTS · MONO, sin color, hatch para diferenciar
+// MINI CHARTS — Achromatic with ink + accent green spots
 // ──────────────────────────────────────────────────────────────────────────
 
 function ChartSexo() {
@@ -24,64 +24,69 @@ function ChartSexo() {
   const w = (v: number) => `${(v / max) * 100}%`;
   return (
     <div className="w-full">
-      <div className="grid grid-cols-12 items-center" style={{ minHeight: '40px' }}>
-        <div
-          className="col-span-2 font-condensed uppercase"
-          style={{ fontSize: '13px', letterSpacing: '0.18em', color: '#292929' }}
+      <div className="grid grid-cols-12 items-center gap-3" style={{ minHeight: 44 }}>
+        <span
+          className="col-span-3 font-mono"
+          style={{ fontSize: 13, color: 'var(--color-ash-gray)', letterSpacing: '-0.36px' }}
         >
-          HOMBRES
-        </div>
-        <div className="col-span-8 relative" style={{ height: '28px' }}>
+          hombres
+        </span>
+        <div className="col-span-7 relative" style={{ height: 32 }}>
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.9, ease: EASE }}
-            className="hatch-ink absolute inset-y-0 left-0 origin-left"
-            style={{ width: w(men), border: '1px solid #292929' }}
+            className="absolute inset-y-0 left-0 origin-left"
+            style={{
+              width: w(men),
+              background: 'var(--color-midnight-ink)',
+              borderRadius: 8,
+            }}
           />
         </div>
-        <div
-          className="col-span-2 text-right font-mono tabular-nums"
-          style={{ fontSize: '15px', color: '#292929', fontWeight: 500 }}
+        <span
+          className="col-span-2 font-mono tabular-nums text-right"
+          style={{ fontSize: 16, fontWeight: 500, color: 'var(--color-midnight-ink)' }}
         >
           133,0
-        </div>
+        </span>
       </div>
-      <div className="grid grid-cols-12 items-center mt-3" style={{ minHeight: '40px' }}>
-        <div
-          className="col-span-2 font-condensed uppercase"
-          style={{ fontSize: '13px', letterSpacing: '0.18em', color: '#292929' }}
+
+      <div className="mt-3 grid grid-cols-12 items-center gap-3" style={{ minHeight: 44 }}>
+        <span
+          className="col-span-3 font-mono"
+          style={{ fontSize: 13, color: 'var(--color-ash-gray)', letterSpacing: '-0.36px' }}
         >
-          MUJERES
-        </div>
-        <div className="col-span-8 relative" style={{ height: '28px' }}>
+          mujeres
+        </span>
+        <div className="col-span-7 relative" style={{ height: 32 }}>
           <motion.div
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.9, delay: 0.08, ease: EASE }}
-            className="absolute inset-y-0 left-0 origin-left bg-ink-black"
-            style={{ width: w(women) }}
+            className="absolute inset-y-0 left-0 origin-left"
+            style={{
+              width: w(women),
+              background: 'var(--color-fog-gray)',
+              borderRadius: 8,
+            }}
           />
         </div>
-        <div
-          className="col-span-2 text-right font-mono tabular-nums"
-          style={{ fontSize: '15px', color: '#292929', fontWeight: 500 }}
+        <span
+          className="col-span-2 font-mono tabular-nums text-right"
+          style={{ fontSize: 16, fontWeight: 500, color: 'var(--color-midnight-ink)' }}
         >
           118,2
-        </div>
-      </div>
-      <div className="mt-5 flex items-baseline justify-between">
-        <span
-          className="font-condensed uppercase"
-          style={{ fontSize: '11px', letterSpacing: '0.2em', color: '#646464' }}
-        >
-          DELTA H − M
         </span>
+      </div>
+
+      <div className="mt-6 flex items-baseline justify-between">
+        <span className="eyebrow-up">Delta · hombres − mujeres</span>
         <span
           className="font-mono tabular-nums"
-          style={{ fontSize: '13px', color: '#292929', letterSpacing: '0.02em' }}
+          style={{ fontSize: 14, color: 'var(--color-midnight-ink)', fontWeight: 500 }}
         >
-          + 14,8 /100K · AÑO
+          + 14,8 / 100K · año
         </span>
       </div>
     </div>
@@ -89,7 +94,6 @@ function ChartSexo() {
 }
 
 function ChartEdad() {
-  // grupos sintetizados · el dominante 70-79 con 26.6 %
   const groups = [
     { label: '40-49', pct: 9.6 },
     { label: '50-59', pct: 15.4 },
@@ -100,73 +104,56 @@ function ChartEdad() {
   const max = 28;
   return (
     <div className="w-full">
-      <div className="grid grid-cols-5 items-end gap-0" style={{ height: '160px' }}>
+      <div className="grid grid-cols-5 items-end gap-3" style={{ height: 180 }}>
         {groups.map((g, i) => {
           const dominant = g.label === '70-79';
           return (
-            <div
-              key={g.label}
-              className="relative flex items-end justify-center h-full"
-              style={{
-                borderRight: i === groups.length - 1 ? 'none' : '1px solid #e6e6e6',
-              }}
-            >
-              <motion.div
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ duration: 0.7, delay: 0.05 * i, ease: EASE }}
-                className="w-[70%] origin-bottom"
-                style={{
-                  height: `${(g.pct / max) * 100}%`,
-                  background: dominant ? '#292929' : '#b4b8b4',
-                  border: dominant ? '2px solid #292929' : '1px solid #292929',
-                }}
-              />
+            <div key={g.label} className="relative flex flex-col items-center justify-end h-full">
               <span
-                className="absolute top-1 left-1/2 -translate-x-1/2 font-mono tabular-nums"
+                className="font-mono tabular-nums mb-2"
                 style={{
-                  fontSize: '12px',
-                  color: dominant ? '#292929' : '#646464',
+                  fontSize: 12,
+                  color: dominant ? 'var(--color-midnight-ink)' : 'var(--color-ash-gray)',
                   fontWeight: dominant ? 500 : 400,
                 }}
               >
                 {g.pct}%
               </span>
+              <motion.div
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{ duration: 0.7, delay: 0.05 * i, ease: EASE }}
+                className="w-full origin-bottom"
+                style={{
+                  height: `${(g.pct / max) * 100}%`,
+                  background: dominant
+                    ? 'var(--color-midnight-ink)'
+                    : 'var(--color-fog-gray)',
+                  borderRadius: '12px 12px 0 0',
+                }}
+              />
+              <span
+                className="font-mono mt-2"
+                style={{
+                  fontSize: 11,
+                  color: dominant ? 'var(--color-midnight-ink)' : 'var(--color-ash-gray)',
+                  fontWeight: dominant ? 500 : 400,
+                  letterSpacing: '-0.36px',
+                }}
+              >
+                {g.label}
+              </span>
             </div>
           );
         })}
       </div>
-      <div
-        className="mt-2 grid grid-cols-5 gap-0"
-        style={{ borderTop: '1px solid #292929' }}
-      >
-        {groups.map((g) => (
-          <div
-            key={g.label}
-            className="text-center font-condensed uppercase py-2"
-            style={{
-              fontSize: '12px',
-              letterSpacing: '0.16em',
-              color: g.label === '70-79' ? '#292929' : '#646464',
-              fontWeight: g.label === '70-79' ? 500 : 400,
-            }}
-          >
-            {g.label}
-          </div>
-        ))}
-      </div>
-      <div className="mt-4 flex items-baseline justify-between">
-        <span
-          className="font-condensed uppercase"
-          style={{ fontSize: '11px', letterSpacing: '0.2em', color: '#646464' }}
-        >
-          GRUPO DOMINANTE
-        </span>
+      <div className="mt-6 flex items-baseline justify-between">
+        <span className="eyebrow-up">Grupo dominante</span>
         <span
           className="font-mono tabular-nums"
-          style={{ fontSize: '13px', color: '#292929', letterSpacing: '0.02em' }}
+          style={{ fontSize: 14, color: 'var(--color-midnight-ink)', fontWeight: 500 }}
         >
-          70-79 AÑOS · 26,6 % · EDAD MEDIA 68,2
+          70-79 años · 26,6 % · edad media 68,2
         </span>
       </div>
     </div>
@@ -175,143 +162,134 @@ function ChartEdad() {
 
 function ChartLocalizacion() {
   const head = 86.8;
-  const other = 13.2;
-  const size = 180;
+  const size = 200;
   const cx = size / 2;
   const cy = size / 2;
-  const r = 72;
-  const stroke = 26;
+  const r = 78;
+  const stroke = 22;
   const circ = 2 * Math.PI * r;
   const headLen = (head / 100) * circ;
-  const otherLen = (other / 100) * circ;
 
   return (
     <div className="w-full grid grid-cols-12 items-center gap-6">
-      <div className="col-span-5 flex justify-center">
+      <div className="col-span-12 md:col-span-5 flex justify-center">
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-          <defs>
-            <pattern
-              id="hatchGrey"
-              patternUnits="userSpaceOnUse"
-              width="6"
-              height="6"
-              patternTransform="rotate(45)"
-            >
-              <line x1="0" y1="0" x2="0" y2="6" stroke="#b4b8b4" strokeWidth="1" />
-            </pattern>
-          </defs>
-          {/* base ring */}
           <circle
             cx={cx}
             cy={cy}
             r={r}
             fill="none"
-            stroke="#e6e6e6"
+            stroke="rgba(0,0,0,0.08)"
             strokeWidth={stroke}
           />
-          {/* head + neck · solid ink */}
           <motion.circle
             cx={cx}
             cy={cy}
             r={r}
             fill="none"
-            stroke="#292929"
+            stroke="var(--color-midnight-ink)"
             strokeWidth={stroke}
             strokeDasharray={`${headLen} ${circ}`}
+            strokeLinecap="round"
             transform={`rotate(-90 ${cx} ${cy})`}
             initial={{ strokeDashoffset: circ }}
             animate={{ strokeDashoffset: 0 }}
             transition={{ duration: 1.2, ease: EASE }}
           />
-          {/* others · hatch grey */}
-          <motion.circle
-            cx={cx}
-            cy={cy}
-            r={r}
-            fill="none"
-            stroke="url(#hatchGrey)"
-            strokeWidth={stroke}
-            strokeDasharray={`${otherLen} ${circ}`}
-            strokeDashoffset={-headLen}
-            transform={`rotate(-90 ${cx} ${cy})`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1.1 }}
-          />
           <text
             x={cx}
             y={cy - 4}
             textAnchor="middle"
-            fontFamily="Bebas Neue, Impact, sans-serif"
-            fontSize="42"
-            fill="#292929"
+            fontFamily="Bebas Neue, sans-serif"
+            fontSize="56"
+            fill="var(--color-midnight-ink)"
+            letterSpacing="-1"
           >
             86,8
           </text>
           <text
             x={cx}
-            y={cy + 16}
+            y={cy + 22}
             textAnchor="middle"
-            fontFamily="Oswald, sans-serif"
-            fontSize="11"
-            letterSpacing="2.5"
-            fill="#646464"
+            fontFamily="IBM Plex Mono, monospace"
+            fontSize="10"
+            letterSpacing="1.8"
+            fill="var(--color-ash-gray)"
           >
             % CARA + CUELLO
           </text>
         </svg>
       </div>
-      <div className="col-span-7">
-        <div className="flex items-center gap-3" style={{ minHeight: '32px' }}>
+      <div className="col-span-12 md:col-span-7 space-y-4">
+        <div className="flex items-center gap-3">
           <span
-            className="block bg-ink-black"
-            style={{ width: '20px', height: '12px' }}
+            className="block"
+            style={{
+              width: 20,
+              height: 12,
+              background: 'var(--color-midnight-ink)',
+              borderRadius: 4,
+            }}
             aria-hidden
           />
           <span
-            className="font-condensed uppercase"
-            style={{ fontSize: '13px', letterSpacing: '0.16em', color: '#292929' }}
+            className="font-suisse"
+            style={{
+              fontSize: 15,
+              fontWeight: 500,
+              color: 'var(--color-midnight-ink)',
+              letterSpacing: '-0.42px',
+            }}
           >
-            CARA + CUELLO
+            cara + cuello
           </span>
           <span
             className="ml-auto font-mono tabular-nums"
-            style={{ fontSize: '14px', color: '#292929', fontWeight: 500 }}
+            style={{ fontSize: 15, color: 'var(--color-midnight-ink)', fontWeight: 500 }}
           >
             86,8 %
           </span>
         </div>
         <div
-          className="flex items-center gap-3 mt-2"
-          style={{ minHeight: '32px', borderTop: '1px solid #e6e6e6', paddingTop: '8px' }}
+          className="flex items-center gap-3 pt-3"
+          style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}
         >
           <span
-            className="block hatch-grey"
-            style={{ width: '20px', height: '12px', border: '1px solid #b4b8b4' }}
+            className="block"
+            style={{
+              width: 20,
+              height: 12,
+              background: 'rgba(0,0,0,0.12)',
+              borderRadius: 4,
+            }}
             aria-hidden
           />
           <span
-            className="font-condensed uppercase"
-            style={{ fontSize: '13px', letterSpacing: '0.16em', color: '#646464' }}
+            className="font-suisse"
+            style={{
+              fontSize: 14,
+              color: 'var(--color-ash-gray)',
+              letterSpacing: '-0.36px',
+            }}
           >
-            OTRAS LOCALIZACIONES
+            otras localizaciones
           </span>
           <span
             className="ml-auto font-mono tabular-nums"
-            style={{ fontSize: '14px', color: '#646464' }}
+            style={{ fontSize: 14, color: 'var(--color-ash-gray)' }}
           >
             13,2 %
           </span>
         </div>
         <p
-          className="mt-5 font-nh"
+          className="font-suisse pt-3"
           style={{
-            fontSize: '14px',
+            fontSize: 14,
             lineHeight: 1.4,
-            color: '#646464',
-            fontWeight: 300,
-            letterSpacing: '-0.01em',
-            maxWidth: '36ch',
+            color: 'var(--color-ash-gray)',
+            letterSpacing: '-0.36px',
+            maxWidth: '38ch',
+            borderTop: '1px solid rgba(0,0,0,0.08)',
           }}
         >
           Zona fotoexpuesta dominante · coherente con etiología solar acumulada en
@@ -323,7 +301,6 @@ function ChartLocalizacion() {
 }
 
 function ChartPeriodo() {
-  // serie sintetizada · tendencia ascendente 2000–2014 (Uribe 2018 reporta período)
   const points = [
     { y: 2000, v: 18 },
     { y: 2002, v: 24 },
@@ -334,44 +311,25 @@ function ChartPeriodo() {
     { y: 2012, v: 89 },
     { y: 2014, v: 118 },
   ];
-  const w = 560;
-  const h = 160;
+  const w = 640;
+  const h = 180;
   const padX = 32;
-  const padY = 18;
+  const padY = 20;
   const maxV = 125;
-  const xs = points.map(
-    (_, i) => padX + (i * (w - padX * 2)) / (points.length - 1),
-  );
+  const xs = points.map((_, i) => padX + (i * (w - padX * 2)) / (points.length - 1));
   const ys = points.map((p) => h - padY - (p.v / maxV) * (h - padY * 2));
-  const path = xs
-    .map((x, i) => `${i === 0 ? 'M' : 'L'} ${x} ${ys[i]}`)
-    .join(' ');
+  const path = xs.map((x, i) => `${i === 0 ? 'M' : 'L'} ${x} ${ys[i]}`).join(' ');
+  const fillPath = `${path} L ${xs[xs.length - 1]} ${h - padY} L ${xs[0]} ${h - padY} Z`;
 
   return (
     <div className="w-full">
-      <svg
-        viewBox={`0 0 ${w} ${h}`}
-        preserveAspectRatio="none"
-        style={{ width: '100%', height: '160px' }}
-      >
-        {/* axes */}
-        <line
-          x1={padX}
-          y1={h - padY}
-          x2={w - padX}
-          y2={h - padY}
-          stroke="#292929"
-          strokeWidth="1"
-        />
-        <line
-          x1={padX}
-          y1={padY}
-          x2={padX}
-          y2={h - padY}
-          stroke="#292929"
-          strokeWidth="1"
-        />
-        {/* grid horizontals */}
+      <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ width: '100%', height: 180 }}>
+        <defs>
+          <linearGradient id="periodoFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(0,0,0,0.08)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+          </linearGradient>
+        </defs>
         {[0.25, 0.5, 0.75].map((p) => (
           <line
             key={p}
@@ -379,60 +337,65 @@ function ChartPeriodo() {
             y1={h - padY - p * (h - padY * 2)}
             x2={w - padX}
             y2={h - padY - p * (h - padY * 2)}
-            stroke="#e6e6e6"
+            stroke="rgba(0,0,0,0.06)"
             strokeWidth="1"
           />
         ))}
-        {/* trend line */}
+        <motion.path
+          d={fillPath}
+          fill="url(#periodoFill)"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 0.3 }}
+        />
         <motion.path
           d={path}
           fill="none"
-          stroke="#292929"
-          strokeWidth="2"
+          stroke="var(--color-midnight-ink)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration: 1.4, ease: EASE }}
         />
-        {/* dots */}
         {xs.map((x, i) => (
           <motion.circle
             key={i}
             cx={x}
             cy={ys[i]}
-            r="3"
-            fill="#292929"
+            r={i === xs.length - 1 ? 5 : 3}
+            fill={i === xs.length - 1 ? 'var(--color-action-green)' : 'var(--color-midnight-ink)'}
+            stroke={i === xs.length - 1 ? 'var(--color-midnight-ink)' : 'none'}
+            strokeWidth={i === xs.length - 1 ? 2 : 0}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 + i * 0.04, duration: 0.3 }}
           />
         ))}
-        {/* axis labels */}
-        {points.map((p, i) => (
-          <text
-            key={p.y}
-            x={xs[i]}
-            y={h - 4}
-            textAnchor="middle"
-            fontFamily="JetBrains Mono, monospace"
-            fontSize="10"
-            fill="#646464"
-          >
-            {p.y}
-          </text>
-        ))}
+        {points.map((p, i) =>
+          i % 2 === 0 ? (
+            <text
+              key={p.y}
+              x={xs[i]}
+              y={h - 4}
+              textAnchor="middle"
+              fontFamily="IBM Plex Mono, monospace"
+              fontSize="11"
+              fill="var(--color-ash-gray)"
+            >
+              {p.y}
+            </text>
+          ) : null,
+        )}
       </svg>
-      <div className="mt-2 flex items-baseline justify-between">
-        <span
-          className="font-condensed uppercase"
-          style={{ fontSize: '11px', letterSpacing: '0.2em', color: '#646464' }}
-        >
-          CASOS ESTIMADOS · BUCARAMANGA AMB
-        </span>
+      <div className="mt-3 flex items-baseline justify-between">
+        <span className="eyebrow-up">Casos estimados · Bucaramanga AMB</span>
         <span
           className="font-mono tabular-nums"
-          style={{ fontSize: '13px', color: '#292929', letterSpacing: '0.02em' }}
+          style={{ fontSize: 14, color: 'var(--color-midnight-ink)', fontWeight: 500 }}
         >
-          ↑ ASCENDENTE SOSTENIDO · 2000–2014
+          ↑ ascendente sostenido · 2000–2014
         </span>
       </div>
     </div>
@@ -440,7 +403,7 @@ function ChartPeriodo() {
 }
 
 // ──────────────────────────────────────────────────────────────────────────
-// KPI CARDS · hover-reveal + invert
+// KPI CARDS
 // ──────────────────────────────────────────────────────────────────────────
 
 type Kpi = {
@@ -457,8 +420,8 @@ const SECONDARY_KPIS: Kpi[] = [
   {
     big: '15',
     bigDecimals: 0,
-    bigSuffix: '%',
-    label: 'CÁNCER DE PIEL · CARGA ONCOLÓGICA',
+    bigSuffix: ' %',
+    label: 'Cáncer de piel · carga oncológica',
     detail: '3.060 / 19.764 diagnósticos · pico en 2021',
     meta: 'FCV / HIC · 2016 – 2023',
   },
@@ -466,86 +429,80 @@ const SECONDARY_KPIS: Kpi[] = [
     big: '338',
     bigDecimals: 0,
     bigPrefix: '+',
-    bigSuffix: '%',
-    label: 'LEISHMANIASIS · BROTE LANDÁZURI',
-    detail: '114 casos en 21 semanas epidemiológicas · 63,9 % hombres · mediana 20 años',
+    bigSuffix: ' %',
+    label: 'Leishmaniasis · brote Landázuri',
+    detail:
+      '114 casos en 21 semanas epidemiológicas · 63,9 % hombres · mediana 20 años',
     meta: 'SIVIGILA / INS · 2025',
   },
   {
     big: '54',
     bigDecimals: 0,
-    bigSuffix: '%',
-    label: 'MELANOMA · INVASIVO',
+    bigSuffix: ' %',
+    label: 'Melanoma · invasivo',
     detail: '5.255 casos nuevos · 80 % de la mortalidad por cáncer de piel',
     meta: 'INC · Colombia 2019',
   },
 ];
 
-function SecondaryKpi({ kpi, idx, total }: { kpi: Kpi; idx: number; total: number }) {
-  const isLast = idx === total - 1;
+function SecondaryKpi({ kpi, idx }: { kpi: Kpi; idx: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.06 * idx, ease: EASE }}
       viewport={{ once: true }}
-      className="hover-reveal invert-on-hover relative flex flex-col bg-canvas-white"
+      className="card hover-reveal flex flex-col"
       style={{
-        borderTop: '1px solid #292929',
-        borderBottom: '1px solid #292929',
-        borderLeft: '1px solid #292929',
-        borderRight: isLast ? '1px solid #292929' : 'none',
-        padding: '28px 24px',
-        minHeight: '280px',
+        padding: 'clamp(24px,2.4vw,32px)',
+        minHeight: 260,
       }}
       tabIndex={0}
     >
-      <span
-        className="font-mono"
-        style={{
-          fontSize: '12px',
-          letterSpacing: '0.04em',
-          color: '#646464',
-        }}
-        data-mute
-      >
-        KPI · {String(idx + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-      </span>
+      <div className="flex items-center justify-between">
+        <span className="eyebrow-up">
+          KPI · {String(idx + 1).padStart(2, '0')} / 03
+        </span>
+        <span
+          className="pill-accent"
+          style={{ fontSize: 11 }}
+          data-hide
+        >
+          hover
+        </span>
+      </div>
 
-      <div className="mt-3 flex items-baseline gap-2">
+      <div className="mt-6 flex items-baseline gap-2">
         <span className="metric-display tabular-nums">
           {kpi.bigPrefix ?? ''}
-          <CountUp
-            value={parseFloat(kpi.big)}
-            decimals={kpi.bigDecimals}
-            duration={1.6}
-          />
+          <CountUp value={parseFloat(kpi.big)} decimals={kpi.bigDecimals} duration={1.6} />
           {kpi.bigSuffix ?? ''}
         </span>
       </div>
 
-      <div className="mt-3 h-px bg-ink-black" aria-hidden />
-
       <span
-        className="mt-3 font-condensed uppercase"
+        className="mt-4 font-suisse"
         style={{
-          fontSize: '13px',
-          letterSpacing: '0.18em',
+          fontSize: 17,
           fontWeight: 500,
+          lineHeight: 1.3,
+          letterSpacing: '-0.42px',
+          color: 'var(--color-midnight-ink)',
         }}
       >
         {kpi.label}
       </span>
 
-      <div className="mt-auto" style={{ paddingTop: '20px', minHeight: '64px' }}>
+      <div className="mt-auto pt-5" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
         <p
           data-reveal
-          className="font-nh"
+          className="font-suisse"
           style={{
-            fontSize: '15px',
+            fontSize: 14,
             lineHeight: 1.45,
-            fontWeight: 300,
-            letterSpacing: '-0.01em',
+            fontWeight: 450,
+            letterSpacing: '-0.36px',
+            color: 'var(--color-ash-gray)',
           }}
         >
           {kpi.detail}
@@ -554,13 +511,123 @@ function SecondaryKpi({ kpi, idx, total }: { kpi: Kpi; idx: number; total: numbe
           data-reveal
           className="mt-3 font-mono"
           style={{
-            fontSize: '11px',
-            letterSpacing: '0.04em',
+            fontSize: 11,
+            letterSpacing: 0.36,
+            textTransform: 'uppercase',
+            color: 'var(--color-ash-gray)',
           }}
         >
           {kpi.meta}
         </p>
       </div>
+    </motion.div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+// VACÍO CARD
+// ──────────────────────────────────────────────────────────────────────────
+
+type Vacio = {
+  n: string;
+  title: string;
+  detail: string;
+  source: string;
+};
+
+const VACIOS: Vacio[] = [
+  {
+    n: '01',
+    title: 'Cero SSL en Colombia',
+    detail:
+      'Revisión sistemática PRISMA sobre 25 papers nacionales · ningún trabajo aplica aprendizaje autosupervisado a dermatología.',
+    source: 'Torres Ospina et al. · 2025',
+  },
+  {
+    n: '02',
+    title: 'Sesgo fototipos IV-V',
+    detail:
+      'Auditoría ISIC mostró representación insuficiente de piel oscura · falsos negativos sistemáticos en piel latina.',
+    source: 'Daneshjou et al. · 2022',
+  },
+  {
+    n: '03',
+    title: 'PanDerm fuera de alcance',
+    detail:
+      '2 millones de imágenes y cómputo de frontera · arquitectura inalcanzable para grupos regionales de Santander.',
+    source: 'Yan et al. · 2025 · Nature Medicine',
+  },
+];
+
+function VacioCard({ v, idx }: { v: Vacio; idx: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: 0.08 * idx, ease: EASE }}
+      viewport={{ once: true }}
+      className="card-fog flex flex-col"
+      style={{ padding: 'clamp(28px,2.6vw,40px)', minHeight: 280 }}
+    >
+      <div className="flex items-baseline justify-between">
+        <span
+          className="font-display"
+          style={{
+            fontSize: 64,
+            lineHeight: 1,
+            color: 'var(--color-midnight-ink)',
+            letterSpacing: '-0.03em',
+          }}
+        >
+          {v.n}
+        </span>
+        <span
+          className="pill"
+          style={{ fontSize: 11 }}
+        >
+          vacío
+        </span>
+      </div>
+
+      <p
+        className="mt-6 font-suisse"
+        style={{
+          fontSize: 20,
+          fontWeight: 500,
+          letterSpacing: '-0.72px',
+          color: 'var(--color-midnight-ink)',
+          lineHeight: 1.2,
+        }}
+      >
+        {v.title}
+      </p>
+
+      <p
+        className="mt-3 font-suisse"
+        style={{
+          fontSize: 14,
+          fontWeight: 450,
+          lineHeight: 1.45,
+          letterSpacing: '-0.36px',
+          color: 'var(--color-ash-gray)',
+          maxWidth: '34ch',
+        }}
+      >
+        {v.detail}
+      </p>
+
+      <p
+        className="mt-auto pt-5 font-mono"
+        style={{
+          fontSize: 11,
+          letterSpacing: 0.36,
+          textTransform: 'uppercase',
+          color: 'var(--color-deep-smoke)',
+          borderTop: '1px solid rgba(0,0,0,0.06)',
+        }}
+      >
+        {v.source}
+      </p>
     </motion.div>
   );
 }
@@ -572,481 +639,327 @@ function SecondaryKpi({ kpi, idx, total }: { kpi: Kpi; idx: number; total: numbe
 export default function Slide01Context() {
   const ref = useRef<HTMLDivElement>(null);
   const [lens, setLens] = useState<LensId>('sexo');
-  const reduced = useReducedMotion();
 
   return (
     <div
       ref={ref}
-      className="relative w-full overflow-hidden bg-canvas-white text-ink-black"
+      className="relative w-full overflow-hidden"
+      style={{ background: 'var(--color-canvas-ice)', color: 'var(--color-midnight-ink)' }}
     >
-      {/* Vertical rules */}
-      <div
-        className="absolute top-0 bottom-0 left-[clamp(24px,5vw,80px)] w-px bg-grey-100 pointer-events-none"
-        aria-hidden
-      />
-      <div
-        className="absolute top-0 bottom-0 right-[clamp(24px,5vw,80px)] w-px bg-grey-100 pointer-events-none"
-        aria-hidden
-      />
+      <div className="absolute inset-0 gradient-architectural pointer-events-none" aria-hidden />
 
-      <div className="relative mx-auto w-full max-w-[1600px] px-[clamp(40px,7vw,120px)] py-[clamp(56px,8vw,96px)]">
-        {/* ── EYEBROW + INDEX ─────────────────────────────────────────── */}
-        <div className="flex items-baseline justify-between">
-          <motion.span
-            initial={{ opacity: 0, y: 6 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE }}
-            viewport={{ once: true }}
-            className="eyebrow"
-            style={{ fontSize: '13px' }}
-          >
-            01 · CONTEXTO CLÍNICO · SANTANDER
-          </motion.span>
-          <span
-            className="font-mono uppercase"
-            style={{
-              fontSize: '12px',
-              letterSpacing: '0.18em',
-              color: '#646464',
-            }}
-          >
-            §01 / 09
-          </span>
-        </div>
+      <div className="relative mx-auto w-full max-w-[1600px] px-[clamp(24px,5vw,64px)] py-[clamp(56px,8vw,96px)]">
+        {/* ── HEADER ─────────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+          viewport={{ once: true }}
+          className="flex items-start justify-between gap-4 flex-wrap"
+        >
+          <span className="eyebrow-up">01 · CONTEXTO CLÍNICO · SANTANDER</span>
+          <span className="pill-yellow">Datos epidemiológicos verificados</span>
+        </motion.div>
 
-        <div className="mt-4 h-px bg-ink-black" aria-hidden />
-
-        {/* ── TITULAR ────────────────────────────────────────────────── */}
+        {/* ── HEADLINE ─────────────────────────────────────── */}
         <motion.h2
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
           viewport={{ once: true }}
-          className="mt-10 font-nh max-w-[22ch]"
+          className="font-display mt-[clamp(40px,5vw,72px)]"
           style={{
-            fontSize: 'clamp(44px, 5.4vw, 72px)',
-            lineHeight: 1.02,
-            letterSpacing: '-0.025em',
-            fontWeight: 300,
-            color: '#292929',
+            fontSize: 'clamp(56px, 9vw, 130px)',
+            lineHeight: 0.88,
+            letterSpacing: '-0.04em',
+            color: 'var(--color-midnight-ink)',
           }}
         >
-          En Bucaramanga, el carcinoma basocelular ya no es una excepción.
+          EN BUCARAMANGA, EL
+          <br />
+          CARCINOMA BASOCELULAR
+          <br />
+          <span style={{ color: 'var(--color-ash-gray)' }}>YA NO ES UNA EXCEPCIÓN.</span>
         </motion.h2>
 
-        {/* ── HERO METRIC ROW ────────────────────────────────────────── */}
-        <div className="mt-16 grid grid-cols-12 gap-0 items-start">
-          {/* Big number · left */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
+          viewport={{ once: true }}
+          className="mt-8 font-suisse"
+          style={{
+            fontSize: 'clamp(18px, 1.6vw, 22px)',
+            lineHeight: 1.4,
+            fontWeight: 450,
+            letterSpacing: '-0.42px',
+            color: 'var(--color-ash-gray)',
+            maxWidth: '62ch',
+          }}
+        >
+          Tres datasets epidemiológicos verificados confirman la escala regional
+          del problema · datos públicos suficientes para justificar el método.
+        </motion.p>
+
+        {/* ── MEGA HERO + KPI STACK ──────────────────────── */}
+        <div className="mt-[clamp(48px,7vw,96px)] grid grid-cols-1 lg:grid-cols-12 gap-[clamp(16px,2vw,24px)] items-stretch">
+          {/* MEGA HERO · col 7 */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: EASE }}
+            transition={{ duration: 0.9, ease: EASE }}
             viewport={{ once: true }}
-            className="col-span-12 lg:col-span-5 flex flex-col"
+            className="card-solid lg:col-span-7 flex flex-col"
+            style={{ padding: 'clamp(32px,3.5vw,56px)' }}
           >
-            <span
-              className="font-condensed uppercase"
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.22em',
-                color: '#646464',
-              }}
-            >
-              TASA ESTANDARIZADA · CBC
-            </span>
-            <div className="mt-2 flex items-baseline">
-              <span className={reduced ? '' : 'number-rise'}>
-                <span className="metric-mega" style={{ fontSize: 'clamp(140px, 18vw, 220px)' }}>
-                  <CountUp value={124.2} decimals={1} duration={2.0} />
-                </span>
+            <div className="flex items-baseline justify-between">
+              <span
+                className="font-mono"
+                style={{
+                  fontSize: 12,
+                  letterSpacing: 0.36,
+                  textTransform: 'uppercase',
+                  color: 'var(--color-fog-gray)',
+                }}
+              >
+                Tasa estandarizada · CBC
+              </span>
+              <span className="pill-accent">
+                <span className="pulse-dot" aria-hidden />
+                verificado
+              </span>
+            </div>
+
+            <div className="mt-8 flex items-baseline gap-3">
+              <span
+                className="font-display tabular-nums"
+                style={{
+                  fontSize: 'clamp(120px, 16vw, 220px)',
+                  lineHeight: 0.86,
+                  letterSpacing: '-0.04em',
+                  color: 'var(--color-action-green)',
+                }}
+              >
+                <CountUp value={124.2} decimals={1} duration={2.0} />
               </span>
             </div>
             <span
-              className="mt-1 font-condensed uppercase"
+              className="mt-2 font-mono"
               style={{
-                fontSize: '14px',
-                letterSpacing: '0.22em',
-                color: '#292929',
-                fontWeight: 500,
+                fontSize: 14,
+                letterSpacing: 0.36,
+                textTransform: 'uppercase',
+                color: 'var(--color-paper-white)',
               }}
             >
-              / 100K · PERSONAS · AÑO
+              / 100K · personas-año
             </span>
-            <span
-              className="mt-3 font-mono"
+            <p
+              className="mt-4 font-suisse"
               style={{
-                fontSize: '12px',
-                letterSpacing: '0.04em',
-                color: '#646464',
+                fontSize: 16,
+                lineHeight: 1.45,
+                fontWeight: 450,
+                letterSpacing: '-0.42px',
+                color: 'var(--color-fog-gray)',
+                maxWidth: '48ch',
               }}
             >
-              URIBE ET AL. · 2018 · n = 1.669
-            </span>
+              Tasa estandarizada por edad · cohorte más amplia documentada en
+              Bucaramanga AMB · Uribe et al. 2018, n = 1.669 pacientes.
+            </p>
+
+            {/* Segmented toggle */}
+            <div className="mt-8 flex items-center gap-3 flex-wrap">
+              <span
+                className="font-mono"
+                style={{
+                  fontSize: 11,
+                  letterSpacing: 0.36,
+                  textTransform: 'uppercase',
+                  color: 'var(--color-fog-gray)',
+                }}
+              >
+                desglose
+              </span>
+              <div
+                className="seg"
+                role="group"
+                aria-label="Desglose de la tasa"
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  borderColor: 'rgba(255,255,255,0.12)',
+                }}
+              >
+                {LENS_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    aria-pressed={lens === opt.id}
+                    onClick={() => setLens(opt.id)}
+                    style={
+                      lens === opt.id
+                        ? {
+                            background: 'var(--color-action-green)',
+                            color: 'var(--color-midnight-ink)',
+                          }
+                        : { color: 'var(--color-fog-gray)' }
+                    }
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Inline mini-chart */}
+            <div
+              className="mt-6 rounded-2xl"
+              style={{
+                background: 'var(--color-paper-white)',
+                padding: 'clamp(20px,2.2vw,32px)',
+                color: 'var(--color-midnight-ink)',
+                minHeight: 220,
+              }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={lens}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.4, ease: EASE }}
+                >
+                  {lens === 'sexo' && <ChartSexo />}
+                  {lens === 'edad' && <ChartEdad />}
+                  {lens === 'localizacion' && <ChartLocalizacion />}
+                  {lens === 'periodo' && <ChartPeriodo />}
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </motion.div>
 
-          {/* Vertical rule + reading */}
-          <div className="col-span-12 lg:col-span-7 mt-12 lg:mt-0 lg:pl-[clamp(24px,3vw,56px)]">
-            <div
-              className="lg:border-l lg:pl-[clamp(24px,3vw,56px)]"
-              style={{ borderColor: '#292929' }}
-            >
-              <motion.span
-                initial={{ opacity: 0, y: 6 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
-                viewport={{ once: true }}
-                className="font-condensed uppercase"
-                style={{
-                  fontSize: '12px',
-                  letterSpacing: '0.22em',
-                  color: '#292929',
-                  fontWeight: 500,
-                }}
-              >
-                ── LECTURA EXPLICATIVA
-              </motion.span>
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
-                viewport={{ once: true }}
-                className="mt-4 font-nh"
-                style={{
-                  fontSize: 'clamp(18px, 1.5vw, 22px)',
-                  lineHeight: 1.45,
-                  color: '#292929',
-                  fontWeight: 300,
-                  letterSpacing: '-0.015em',
-                  maxWidth: '40ch',
-                }}
-              >
-                124 casos por cada 100.000 habitantes-año. Tasa estandarizada por
-                edad sobre <span style={{ fontWeight: 500 }}>1.669 pacientes</span>{' '}
-                seguidos en el área metropolitana · la cohorte más amplia jamás
-                documentada en el AMB.
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.7, ease: EASE }}
-                viewport={{ once: true }}
-                className="mt-6 grid grid-cols-2 gap-0"
-                style={{ borderTop: '1px solid #292929' }}
-              >
-                <div
-                  className="py-3 pr-4"
-                  style={{ borderRight: '1px solid #292929' }}
-                >
-                  <span
-                    className="font-condensed uppercase block"
-                    style={{
-                      fontSize: '11px',
-                      letterSpacing: '0.22em',
-                      color: '#646464',
-                    }}
-                  >
-                    EDAD MEDIA
-                  </span>
-                  <span
-                    className="mt-1 inline-block font-display tabular-nums"
-                    style={{ fontSize: '32px', lineHeight: 1, color: '#292929' }}
-                  >
-                    68,2
-                  </span>
-                  <span
-                    className="ml-2 font-condensed uppercase"
-                    style={{
-                      fontSize: '11px',
-                      letterSpacing: '0.18em',
-                      color: '#646464',
-                    }}
-                  >
-                    AÑOS
-                  </span>
-                </div>
-                <div className="py-3 pl-4">
-                  <span
-                    className="font-condensed uppercase block"
-                    style={{
-                      fontSize: '11px',
-                      letterSpacing: '0.22em',
-                      color: '#646464',
-                    }}
-                  >
-                    DISTRIBUCIÓN
-                  </span>
-                  <span
-                    className="mt-1 inline-block font-display tabular-nums"
-                    style={{ fontSize: '32px', lineHeight: 1, color: '#292929' }}
-                  >
-                    54,5
-                  </span>
-                  <span
-                    className="ml-2 font-condensed uppercase"
-                    style={{
-                      fontSize: '11px',
-                      letterSpacing: '0.18em',
-                      color: '#646464',
-                    }}
-                  >
-                    % MUJERES
-                  </span>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── INTERACTIVE LENS ROW ───────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: EASE }}
-          viewport={{ once: true }}
-          className="mt-20"
-        >
-          <div className="flex items-baseline justify-between flex-wrap gap-y-3">
-            <span
-              className="font-condensed uppercase"
-              style={{
-                fontSize: '13px',
-                letterSpacing: '0.22em',
-                color: '#292929',
-                fontWeight: 500,
-              }}
-            >
-              ── DESGLOSE DE LA TASA
-            </span>
-            <div className="seg" role="group" aria-label="Cambiar lente">
-              {LENS_OPTIONS.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  aria-pressed={lens === opt.id}
-                  onClick={() => setLens(opt.id)}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="mt-6"
-            style={{
-              border: '1px solid #292929',
-              padding: 'clamp(24px, 3vw, 40px)',
-              minHeight: '280px',
-            }}
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={lens}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.4, ease: EASE }}
-              >
-                {lens === 'sexo' && <ChartSexo />}
-                {lens === 'edad' && <ChartEdad />}
-                {lens === 'localizacion' && <ChartLocalizacion />}
-                {lens === 'periodo' && <ChartPeriodo />}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
-
-        {/* ── SECONDARY KPIs ─────────────────────────────────────────── */}
-        <div className="mt-20">
-          <div className="flex items-baseline justify-between">
-            <span
-              className="font-condensed uppercase"
-              style={{
-                fontSize: '13px',
-                letterSpacing: '0.22em',
-                color: '#292929',
-                fontWeight: 500,
-              }}
-            >
-              ── CARGA SECUNDARIA · MÁS ALLÁ DEL CBC
-            </span>
-            <span
-              className="font-mono uppercase"
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.18em',
-                color: '#646464',
-              }}
-            >
-              HOVER · 3 FUENTES
-            </span>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-0">
+          {/* KPI STACK · col 5 */}
+          <div className="lg:col-span-5 flex flex-col gap-[clamp(16px,2vw,24px)]">
             {SECONDARY_KPIS.map((k, i) => (
-              <SecondaryKpi
-                key={k.label}
-                kpi={k}
-                idx={i}
-                total={SECONDARY_KPIS.length}
-              />
+              <SecondaryKpi key={k.label} kpi={k} idx={i} />
             ))}
           </div>
         </div>
 
-        {/* ── VACÍOS IDENTIFICADOS ───────────────────────────────────── */}
-        <div className="mt-20">
-          <span
-            className="font-condensed uppercase"
-            style={{
-              fontSize: '13px',
-              letterSpacing: '0.22em',
-              color: '#292929',
-              fontWeight: 500,
-            }}
-          >
-            ── VACÍOS IDENTIFICADOS
-          </span>
-          <div className="mt-4" style={{ borderTop: '1px solid #292929' }}>
-            {[
-              {
-                title: 'CERO INVESTIGACIONES SSL EN COLOMBIA',
-                meta: 'Torres Ospina et al. 2025 · revisión PRISMA · n = 25 papers',
-              },
-              {
-                title: 'SESGO HACIA FOTOTIPOS IV-V EN DATASETS PÚBLICOS',
-                meta: 'Daneshjou et al. 2022 · auditoría ISIC',
-              },
-              {
-                title: 'PANDERM (2 M IMÁGENES) FUERA DE ALCANCE REGIONAL',
-                meta: 'Yan et al. 2025 · Nature Medicine',
-              },
-            ].map((row, i) => (
-              <motion.div
-                key={row.title}
-                initial={{ opacity: 0, x: -8 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.05 * i, ease: EASE }}
-                viewport={{ once: true }}
-                className="grid grid-cols-12 items-center"
+        {/* ── VACÍOS IDENTIFICADOS ──────────────────────── */}
+        <div className="mt-[clamp(56px,7vw,96px)]">
+          <div className="flex items-baseline justify-between flex-wrap gap-3 mb-8">
+            <div>
+              <span className="eyebrow-up">Vacíos identificados</span>
+              <h3
+                className="font-suisse mt-2"
                 style={{
-                  borderBottom: '1px solid #292929',
-                  minHeight: '64px',
+                  fontSize: 'clamp(28px,3vw,40px)',
+                  fontWeight: 500,
+                  letterSpacing: '-1.12px',
+                  color: 'var(--color-midnight-ink)',
+                  lineHeight: 1.05,
                 }}
               >
-                <div
-                  className="col-span-1 flex items-center justify-center font-mono"
-                  style={{
-                    fontSize: '12px',
-                    color: '#646464',
-                    borderRight: '1px solid #292929',
-                    alignSelf: 'stretch',
-                    display: 'flex',
-                  }}
-                >
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <div
-                  className="col-span-7 px-5 font-condensed uppercase"
-                  style={{
-                    fontSize: '16px',
-                    letterSpacing: '0.14em',
-                    color: '#292929',
-                    fontWeight: 500,
-                  }}
-                >
-                  ── {row.title}
-                </div>
-                <div
-                  className="col-span-4 px-5 font-mono text-right"
-                  style={{
-                    fontSize: '12px',
-                    letterSpacing: '0.02em',
-                    color: '#646464',
-                    borderLeft: '1px solid #e6e6e6',
-                    alignSelf: 'stretch',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  {row.meta}
-                </div>
-              </motion.div>
+                Lo que falta en el estado del arte regional.
+              </h3>
+            </div>
+            <span
+              className="pill"
+              style={{ fontSize: 12 }}
+            >
+              3 hallazgos · revisión 2022 – 2025
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[clamp(16px,2vw,24px)]">
+            {VACIOS.map((v, i) => (
+              <VacioCard key={v.n} v={v} idx={i} />
             ))}
           </div>
         </div>
 
-        {/* ── CIERRE NARRATIVO ───────────────────────────────────────── */}
+        {/* ── CIERRE CARD-ACCENT ────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: EASE }}
           viewport={{ once: true }}
-          className="mt-16 card-dark"
-          style={{ padding: 'clamp(32px, 4vw, 56px)' }}
+          className="card-accent mt-[clamp(56px,7vw,96px)]"
+          style={{ padding: 'clamp(40px,5vw,80px)' }}
         >
-          <span
-            className="font-condensed uppercase block"
+          <div className="flex items-baseline justify-between mb-6">
+            <span
+              className="font-mono"
+              style={{
+                fontSize: 12,
+                letterSpacing: 0.36,
+                textTransform: 'uppercase',
+                color: 'var(--color-midnight-ink)',
+              }}
+            >
+              Conclusión sección
+            </span>
+            <span
+              className="pill-ink"
+              style={{ fontSize: 11 }}
+            >
+              §01 → §02
+            </span>
+          </div>
+          <h3
+            className="font-display"
             style={{
-              fontSize: '12px',
-              letterSpacing: '0.22em',
-              color: '#b4b8b4',
-              fontWeight: 400,
+              fontSize: 'clamp(56px, 9vw, 130px)',
+              lineHeight: 0.86,
+              letterSpacing: '-0.04em',
+              color: 'var(--color-midnight-ink)',
             }}
           >
-            ── DECISIÓN
-          </span>
+            HAY DATOS.
+            <br />
+            HAY CARGA.
+            <br />
+            FALTA EL MÉTODO.
+          </h3>
           <p
-            className="mt-5 font-display"
+            className="mt-8 font-suisse"
             style={{
-              fontSize: 'clamp(56px, 6vw, 72px)',
-              lineHeight: 0.98,
-              color: '#ffffff',
-              letterSpacing: '-0.01em',
+              fontSize: 18,
+              lineHeight: 1.4,
+              fontWeight: 500,
+              letterSpacing: '-0.42px',
+              color: 'var(--color-midnight-ink)',
+              maxWidth: '54ch',
             }}
           >
-            HAY DATOS. HAY CARGA. FALTA EL MÉTODO.
-          </p>
-          <p
-            className="mt-6 font-nh max-w-3xl"
-            style={{
-              fontSize: 'clamp(18px, 1.5vw, 22px)',
-              lineHeight: 1.45,
-              color: '#ffffff',
-              fontWeight: 300,
-              letterSpacing: '-0.015em',
-            }}
-          >
-            Un modelo autosupervisado puede aprender de imágenes{' '}
-            <span style={{ fontWeight: 500 }}>sin etiquetar</span> · exactamente lo
-            que sobra en Santander.
+            Un modelo autosupervisado puede aprender de imágenes sin etiquetar ·
+            exactamente lo que sobra en Santander.
           </p>
         </motion.div>
 
-        {/* ── FOOTER ─────────────────────────────────────────────────── */}
+        {/* ── FOOTER ─────────────────────────────────────── */}
         <div className="mt-12 flex items-baseline justify-between flex-wrap gap-y-3">
           <span
             className="font-mono"
             style={{
-              fontSize: '12px',
-              letterSpacing: '0.04em',
-              color: '#646464',
+              fontSize: 12,
+              letterSpacing: '-0.36px',
+              color: 'var(--color-ash-gray)',
             }}
           >
-            END OF SECTION 01 · GOTO §02
+            → pregunta de investigación · §02
           </span>
           <span
-            className="inline-flex items-center font-condensed uppercase"
+            className="font-mono inline-flex items-center gap-2"
             style={{
-              fontSize: '12px',
-              letterSpacing: '0.2em',
-              color: '#292929',
+              fontSize: 12,
+              letterSpacing: '-0.36px',
+              color: 'var(--color-ash-gray)',
             }}
           >
-            <span className="kbd">←</span>
-            <span className="kbd">→</span>
-            <span className="ml-2">PARA NAVEGAR</span>
+            navegar <span className="kbd">←</span><span className="kbd">→</span>
           </span>
         </div>
       </div>

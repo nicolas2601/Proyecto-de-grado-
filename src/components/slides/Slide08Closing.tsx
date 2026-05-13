@@ -5,13 +5,18 @@ import SplitText from '@/components/reactbits/SplitText';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-// ── Repository + QR ────────────────────────────────────────────────
-const REPO_URL = 'github.com/nicomoreno/sustentacion-objetivo1';
-const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=0&data=${encodeURIComponent(
-  'https://' + REPO_URL
-)}&color=292929&bgcolor=ffffff&qzone=1&format=svg`;
+// ─────────────────────────────────────────────────────────────────────
+// Repository + QR
+// ─────────────────────────────────────────────────────────────────────
+const REPO_URL = 'github.com/nicolas2601/Proyecto-de-grado-';
+const REPO_FULL = `https://${REPO_URL}`;
+const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=0&color=000000&bgcolor=ffffff&data=${encodeURIComponent(
+  REPO_FULL,
+)}&qzone=1&format=svg`;
 
-// ── References · 20 verbatim del anteproyecto ──────────────────────
+// ─────────────────────────────────────────────────────────────────────
+// Referencias · 20 verbatim del anteproyecto
+// ─────────────────────────────────────────────────────────────────────
 type RefCategory = 'EPIDEMIO' | 'SSL' | 'NORMATIVA' | 'METODOLOGIA' | 'DATASET';
 type Ref = {
   n: number;
@@ -29,7 +34,7 @@ const REFS: Ref[] = [
     author: 'Uribe CJ et al.',
     year: '2018',
     title: 'Carcinoma basocelular de piel en el área metropolitana de Bucaramanga',
-    source: 'Rev Asoc Colomb Dermatol Cir Dermatol 26(1)',
+    source: 'Rev Asoc Colomb Dermatol 26(1)',
     doi: 'asocolderma.org.co',
     category: 'EPIDEMIO',
   },
@@ -38,7 +43,7 @@ const REFS: Ref[] = [
     author: 'FCV / HIC',
     year: '2024',
     title: 'El 15 % de los diagnósticos oncológicos del HIC son de piel',
-    source: 'Comunicado de prensa · Fundación Cardiovascular',
+    source: 'Comunicado FCV',
     doi: 'fcv.org',
     category: 'EPIDEMIO',
   },
@@ -55,7 +60,7 @@ const REFS: Ref[] = [
     n: 4,
     author: 'Tschandl P, Rosendahl C, Kittler H',
     year: '2018',
-    title: 'HAM10000 · Multi-source dermatoscopic images of common pigmented skin lesions',
+    title: 'HAM10000 · Multi-source dermatoscopic images of common pigmented lesions',
     source: 'Scientific Data 5, 180161',
     doi: '10.1038/sdata.2018.161',
     category: 'DATASET',
@@ -207,9 +212,11 @@ const REFS: Ref[] = [
 ];
 
 type Filter = 'TODAS' | RefCategory;
-
 const FILTERS: Filter[] = ['TODAS', 'EPIDEMIO', 'SSL', 'NORMATIVA'];
 
+// ─────────────────────────────────────────────────────────────────────
+// SLIDE 08
+// ─────────────────────────────────────────────────────────────────────
 export default function Slide08Closing() {
   const ref = useRef<HTMLDivElement>(null);
   const [filter, setFilter] = useState<Filter>('TODAS');
@@ -221,30 +228,37 @@ export default function Slide08Closing() {
   }, [filter]);
 
   return (
-    <div ref={ref} className="relative w-full overflow-hidden bg-canvas-white">
-      {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="relative w-full max-w-[1600px] mx-auto px-[clamp(24px,5vw,80px)] pt-20 pb-12">
-        {/* ── Top header ──────────────────────────────────────── */}
-        <div className="flex items-center gap-4">
-          <span className="eyebrow">08 · CIERRE · Q&A</span>
-          <span className="flex-1 h-px" style={{ background: '#292929' }} />
+    <div
+      ref={ref}
+      className="slide relative w-full"
+      style={{ overflow: 'clip', background: '#e5e7eb' }}
+    >
+      <div className="slide-narrow relative">
+        {/* HEADER ────────────────────────────────────────────── */}
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <span className="eyebrow-up">08 · CIERRE · Q&amp;A</span>
           <span
-            className="font-condensed text-ink-black"
-            style={{ fontSize: 13, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 11,
+              letterSpacing: '0.04em',
+              color: '#444444',
+            }}
           >
-            END OF DOCUMENT · 09 / 09
+            END OF DOC · 09 / 09 · 2026.05.13
           </span>
         </div>
 
-        {/* ── Headline cinematográfico ────────────────────────── */}
-        <div className="mt-14 text-center">
+        {/* HERO HEADLINE ───────────────────────────────────── */}
+        <div className="mt-16 md:mt-24 text-center">
           <h2
-            className="font-ev text-ink-black"
             style={{
-              fontSize: 'clamp(72px, 11vw, 160px)',
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontWeight: 300,
+              fontSize: 'clamp(72px, 11vw, 180px)',
               lineHeight: 0.92,
-              letterSpacing: '-0.05em',
-              fontWeight: 100,
+              letterSpacing: '-0.045em',
+              color: '#000000',
             }}
           >
             <SplitText
@@ -275,17 +289,19 @@ export default function Slide08Closing() {
             />
           </h2>
 
-          {/* ── Animated rule ─────────────────────────────────── */}
+          {/* Animated rule */}
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             onAnimationComplete={() => setRuleDone(true)}
             transition={{ delay: 1.5, duration: 0.85, ease: EASE }}
             viewport={{ once: true }}
-            className="mx-auto mt-10 h-px"
+            className="mx-auto mt-12"
             style={{
               width: '60%',
-              background: '#292929',
+              maxWidth: 720,
+              height: 1,
+              background: '#000000',
               transformOrigin: 'left center',
             }}
           />
@@ -294,129 +310,151 @@ export default function Slide08Closing() {
             initial={{ opacity: 0, y: 8 }}
             animate={ruleDone ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-8 mx-auto font-nh font-light italic text-ink-black"
+            className="mt-8 mx-auto"
             style={{
-              fontSize: 24,
+              fontFamily: "'Instrument Serif', serif",
+              fontStyle: 'italic',
+              fontSize: 'clamp(22px, 2.6vw, 28px)',
               lineHeight: 1.4,
-              maxWidth: '50ch',
+              color: '#000000',
+              maxWidth: '60ch',
+              letterSpacing: '-0.01em',
             }}
           >
             El primer objetivo deja una base reproducible. Lo que viene se construye sobre estos datos.
           </motion.p>
         </div>
 
-        {/* ── Two columns ─────────────────────────────────────── */}
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* ── LEFT · Agradecimientos + contacto ──────────── */}
+        {/* BENTO 7 + 5 ───────────────────────────────────── */}
+        <div className="bento mt-20 md:mt-28">
+          {/* LEFT 7 · Agradecimientos */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.3, ease: EASE }}
             viewport={{ once: true }}
-            className="lg:col-span-7 card"
-            style={{ padding: 0 }}
+            className="card"
+            style={{ gridColumn: 'span 7', padding: 0, overflow: 'hidden' }}
           >
             <div
-              className="flex items-center justify-between"
-              style={{ padding: '14px 18px', borderBottom: '1px solid #292929' }}
+              className="flex items-baseline justify-between"
+              style={{ padding: '20px 28px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
             >
-              <span className="eyebrow">── AGRADECIMIENTOS</span>
+              <span className="eyebrow-up">── AGRADECIMIENTOS</span>
               <span
-                className="font-condensed text-ink-black"
-                style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 11,
+                  letterSpacing: '0.04em',
+                  color: '#979797',
+                }}
               >
-                03 PERSONAS
+                03 personas
               </span>
             </div>
 
-            {/* ── Sub-card · Director ─────────────────── */}
-            <div
-              className="grid"
-              style={{
-                gridTemplateColumns: '1fr',
-              }}
-            >
-              {[
-                {
-                  role: 'DIRECCIÓN',
-                  name: 'Andrés Felipe Jerez Ariza',
-                  affiliation: 'UNAB · Ingeniería de Sistemas',
-                },
-                {
-                  role: 'ASESORÍA · CO-DIRECTORA',
-                  name: 'Karen Yaneth Sánchez Quiroga',
-                  affiliation: projectMeta.advisorAffiliation,
-                },
-                {
-                  role: 'JURADO',
-                  name: 'Comité evaluador · Proyecto de Grado I',
-                  affiliation: 'Por la rigurosidad y disponibilidad',
-                },
-              ].map((p, i) => (
-                <div
-                  key={p.role}
-                  className="magnet-frame"
+            {[
+              {
+                role: 'dirección',
+                name: 'Andrés Felipe Jerez Ariza',
+                affiliation: 'UNAB · Ingeniería de Sistemas',
+                pill: null as string | null,
+              },
+              {
+                role: 'asesoría · co-directora',
+                name: 'Karen Yaneth Sánchez Quiroga',
+                affiliation: projectMeta.advisorAffiliation,
+                pill: 'KAUST',
+              },
+              {
+                role: 'jurado',
+                name: 'Comité evaluador · Proyecto de Grado I',
+                affiliation: 'Por la rigurosidad y disponibilidad',
+                pill: null as string | null,
+              },
+            ].map((p, i, arr) => (
+              <div
+                key={p.role}
+                className="magnet-frame"
+                style={{
+                  padding: '24px 28px',
+                  borderTop: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.04)',
+                }}
+              >
+                <p className="eyebrow-up">{p.role}</p>
+                <p
+                  className="mt-2 flex items-baseline gap-3 flex-wrap"
                   style={{
-                    padding: '18px 18px',
-                    borderTop: i === 0 ? 'none' : '1px solid #e6e6e6',
+                    fontFamily: "'Inter', system-ui, sans-serif",
+                    fontSize: 22,
+                    lineHeight: 1.25,
+                    fontWeight: 500,
+                    color: '#000000',
+                    letterSpacing: '-0.015em',
                   }}
                 >
-                  <p
-                    className="font-condensed text-ink-black"
-                    style={{
-                      fontSize: 11,
-                      letterSpacing: '0.2em',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {p.role}
-                  </p>
-                  <p
-                    className="mt-2 font-nh text-ink-black"
-                    style={{ fontSize: 18, lineHeight: 1.3, fontWeight: 500 }}
-                  >
-                    {p.name}
-                  </p>
-                  <p
-                    className="mt-1 font-nh text-ink-black"
-                    style={{ fontSize: 14, lineHeight: 1.4, opacity: 0.7 }}
-                  >
-                    {p.affiliation}
-                  </p>
-                </div>
-              ))}
-            </div>
+                  <span>{p.name}</span>
+                  {p.pill && (
+                    <span className="pill-accent" style={{ padding: '4px 10px', fontSize: 11 }}>
+                      {p.pill}
+                    </span>
+                  )}
+                </p>
+                <p
+                  className="mt-1.5"
+                  style={{
+                    fontFamily:
+                      p.role === 'jurado'
+                        ? "'Instrument Serif', serif"
+                        : "'Inter', system-ui, sans-serif",
+                    fontStyle: p.role === 'jurado' ? 'italic' : 'normal',
+                    fontSize: 14,
+                    lineHeight: 1.4,
+                    color: '#444444',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {p.affiliation}
+                </p>
+                {i === arr.length - 1 && null}
+              </div>
+            ))}
 
-            {/* ── Sub-card · Contacto (card-dark interna) ─────── */}
+            {/* Contacto card-solid interna */}
             <div
-              className="card-dark"
-              style={{ padding: 18, borderTop: '1px solid #292929' }}
+              className="card-solid"
+              style={{
+                margin: 20,
+                padding: 24,
+                borderRadius: 24,
+              }}
             >
               <span
-                className="font-condensed"
                 style={{
-                  fontSize: 12,
-                  letterSpacing: '0.2em',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 11,
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  color: '#ffffff',
+                  color: 'rgba(255,255,255,0.55)',
                 }}
               >
                 ── CONTACTO
               </span>
-              <div className="mt-3 grid gap-1.5">
+              <div className="mt-3 grid gap-2">
                 {[
-                  ['MAIL.A', 'nmoreno@unab.edu.co'],
-                  ['MAIL.B', 'psaavedra@unab.edu.co'],
-                  ['REPO ', REPO_URL],
-                  ['TEL  ', '+57 ·· UNAB Bucaramanga'],
+                  ['mail.a', 'nmoreno@unab.edu.co'],
+                  ['mail.b', 'psaavedra@unab.edu.co'],
+                  ['repo  ', REPO_URL],
+                  ['tel   ', '+57 ·· UNAB Bucaramanga'],
                 ].map(([k, v]) => (
                   <p
                     key={k}
-                    className="font-mono tabular-nums"
                     style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
                       fontSize: 13,
                       color: '#ffffff',
                       lineHeight: 1.5,
+                      fontVariantNumeric: 'tabular-nums',
                     }}
                   >
                     <span style={{ opacity: 0.5 }}>{k} · </span>
@@ -427,52 +465,52 @@ export default function Slide08Closing() {
             </div>
           </motion.div>
 
-          {/* ── RIGHT · QR + repositorio ────────────────────── */}
+          {/* RIGHT 5 · QR + repositorio */}
           <motion.aside
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.45, ease: EASE }}
             viewport={{ once: true }}
-            className="lg:col-span-5"
+            style={{ gridColumn: 'span 5' }}
           >
-            <div className="card magnet-frame" style={{ padding: 0 }}>
+            <div
+              className="card magnet-frame"
+              style={{ padding: 0, overflow: 'hidden' }}
+            >
               <div
-                className="flex items-center justify-between"
-                style={{ padding: '14px 18px', borderBottom: '1px solid #292929' }}
+                className="flex items-baseline justify-between"
+                style={{ padding: '20px 28px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
               >
-                <span className="eyebrow">── REPOSITORIO + COLAB</span>
+                <span className="eyebrow-up">── REPOSITORIO + COLAB</span>
                 <span
-                  className="font-condensed text-ink-black"
                   style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
                     fontSize: 11,
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    border: '1px solid #292929',
-                    padding: '3px 8px',
+                    letterSpacing: '0.04em',
+                    color: '#000000',
+                    padding: '4px 12px',
+                    borderRadius: 9999,
+                    background: '#d1ffca',
                   }}
                 >
                   SCAN ↗
                 </span>
               </div>
 
-              {/* ── QR ──────────────────────────── */}
-              <div
-                style={{
-                  padding: 18,
-                  background: '#ffffff',
-                  borderBottom: '1px solid #292929',
-                }}
-              >
+              {/* QR */}
+              <div style={{ padding: 28 }}>
                 <div
                   className="mx-auto"
                   style={{
                     aspectRatio: '1 / 1',
                     width: '100%',
                     maxWidth: 320,
-                    border: '1px solid #292929',
+                    borderRadius: 20,
+                    background: '#ffffff',
+                    border: '1px solid rgba(0,0,0,0.06)',
                     display: 'grid',
                     placeItems: 'center',
-                    background: '#ffffff',
+                    padding: 16,
                   }}
                 >
                   <img
@@ -480,248 +518,310 @@ export default function Slide08Closing() {
                     alt={`QR code · ${REPO_URL}`}
                     style={{
                       display: 'block',
-                      width: '92%',
-                      height: '92%',
+                      width: '100%',
+                      height: '100%',
                     }}
                   />
                 </div>
               </div>
 
-              {/* ── URL ──────────────────────────── */}
-              <div style={{ padding: '14px 18px', borderBottom: '1px solid #292929' }}>
+              {/* URL */}
+              <div
+                style={{
+                  padding: '20px 28px',
+                  borderTop: '1px solid rgba(0,0,0,0.06)',
+                  borderBottom: '1px solid rgba(0,0,0,0.06)',
+                }}
+              >
                 <p
-                  className="font-nh text-ink-black"
-                  style={{ fontSize: 14, lineHeight: 1.4, fontWeight: 500, wordBreak: 'break-all' }}
+                  style={{
+                    fontFamily: "'Inter', system-ui, sans-serif",
+                    fontSize: 14,
+                    lineHeight: 1.4,
+                    fontWeight: 500,
+                    color: '#000000',
+                    wordBreak: 'break-all',
+                    letterSpacing: '-0.01em',
+                  }}
                 >
                   {REPO_URL}
                 </p>
               </div>
 
-              {/* ── License strip ───────────────── */}
-              <div
-                className="grid grid-cols-3"
-                style={{ padding: 0 }}
-              >
+              {/* License chips */}
+              <div className="flex flex-wrap gap-2" style={{ padding: 20 }}>
                 {[
-                  ['CODE', 'MIT'],
-                  ['DATA', 'CC-BY-NC 4.0'],
-                  ['PROTO', 'STREAMLIT'],
-                ].map(([k, v], i) => (
-                  <div
+                  ['code', 'MIT'],
+                  ['data', 'CC-BY-NC 4.0'],
+                  ['proto', 'STREAMLIT'],
+                ].map(([k, v]) => (
+                  <span
                     key={k}
+                    className="pill"
                     style={{
-                      padding: '12px 14px',
-                      borderLeft: i === 0 ? 'none' : '1px solid #292929',
+                      padding: '6px 14px',
+                      fontSize: 11,
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      letterSpacing: '0.04em',
                     }}
                   >
-                    <p
-                      className="font-condensed text-ink-black"
-                      style={{
-                        fontSize: 10,
-                        letterSpacing: '0.2em',
-                        textTransform: 'uppercase',
-                        opacity: 0.55,
-                      }}
-                    >
-                      {k}
-                    </p>
-                    <p
-                      className="mt-1 font-mono text-ink-black"
-                      style={{ fontSize: 12, letterSpacing: '0.05em' }}
-                    >
-                      {v}
-                    </p>
-                  </div>
+                    <span style={{ color: '#979797' }}>{k}</span>
+                    <span style={{ color: '#000000', fontWeight: 500 }}>{v}</span>
+                  </span>
                 ))}
               </div>
             </div>
           </motion.aside>
         </div>
-      </section>
 
-      {/* ── References rail ──────────────────────────────────────── */}
-      <section className="relative w-full max-w-[1600px] mx-auto px-[clamp(24px,5vw,80px)] pb-20">
-        <div className="flex items-center flex-wrap gap-4 mb-5">
-          <span className="eyebrow">── REFERENCIAS · {String(REFS.length).padStart(2, '0')}</span>
-          <span className="flex-1 h-px" style={{ background: '#292929' }} />
-          <div className="seg" role="group" aria-label="Filtro de referencias">
-            {FILTERS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                aria-pressed={filter === f}
-                onClick={() => setFilter(f)}
-              >
-                {f}
-              </button>
-            ))}
+        {/* REFERENCES RAIL ────────────────────────────────── */}
+        <div className="mt-20 card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div
+            className="flex items-center flex-wrap gap-3 justify-between"
+            style={{ padding: '20px 28px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
+          >
+            <span className="eyebrow-up">
+              ── REFERENCIAS · {String(REFS.length).padStart(2, '0')}+
+            </span>
+            <div className="seg" role="group" aria-label="Filtro de referencias">
+              {FILTERS.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  aria-pressed={filter === f}
+                  onClick={() => setFilter(f)}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div
-          className="relative overflow-x-auto"
-          style={{
-            touchAction: 'pan-x pan-y',
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'thin',
-            scrollbarColor: '#292929 transparent',
-            borderTop: '1px solid #292929',
-            borderBottom: '1px solid #292929',
-            padding: '18px 0',
-          }}
-        >
-          <div className="flex items-stretch gap-3">
-            {filteredRefs.map((r, i) => (
-              <motion.article
-                key={r.n}
-                initial={{ opacity: 0, y: 8 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.03 * i, duration: 0.4, ease: EASE }}
-                viewport={{ once: true, amount: 0.2 }}
-                className="shrink-0 bg-canvas-white flex flex-col magnet-frame"
-                style={{
-                  border: '1px solid #292929',
-                  padding: 16,
-                  minWidth: 300,
-                  maxWidth: 300,
-                  scrollSnapAlign: 'start',
-                }}
-              >
-                <div className="flex items-baseline justify-between">
-                  <span
-                    className="font-display text-ink-black leading-none tabular-nums"
-                    style={{ fontSize: 32, letterSpacing: 0 }}
-                  >
-                    [{String(r.n).padStart(2, '0')}]
-                  </span>
-                  <span
-                    className="font-condensed text-ink-black"
+          <div
+            className="relative"
+            style={{
+              overflowX: 'auto',
+              touchAction: 'pan-x pan-y',
+              scrollSnapType: 'x mandatory',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(0,0,0,0.16) transparent',
+              padding: '24px 28px',
+            }}
+          >
+            <div className="flex items-stretch gap-4">
+              {filteredRefs.map((r, i) => (
+                <motion.article
+                  key={r.n}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.03 * i, duration: 0.4, ease: EASE }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  className="card-fog flex flex-col magnet-frame"
+                  style={{
+                    flexShrink: 0,
+                    padding: 20,
+                    minWidth: 300,
+                    maxWidth: 320,
+                    scrollSnapAlign: 'start',
+                  }}
+                >
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span
+                      style={{
+                        fontFamily: "'Bebas Neue', sans-serif",
+                        fontSize: 32,
+                        lineHeight: 0.9,
+                        color: '#000000',
+                        fontVariantNumeric: 'tabular-nums',
+                        letterSpacing: '-0.02em',
+                      }}
+                    >
+                      [{String(r.n).padStart(2, '0')}]
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontSize: 10,
+                        letterSpacing: '0.04em',
+                        color: '#000000',
+                        padding: '3px 10px',
+                        borderRadius: 9999,
+                        background: '#ffffff',
+                        border: '1px solid rgba(0,0,0,0.06)',
+                      }}
+                    >
+                      {r.category}
+                    </span>
+                  </div>
+
+                  <div
+                    className="mt-3"
+                    style={{ height: 1, background: 'rgba(0,0,0,0.08)' }}
+                  />
+
+                  <p
+                    className="mt-3"
                     style={{
-                      fontSize: 10,
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      border: '1px solid #292929',
-                      padding: '2px 6px',
+                      fontFamily: "'Inter', system-ui, sans-serif",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      lineHeight: 1.35,
+                      color: '#000000',
+                      letterSpacing: '-0.01em',
                     }}
                   >
-                    {r.category}
-                  </span>
-                </div>
+                    {r.author} · {r.year}
+                  </p>
+                  <p
+                    className="mt-2"
+                    style={{
+                      fontFamily: "'Inter', system-ui, sans-serif",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      lineHeight: 1.35,
+                      color: '#000000',
+                      letterSpacing: '-0.015em',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {r.title}
+                  </p>
+                  <p
+                    className="mt-2"
+                    style={{
+                      fontFamily: "'Instrument Serif', serif",
+                      fontStyle: 'italic',
+                      fontSize: 12,
+                      lineHeight: 1.4,
+                      color: '#444444',
+                    }}
+                  >
+                    {r.source}
+                  </p>
+                  <p
+                    className="mt-auto pt-3"
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 11,
+                      lineHeight: 1.4,
+                      color: '#979797',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {r.doi}
+                  </p>
+                </motion.article>
+              ))}
+            </div>
+          </div>
 
-                <div
-                  className="mt-3 h-px w-full"
-                  style={{ background: '#292929' }}
-                />
-
-                <p
-                  className="mt-3 font-nh text-ink-black"
-                  style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.4 }}
-                >
-                  {r.author} · {r.year}
-                </p>
-                <p
-                  className="mt-2 font-nh text-ink-black"
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 500,
-                    lineHeight: 1.35,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {r.title}
-                </p>
-                <p
-                  className="mt-2 font-nh italic text-ink-black"
-                  style={{ fontSize: 12, lineHeight: 1.4, opacity: 0.7 }}
-                >
-                  {r.source}
-                </p>
-                <p
-                  className="mt-auto pt-3 font-mono text-ink-black"
-                  style={{
-                    fontSize: 11,
-                    lineHeight: 1.4,
-                    opacity: 0.65,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {r.doi}
-                </p>
-              </motion.article>
-            ))}
+          {/* drag hint */}
+          <div
+            className="flex items-center gap-2 flex-wrap"
+            style={{
+              padding: '16px 28px',
+              borderTop: '1px solid rgba(0,0,0,0.06)',
+            }}
+          >
+            <span className="kbd">←</span>
+            <span className="kbd">→</span>
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                color: '#444444',
+                letterSpacing: '0.04em',
+              }}
+            >
+              arrastrar para navegar
+            </span>
+            <span style={{ flex: 1 }} />
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                color: '#979797',
+                letterSpacing: '0.04em',
+                fontVariantNumeric: 'tabular-nums',
+              }}
+            >
+              {filteredRefs.length} / {REFS.length}
+            </span>
           </div>
         </div>
 
-        {/* ── Drag hint ─────────────────────────────────────── */}
-        <div className="mt-3 flex items-center gap-2">
-          <span className="kbd">←</span>
-          <span className="kbd">→</span>
-          <span
-            className="font-condensed text-ink-black"
-            style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
-          >
-            arrastrar para navegar
-          </span>
-          <span className="flex-1" />
-          <span
-            className="font-condensed text-ink-black"
-            style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
-          >
-            {filter === 'TODAS' ? REFS.length : filteredRefs.length} / {REFS.length}
-          </span>
-        </div>
-
-        {/* ── FIN marker ────────────────────────────────────── */}
+        {/* FIN MARKER ───────────────────────────────────── */}
         <div className="mt-16 flex items-end justify-between gap-6 flex-wrap">
           <div>
-            <span className="eyebrow">── UNIVERSIDAD</span>
+            <span className="eyebrow-up">── UNIVERSIDAD</span>
             <p
-              className="mt-3 font-nh text-ink-black"
-              style={{ fontSize: 14, fontWeight: 500 }}
+              className="mt-3"
+              style={{
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: 16,
+                fontWeight: 500,
+                color: '#000000',
+                letterSpacing: '-0.01em',
+              }}
             >
               {projectMeta.university}
             </p>
             <p
-              className="mt-1 font-condensed text-ink-black"
-              style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+              className="mt-1"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                letterSpacing: '0.04em',
+                color: '#444444',
+              }}
             >
               {projectMeta.course}
             </p>
           </div>
 
           <div className="text-right">
-            <span
-              className="font-condensed text-ink-black"
-              style={{ fontSize: 14, letterSpacing: '0.2em', textTransform: 'uppercase' }}
-            >
-              ── FIN DE LA SUSTENTACIÓN
-            </span>
+            <span className="eyebrow-up">── FIN DE LA SUSTENTACIÓN</span>
             <div
-              className="mt-3 h-px"
-              style={{ background: '#292929', width: 220, marginLeft: 'auto' }}
+              className="mt-3"
+              style={{
+                height: 1,
+                background: '#000000',
+                width: 220,
+                marginLeft: 'auto',
+              }}
             />
             <p
-              className="mt-3 font-condensed text-ink-black"
-              style={{ fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase' }}
+              className="mt-3"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                letterSpacing: '0.04em',
+                color: '#000000',
+                fontVariantNumeric: 'tabular-nums',
+              }}
             >
-              01 OBJETIVO COMPLETADO · 03 PENDIENTES
+              01 completado · 03 pendientes · TRL 4 objetivo
             </p>
           </div>
         </div>
 
-        {/* ── Footer kbd hints ──────────────────────────────── */}
-        <div className="mt-10 flex flex-wrap items-center gap-4">
+        {/* Footer kbd hints */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
           <div className="flex items-center gap-2">
             <span className="kbd">N</span>
             <span
-              className="font-condensed text-ink-black"
-              style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 12,
+                color: '#444444',
+                letterSpacing: '0.04em',
+              }}
             >
               notas
             </span>
@@ -729,8 +829,12 @@ export default function Slide08Closing() {
           <div className="flex items-center gap-2">
             <span className="kbd">T</span>
             <span
-              className="font-condensed text-ink-black"
-              style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 12,
+                color: '#444444',
+                letterSpacing: '0.04em',
+              }}
             >
               timer
             </span>
@@ -738,21 +842,18 @@ export default function Slide08Closing() {
           <div className="flex items-center gap-2">
             <span className="kbd">R</span>
             <span
-              className="font-condensed text-ink-black"
-              style={{ fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase' }}
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 12,
+                color: '#444444',
+                letterSpacing: '0.04em',
+              }}
             >
               reset
             </span>
           </div>
-          <span className="flex-1" />
-          <span
-            className="font-mono text-ink-black"
-            style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', opacity: 0.55 }}
-          >
-            MONO X7 · 2026
-          </span>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
