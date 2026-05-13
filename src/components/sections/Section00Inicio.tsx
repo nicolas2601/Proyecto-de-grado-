@@ -1,264 +1,193 @@
-import { motion } from 'framer-motion';
-import { PROJECT } from '@/data/content';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { ENTER } from '@/lib/motion';
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
-
-const fade = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-10%' },
-  transition: { duration: 0.7, ease: easeOut, delay },
-});
+// ─────────────────────────────────────────────────────────────────────────
+// §00 INICIO · hero cinematográfico full-bleed
+// Video dermatoscopia · headline centrado · subtitle Courier mono · CTA
+// magnético · brand footer con autores + dirección · scroll cue inferior
+// ─────────────────────────────────────────────────────────────────────────
 
 export default function Section00Inicio() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const reduced = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.7, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, reduced ? 1 : 1.05]);
+
+  // Video fade-in
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onCanPlay = () => setVideoLoaded(true);
+    v.addEventListener('canplay', onCanPlay);
+    v.play().catch(() => {
+      // poster fallback
+    });
+    return () => v.removeEventListener('canplay', onCanPlay);
+  }, []);
+
+  const scrollNext = () => {
+    const next = document.querySelector('[data-section-idx="1"]');
+    if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
-    <section
-      id="inicio"
-      className="section relative overflow-hidden"
+    <div
+      ref={sectionRef}
+      className="relative w-full overflow-hidden"
       style={{
-        background:
-          'linear-gradient(135deg, #0F2C45 0%, #061A2C 100%)',
-        color: '#ffffff',
+        background: '#050505',
+        minHeight: '100dvh',
+        height: '100dvh',
       }}
     >
-      {/* Grain overlay */}
-      <div
-        aria-hidden
-        className="bg-grain pointer-events-none absolute inset-0"
-        style={{ opacity: 0.4 }}
-      />
-      {/* Soft teal glow top-right */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute"
-        style={{
-          top: '-20%',
-          right: '-10%',
-          width: '60vw',
-          height: '60vw',
-          background:
-            'radial-gradient(circle, rgba(31,140,136,0.18) 0%, transparent 60%)',
-          filter: 'blur(40px)',
-        }}
-      />
+      {/* ── BACKGROUND VIDEO · full-bleed ───────────────────── */}
+      <motion.div style={{ scale: heroScale }} className="absolute inset-0 z-0">
+        <video
+          ref={videoRef}
+          src="/media/hero-lesion.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          aria-label="Dermatoscopia · imagen clínica de referencia"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: videoLoaded ? 1 : 0,
+            transition: 'opacity 900ms cubic-bezier(0.22, 1, 0.36, 1)',
+            filter: 'saturate(0.85) contrast(1.05)',
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(5,5,5,0.55) 0%, rgba(5,5,5,0.35) 35%, rgba(5,5,5,0.55) 70%, rgba(5,5,5,0.88) 100%)',
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(5,5,5,0.32) 70%, rgba(5,5,5,0.62) 100%)',
+          }}
+        />
+      </motion.div>
 
-      <div className="container relative">
-        <div className="grid grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* ── Col 8 izquierda ───────────────────────── */}
-          <div className="col-span-12 lg:col-span-8 flex flex-col gap-8">
-            <motion.div
-              {...fade(0)}
-              className="eyebrow-num"
-              style={{ color: '#1F8C88' }}
-            >
-              Proyecto de Grado I · UNAB · 2026
-            </motion.div>
-
-            <motion.h1
-              {...fade(0.08)}
-              className="font-display"
-              style={{
-                color: '#ffffff',
-                fontSize: 'clamp(40px, 5.4vw, 72px)',
-                lineHeight: 1.05,
-                maxWidth: '22ch',
-              }}
-            >
-              {PROJECT.title}
-            </motion.h1>
-
-            <motion.p
-              {...fade(0.16)}
-              className="font-serif-it"
-              style={{
-                color: '#B7E1DF',
-                fontSize: 'clamp(20px, 2vw, 28px)',
-                lineHeight: 1.25,
-                maxWidth: '36ch',
-              }}
-            >
-              Aplicación de Inteligencia Artificial en el Contexto Clínico
-              del Departamento de Santander
-            </motion.p>
-
-            <motion.div
-              {...fade(0.24)}
-              style={{
-                width: '50%',
-                height: 1,
-                background: 'rgba(255,255,255,0.18)',
-              }}
-            />
-
-            {/* Mini-cards autores / dirección / institución */}
-            <motion.div
-              {...fade(0.32)}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4"
-            >
-              {/* Autores */}
-              <div
-                className="rounded-2xl p-5"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                }}
-              >
-                <div
-                  className="eyebrow"
-                  style={{ color: 'rgba(255,255,255,0.55)' }}
-                >
-                  Autores
-                </div>
-                <div
-                  className="mt-2 flex flex-col gap-1"
-                  style={{ color: '#ffffff', fontSize: 14, lineHeight: 1.4 }}
-                >
-                  <span>{PROJECT.authors[0]}</span>
-                  <span>{PROJECT.authors[1]}</span>
-                </div>
-              </div>
-
-              {/* Dirección */}
-              <div
-                className="rounded-2xl p-5"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                }}
-              >
-                <div
-                  className="eyebrow"
-                  style={{ color: 'rgba(255,255,255,0.55)' }}
-                >
-                  Dirección
-                </div>
-                <div
-                  className="mt-2 flex flex-col gap-2"
-                  style={{ color: '#ffffff', fontSize: 14, lineHeight: 1.4 }}
-                >
-                  <span>
-                    {PROJECT.director}{' '}
-                    <span style={{ color: 'rgba(255,255,255,0.55)' }}>
-                      · Director
-                    </span>
-                  </span>
-                  <span className="flex flex-wrap items-center gap-2">
-                    <span>{PROJECT.advisor}</span>
-                    <span className="pill-teal" style={{ fontSize: 11 }}>
-                      KAUST · Co-Dir
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-              {/* Institución */}
-              <div
-                className="rounded-2xl p-5"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                }}
-              >
-                <div
-                  className="eyebrow"
-                  style={{ color: 'rgba(255,255,255,0.55)' }}
-                >
-                  Institución
-                </div>
-                <div
-                  className="mt-2 flex flex-col gap-1"
-                  style={{ color: '#ffffff', fontSize: 14, lineHeight: 1.4 }}
-                >
-                  <span>{PROJECT.university}</span>
-                  <span style={{ color: 'rgba(255,255,255,0.55)' }}>
-                    {PROJECT.program}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* ── Col 4 derecha · video card ───────────────────── */}
-          <motion.div
-            {...fade(0.18)}
-            className="col-span-12 lg:col-span-4"
-          >
-            <div
-              className="relative overflow-hidden"
-              style={{
-                aspectRatio: '4 / 5',
-                borderRadius: 32,
-                background: '#0F2C45',
-                border: '1px solid rgba(255,255,255,0.12)',
-                boxShadow: '0 32px 80px -20px rgba(0,0,0,0.5)',
-              }}
-            >
-              <video
-                src="/media/hero-lesion.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                }}
-              />
-              {/* Tag flotante */}
-              <div
-                className="absolute"
-                style={{
-                  bottom: 16,
-                  left: 16,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '6px 12px',
-                  borderRadius: 9999,
-                  background: 'rgba(6,26,44,0.72)',
-                  backdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(255,255,255,0.14)',
-                }}
-              >
-                <span className="dot-pulse" />
-                <span
-                  className="font-mono"
-                  style={{
-                    color: '#ffffff',
-                    fontSize: 11,
-                    letterSpacing: '0.06em',
-                  }}
-                >
-                  dermatoscopia · referencia
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Bottom row */}
-        <motion.div
-          {...fade(0.44)}
-          className="mt-16 flex flex-wrap items-center justify-between gap-4"
-          style={{ paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.12)' }}
+      {/* ── HERO CONTENT ──────────────────────────────────── */}
+      <motion.div
+        style={{ opacity: heroOpacity }}
+        className="relative z-20 h-full w-full flex flex-col items-center justify-center px-5 sm:px-8 text-center"
+      >
+        {/* Eyebrow */}
+        <motion.span
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2, ease: ENTER }}
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.55)',
+            marginBottom: 32,
+          }}
         >
-          <span className="pill-teal-solid" style={{ padding: '8px 16px' }}>
-            {PROJECT.duration} · sustentación
-          </span>
-          <span
-            className="font-mono"
-            style={{
-              color: 'rgba(255,255,255,0.55)',
-              fontSize: 12,
-              letterSpacing: '0.06em',
-            }}
+          §00 · Proyecto de Grado I · UNAB · 2026
+        </motion.span>
+
+        {/* Headline · 2 líneas */}
+        <motion.h1
+          className="text-white font-normal leading-[1.08] tracking-tight max-w-4xl"
+          style={{
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 'clamp(2rem, 6vw, 4.2rem)',
+            letterSpacing: '-0.025em',
+          }}
+        >
+          <motion.span
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.4, ease: ENTER }}
+            className="block"
           >
-            scroll para iniciar →
-          </span>
-        </motion.div>
-      </div>
-    </section>
+            Aprendizaje autosupervisado
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, delay: 0.62, ease: ENTER }}
+            className="block"
+            style={{ color: 'rgba(255,255,255,0.72)' }}
+          >
+            para lesiones cutáneas en{' '}
+            <span style={{ color: '#FFFFFF' }}>Santander</span>
+          </motion.span>
+        </motion.h1>
+
+        {/* Subtitle · Courier mono */}
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.95, ease: ENTER }}
+          className="mt-5 md:mt-7 text-white/55 text-sm md:text-base leading-relaxed max-w-md"
+          style={{
+            fontFamily: "'JetBrains Mono', 'Courier New', monospace",
+            letterSpacing: '0.01em',
+          }}
+        >
+          un puente entre imágenes dermatológicas
+          <br className="hidden sm:block" />
+          {' '}y diagnóstico asistido por IA
+        </motion.p>
+
+        {/* Scroll cue */}
+        <motion.button
+          type="button"
+          onClick={scrollNext}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 2.0, ease: ENTER }}
+          className="absolute bottom-5 md:bottom-6 left-0 right-0 flex items-center justify-center gap-2 text-white/40 hover:text-white/70 transition-colors duration-200"
+          style={{
+            background: 'transparent',
+            border: 0,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 10,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+          }}
+        >
+          <span>scroll</span>
+          <motion.span
+            animate={reduced ? {} : { y: [0, 4, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            aria-hidden
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 4v16M6 14l6 6 6-6"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.span>
+        </motion.button>
+      </motion.div>
+    </div>
   );
 }
+

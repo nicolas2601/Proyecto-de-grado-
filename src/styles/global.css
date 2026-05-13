@@ -75,12 +75,15 @@
     background: var(--color-paper);
     color: var(--color-charcoal);
     font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
     overscroll-behavior: none;
   }
-  body { margin: 0; min-height: 100vh; }
+  body { margin: 0; min-height: 100vh; font-size: 17px; }
+  p { font-size: inherit; }
   * { box-sizing: border-box; }
   ::selection { background: var(--color-teal-soft); color: var(--color-navy); }
   h1, h2, h3, h4, h5, h6 {
@@ -106,7 +109,7 @@
   .eyebrow {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-graphite);
@@ -114,7 +117,7 @@
   }
   .eyebrow-num {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-teal);
@@ -307,6 +310,7 @@
     font-size: 12px;
     font-weight: 500;
     letter-spacing: -0.01em;
+    white-space: nowrap;
   }
   .status-pending {
     display: inline-flex;
@@ -319,6 +323,24 @@
     padding: 5px 13px;
     font-size: 12px;
     font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* ── Objetivo cards · responsive grid ────────────── */
+  @media (max-width: 760px) {
+    .objcard-grid {
+      grid-template-columns: auto minmax(0, 1fr) !important;
+    }
+    .objcard-grid > [style*='grid-column: 3'],
+    .objcard-grid > [style*='gridColumn: "3"'],
+    .objcard-grid > [data-objcard-status] {
+      grid-column: 1 / -1 !important;
+      grid-row: 2 !important;
+      justify-self: stretch !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
   }
 
   /* ── Pulse dot ─────────────────────────── */
@@ -348,15 +370,17 @@
   .section {
     position: relative;
     width: 100%;
-    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-block: clamp(64px, 9vw, 128px);
+    padding-block: clamp(48px, 6vw, 88px);
+  }
+  .section-hero {
+    min-height: 100dvh;
+    padding-block: 0;
   }
   .section-tight {
-    min-height: auto;
-    padding-block: clamp(56px, 7vw, 96px);
+    padding-block: clamp(40px, 4vw, 64px);
   }
   .container {
     max-width: 1380px;

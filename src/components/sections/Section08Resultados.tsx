@@ -1,16 +1,103 @@
-import { motion } from 'framer-motion';
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  useInView,
+  useMotionValue,
+  useSpring,
+  animate,
+} from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { RESULTADOS, METRICAS, PUNTOS_ESTRATEGICOS } from '@/data/content';
+import { Cite } from '@/components/ui/Cite';
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
+const ENTER = [0.22, 1, 0.36, 1] as const;
+const MOVE = [0.25, 1, 0.5, 1] as const;
 
-const fade = (delay = 0, y = 24) => ({
-  initial: { opacity: 0, y },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-10%' },
-  transition: { duration: 0.7, ease: easeOut, delay },
-});
+// ── Counter animado 0→target ───────────────────────────
+function CounterMega({ target, reduced }: { target: number; reduced: boolean }) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: '-10%' });
+  const [val, setVal] = useState(reduced ? target : 0);
+
+  useEffect(() => {
+    if (!inView || reduced) {
+      if (reduced) setVal(target);
+      return;
+    }
+    const controls = animate(0, target, {
+      duration: 1.2,
+      ease: ENTER,
+      onUpdate: (v) => setVal(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [inView, target, reduced]);
+
+  return (
+    <span
+      ref={ref}
+      className="font-display tabular-nums"
+      style={{
+        fontSize: 'clamp(120px, 14vw, 180px)',
+        lineHeight: 0.85,
+        color: 'var(--color-teal-soft)',
+        fontWeight: 700,
+        letterSpacing: '-0.05em',
+      }}
+    >
+      {val}
+    </span>
+  );
+}
 
 export default function Section07Resultados() {
+  const reduced = useReducedMotion() ?? false;
+  const trlRef = useRef<HTMLDivElement | null>(null);
+
+  // TRL band parallax scale 0.98 → 1 → 0.98
+  const { scrollYProgress: trlProgress } = useScroll({
+    target: trlRef,
+    offset: ['start end', 'end start'],
+  });
+  const trlScaleRaw = useTransform(trlProgress, [0, 0.5, 1], [0.98, 1, 0.98]);
+  const trlScale = useSpring(trlScaleRaw, { stiffness: 120, damping: 24, mass: 0.6 });
+
+  // ── Bento 7+5 (clip-path reveal lateral) ──
+  const bentoLeft = {
+    hidden: reduced
+      ? { opacity: 0 }
+      : { opacity: 0, clipPath: 'inset(0 100% 0 0)', x: -16 },
+    show: reduced
+      ? { opacity: 1, transition: { duration: 0.4 } }
+      : {
+          opacity: 1,
+          clipPath: 'inset(0 0% 0 0)',
+          x: 0,
+          transition: { duration: 0.85, ease: ENTER },
+        },
+  };
+  const bentoRight = {
+    hidden: reduced
+      ? { opacity: 0 }
+      : { opacity: 0, clipPath: 'inset(0 0 0 100%)', x: 16 },
+    show: reduced
+      ? { opacity: 1, transition: { duration: 0.4 } }
+      : {
+          opacity: 1,
+          clipPath: 'inset(0 0 0 0%)',
+          x: 0,
+          transition: { duration: 0.85, ease: ENTER },
+        },
+  };
+
+  const fadeIn = (delay = 0) => ({
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-10%' },
+    transition: { duration: 0.7, ease: ENTER, delay },
+  });
+
   return (
     <section
       id="resultados"
@@ -20,12 +107,12 @@ export default function Section07Resultados() {
       <div aria-hidden className="bg-grain pointer-events-none absolute inset-0" style={{ opacity: 0.3 }} />
 
       <div className="container relative">
-        <motion.div {...fade(0)} className="eyebrow-num mb-6">
-          §07 / Resultados esperados
+        <motion.div {...fadeIn(0)} className="eyebrow-num mb-6">
+          §16 / Resultados esperados
         </motion.div>
 
         <motion.h2
-          {...fade(0.08)}
+          {...fadeIn(0.06)}
           className="font-display"
           style={{
             fontSize: 'clamp(40px, 5.4vw, 72px)',
@@ -42,10 +129,15 @@ export default function Section07Resultados() {
         </motion.h2>
 
         {/* ── Bento 7+5 superior ───────────────────────── */}
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6">
-          {/* Col 7 · Entregable técnico */}
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-10%' }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0 } } }}
+          className="mt-14 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6"
+        >
           <motion.div
-            {...fade(0.18)}
+            variants={bentoLeft}
             className="card-paper lg:col-span-7"
             style={{
               padding: 36,
@@ -53,6 +145,7 @@ export default function Section07Resultados() {
               display: 'flex',
               flexDirection: 'column',
               gap: 18,
+              willChange: 'transform, clip-path',
             }}
           >
             <div className="flex items-center justify-between">
@@ -101,9 +194,8 @@ export default function Section07Resultados() {
             </p>
           </motion.div>
 
-          {/* Col 5 · Entregable funcional */}
           <motion.div
-            {...fade(0.26)}
+            variants={bentoRight}
             className="card-teal lg:col-span-5"
             style={{
               padding: 36,
@@ -111,6 +203,7 @@ export default function Section07Resultados() {
               display: 'flex',
               flexDirection: 'column',
               gap: 18,
+              willChange: 'transform, clip-path',
             }}
           >
             <div className="flex items-center justify-between">
@@ -162,28 +255,27 @@ export default function Section07Resultados() {
               {RESULTADOS.funcional}
             </p>
           </motion.div>
-        </div>
+        </motion.div>
 
-        {/* ── TRL band · card navy ───────────────────────── */}
+        {/* ── TRL band · card navy con parallax scale ──── */}
         <motion.div
-          {...fade(0.35)}
+          ref={trlRef}
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-5%' }}
+          transition={{ duration: 0.85, ease: ENTER, delay: 0.1 }}
+          style={{
+            scale: reduced ? 1 : trlScale,
+            willChange: 'transform',
+          }}
           className="card-navy mt-5 lg:mt-6"
-          style={{ padding: 'clamp(28px, 4vw, 56px)' }}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+          <div
+            style={{ padding: 'clamp(28px, 4vw, 56px)' }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center"
+          >
             <div className="lg:col-span-4 flex flex-col items-start lg:items-center">
-              <span
-                className="font-display tabular-nums"
-                style={{
-                  fontSize: 'clamp(120px, 14vw, 180px)',
-                  lineHeight: 0.85,
-                  color: 'var(--color-teal-soft)',
-                  fontWeight: 700,
-                  letterSpacing: '-0.05em',
-                }}
-              >
-                4
-              </span>
+              <CounterMega target={4} reduced={reduced} />
             </div>
             <div className="lg:col-span-8">
               <div
@@ -204,13 +296,43 @@ export default function Section07Resultados() {
               >
                 {RESULTADOS.trl.descripcion}
               </p>
-              <div className="mt-6 flex flex-wrap gap-2">
+              <motion.div
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: '-5%' }}
+                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
+                className="mt-6 flex flex-wrap gap-2"
+              >
                 {['TRL 1', 'TRL 2', 'TRL 3', 'TRL 4', 'TRL 5', 'TRL 6'].map((trl, i) => {
                   const active = trl === 'TRL 4';
                   const passed = i < 3;
                   return (
-                    <span
+                    <motion.span
                       key={trl}
+                      variants={{
+                        hidden: reduced ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 },
+                        show: reduced
+                          ? { opacity: 1, transition: { duration: 0.3 } }
+                          : {
+                              opacity: 1,
+                              y: 0,
+                              scale: active ? 1.04 : 1,
+                              transition: { duration: 0.5, ease: ENTER },
+                            },
+                      }}
+                      animate={
+                        !reduced && active
+                          ? {
+                              scale: [1.04, 1.08, 1.04],
+                              transition: {
+                                duration: 2.6,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                                delay: 1.2,
+                              },
+                            }
+                          : undefined
+                      }
                       className="font-mono"
                       style={{
                         fontSize: 11,
@@ -231,19 +353,21 @@ export default function Section07Resultados() {
                           ? '1px solid var(--color-teal)'
                           : '1px solid rgba(255,255,255,0.18)',
                         fontWeight: active ? 600 : 400,
+                        display: 'inline-block',
+                        transformOrigin: 'center',
                       }}
                     >
                       {trl}
-                    </span>
+                    </motion.span>
                   );
                 })}
-              </div>
+              </motion.div>
             </div>
           </div>
         </motion.div>
 
         {/* ── 4 MÉTRICAS · grid 4-col ───────────────────────── */}
-        <motion.div {...fade(0.45)} className="mt-12 mb-6">
+        <motion.div {...fadeIn(0.05)} className="mt-12 mb-6">
           <span
             className="eyebrow"
             style={{ color: 'var(--color-graphite)' }}
@@ -252,13 +376,36 @@ export default function Section07Resultados() {
           </span>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-10%' }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5"
+        >
           {METRICAS.map((m, i) => {
             const featured = i === 0;
             return (
               <motion.div
                 key={m.nombre}
-                {...fade(0.5 + i * 0.06)}
+                variants={{
+                  hidden: reduced
+                    ? { opacity: 0 }
+                    : { opacity: 0, y: 24, scale: 0.96 },
+                  show: reduced
+                    ? { opacity: 1, transition: { duration: 0.4 } }
+                    : {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: { duration: 0.7, ease: ENTER },
+                      },
+                }}
+                whileHover={
+                  reduced
+                    ? undefined
+                    : { y: -3, transition: { type: 'spring', stiffness: 300, damping: 22 } }
+                }
                 className={featured ? 'card-teal-soft' : 'card-paper'}
                 style={{
                   padding: 24,
@@ -271,8 +418,30 @@ export default function Section07Resultados() {
                     ? '2px solid var(--color-teal)'
                     : '1px solid var(--color-line)',
                   background: featured ? 'var(--color-teal-soft)' : 'var(--color-paper-warm)',
+                  position: 'relative',
+                  willChange: 'transform',
                 }}
               >
+                {/* Glow teal pulsante para AUC-ROC destacada */}
+                {featured && !reduced && (
+                  <motion.span
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      inset: -2,
+                      borderRadius: 22,
+                      pointerEvents: 'none',
+                    }}
+                    animate={{
+                      boxShadow: [
+                        '0 0 0 0 rgba(31,140,136,0)',
+                        '0 0 0 10px rgba(31,140,136,0.10)',
+                        '0 0 0 0 rgba(31,140,136,0)',
+                      ],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                )}
                 <div className="flex items-center justify-between">
                   <span
                     className="eyebrow"
@@ -317,13 +486,18 @@ export default function Section07Resultados() {
                 >
                   {m.detalle}
                 </p>
+                {'refs' in m && Array.isArray((m as any).refs) && (m as any).refs.length > 0 ? (
+                  <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    <Cite refs={(m as any).refs} tone="paper" />
+                  </div>
+                ) : null}
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* ── 3 puntos estratégicos ───────────────────── */}
-        <motion.div {...fade(0.65)} className="mt-12 mb-6">
+        <motion.div {...fadeIn(0.05)} className="mt-12 mb-6">
           <span
             className="eyebrow"
             style={{ color: 'var(--color-graphite)' }}
@@ -332,11 +506,27 @@ export default function Section07Resultados() {
           </span>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5">
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-10%' }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5"
+        >
           {PUNTOS_ESTRATEGICOS.map((p, i) => (
             <motion.div
               key={p.titulo}
-              {...fade(0.7 + i * 0.06)}
+              variants={{
+                hidden: reduced ? { opacity: 0 } : { opacity: 0, y: 24 },
+                show: reduced
+                  ? { opacity: 1, transition: { duration: 0.4 } }
+                  : { opacity: 1, y: 0, transition: { duration: 0.7, ease: ENTER } },
+              }}
+              whileHover={
+                reduced
+                  ? undefined
+                  : { y: -3, transition: { type: 'spring', stiffness: 300, damping: 22 } }
+              }
               className="card-paper"
               style={{
                 padding: 28,
@@ -346,6 +536,7 @@ export default function Section07Resultados() {
                 gap: 10,
                 borderRadius: 20,
                 borderTop: '3px solid var(--color-teal)',
+                willChange: 'transform',
               }}
             >
               <div className="flex items-center justify-between">
@@ -382,13 +573,18 @@ export default function Section07Resultados() {
               >
                 {p.texto}
               </p>
+              {'refs' in p && Array.isArray((p as any).refs) && (p as any).refs.length > 0 ? (
+                <div style={{ marginTop: 'auto', paddingTop: 12, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                  <Cite refs={(p as any).refs} tone="paper" />
+                </div>
+              ) : null}
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Footer hairline */}
         <motion.div
-          {...fade(0.88)}
+          {...fadeIn(0.1)}
           className="hairline mt-14 pt-6 flex flex-wrap items-center justify-between gap-3"
         >
           <span
@@ -399,7 +595,7 @@ export default function Section07Resultados() {
               maxWidth: '60ch',
             }}
           >
-            El prototipo informa explícitamente estas métricas al usuario médico, transparencia como principio de seguridad.
+            El prototipo reporta las métricas al usuario médico para que conozca capacidades y limitaciones antes de cualquier decisión clínica.
           </span>
           <span
             className="font-mono"
@@ -410,7 +606,7 @@ export default function Section07Resultados() {
               color: 'var(--color-teal)',
             }}
           >
-            §07 / resultados esperados
+            §16 / resultados esperados
           </span>
         </motion.div>
       </div>

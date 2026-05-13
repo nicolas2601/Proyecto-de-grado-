@@ -1,39 +1,46 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { SECCIONES } from '@/data/content';
+import { bootMotion, teardownMotion, mountCursor, pageReveal, scrollToSection as motionScrollTo } from '@/lib/motion';
 import Section00Inicio from '@/components/sections/Section00Inicio';
+import SectionEquipo from '@/components/sections/SectionEquipo';
 import Section01Introduccion from '@/components/sections/Section01Introduccion';
 import Section02Problema from '@/components/sections/Section02Problema';
 import Section03Pregunta from '@/components/sections/Section03Pregunta';
-import Section04Justificacion from '@/components/sections/Section04Justificacion';
-import Section05Alcance from '@/components/sections/Section05Alcance';
-import Section06Objetivos from '@/components/sections/Section06Objetivos';
-import Section07Resultados from '@/components/sections/Section07Resultados';
-import Section08MarcoTeorico from '@/components/sections/Section08MarcoTeorico';
-import Section09MarcoNormativo from '@/components/sections/Section09MarcoNormativo';
-import Section10Antecedentes from '@/components/sections/Section10Antecedentes';
-import Section11Contexto from '@/components/sections/Section11Contexto';
-import Section12Metodologia from '@/components/sections/Section12Metodologia';
-import Section13Cronograma from '@/components/sections/Section13Cronograma';
-import Section14Avances from '@/components/sections/Section14Avances';
-import Section15Referencias from '@/components/sections/Section15Referencias';
+import Section04Hipotesis from '@/components/sections/Section04Hipotesis';
+import Section05Justificacion from '@/components/sections/Section05Justificacion';
+import Section06Alcance from '@/components/sections/Section06Alcance';
+import Section07Objetivos from '@/components/sections/Section07Objetivos';
+import Section08Resultados from '@/components/sections/Section08Resultados';
+import Section09MarcoTeorico from '@/components/sections/Section09MarcoTeorico';
+import Section10MarcoNormativo from '@/components/sections/Section10MarcoNormativo';
+import Section11RevisionLiteratura from '@/components/sections/Section11RevisionLiteratura';
+import Section12Antecedentes from '@/components/sections/Section12Antecedentes';
+import Section13Contexto from '@/components/sections/Section13Contexto';
+import Section14Metodologia from '@/components/sections/Section14Metodologia';
+import Section15Cronograma from '@/components/sections/Section15Cronograma';
+import Section16Avances from '@/components/sections/Section16Avances';
+import Section17Referencias from '@/components/sections/Section17Referencias';
 
+// Orden de sustentación · marco teórico tras objetivos · resultados al final
 const SECTION_COMPONENTS = [
-  Section00Inicio,
-  Section01Introduccion,
-  Section02Problema,
-  Section03Pregunta,
-  Section04Justificacion,
-  Section05Alcance,
-  Section06Objetivos,
-  Section07Resultados,
-  Section08MarcoTeorico,
-  Section09MarcoNormativo,
-  Section10Antecedentes,
-  Section11Contexto,
-  Section12Metodologia,
-  Section13Cronograma,
-  Section14Avances,
-  Section15Referencias,
+  Section00Inicio,             // 00
+  Section01Introduccion,       // 01
+  Section02Problema,           // 02
+  Section03Pregunta,           // 03
+  Section04Hipotesis,          // 04
+  Section05Justificacion,      // 05
+  Section06Alcance,            // 06
+  Section07Objetivos,          // 07
+  Section09MarcoTeorico,       // 08 (antes 9)
+  Section10MarcoNormativo,     // 09 (antes 10)
+  Section11RevisionLiteratura, // 10
+  Section12Antecedentes,       // 11
+  Section13Contexto,           // 12
+  Section14Metodologia,        // 13
+  Section15Cronograma,         // 14
+  Section16Avances,            // 15
+  Section08Resultados,         // 16 · resultados esperados al final
+  Section17Referencias,        // 17
 ];
 
 export default function Shell() {
@@ -41,7 +48,7 @@ export default function Shell() {
   const [navOpen, setNavOpen] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Reset scroll on mount
+  // Reset scroll on mount + boot motion (Lenis + GSAP + cursor + page reveal)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if ('scrollRestoration' in window.history) {
@@ -49,6 +56,13 @@ export default function Shell() {
       }
       window.scrollTo(0, 0);
     }
+    bootMotion();
+    pageReveal();
+    const offCursor = mountCursor();
+    return () => {
+      offCursor();
+      teardownMotion();
+    };
   }, []);
 
   // IntersectionObserver to track active section
@@ -113,12 +127,7 @@ export default function Shell() {
     return () => window.removeEventListener('keydown', onKey);
   }, [current]);
 
-  const scrollToSection = (idx: number) => {
-    const el = document.querySelector(`[data-section-idx="${idx}"]`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+  const scrollToSection = motionScrollTo;
 
   return (
     <>
@@ -141,16 +150,31 @@ export default function Shell() {
             onClick={() => scrollToSection(0)}
             className="flex items-center gap-2.5 shrink-0"
             style={{ background: 'none', border: 0, cursor: 'pointer' }}
+            aria-label="Universidad Autónoma de Bucaramanga · Inicio"
           >
             <span
               style={{
-                width: 22,
-                height: 22,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 34,
+                height: 34,
                 background: '#0F2C45',
-                borderRadius: 6,
-                display: 'inline-block',
+                borderRadius: 9,
+                boxShadow: '0 1px 0 rgba(255,255,255,0.06) inset, 0 1px 2px rgba(15,44,69,0.18)',
               }}
-            />
+            >
+              <img
+                src="/media/logo-unab.png"
+                alt=""
+                aria-hidden
+                style={{
+                  height: 26,
+                  width: 'auto',
+                  display: 'block',
+                }}
+              />
+            </span>
             <span
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -165,9 +189,9 @@ export default function Shell() {
             </span>
           </button>
 
-          {/* Section pills · centered horizontal scroll on lg */}
+          {/* Section pills · centered horizontal scroll on xl */}
           <nav
-            className="hidden lg:flex items-center gap-1 flex-1 overflow-x-auto"
+            className="hidden xl:flex items-center gap-1 flex-1 overflow-x-auto"
             style={{ scrollbarWidth: 'none' }}
           >
             {SECCIONES.map((s) => (
@@ -179,10 +203,10 @@ export default function Shell() {
                   background: current === s.id ? '#0F2C45' : 'transparent',
                   color: current === s.id ? '#FFFFFF' : '#4D5B6D',
                   border: 0,
-                  padding: '7px 12px',
+                  padding: '6px 10px',
                   borderRadius: 9999,
                   fontFamily: "'Inter', sans-serif",
-                  fontSize: 12.5,
+                  fontSize: 11.5,
                   fontWeight: 500,
                   letterSpacing: '-0.01em',
                   cursor: 'pointer',
@@ -203,9 +227,9 @@ export default function Shell() {
                 <span
                   style={{
                     opacity: 0.6,
-                    marginRight: 5,
+                    marginRight: 4,
                     fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
+                    fontSize: 9,
                   }}
                 >
                   {String(s.id).padStart(2, '0')}
@@ -215,9 +239,9 @@ export default function Shell() {
             ))}
           </nav>
 
-          {/* Section counter (md only) */}
+          {/* Section counter (lg only · cuando no caben los 18 pills) */}
           <div
-            className="hidden md:flex lg:hidden items-center gap-2 px-3 py-1.5 flex-1 justify-center"
+            className="hidden md:flex xl:hidden items-center gap-2 px-3 py-1.5 flex-1 justify-center"
             style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 12,
@@ -243,7 +267,7 @@ export default function Shell() {
           <button
             type="button"
             onClick={() => setNavOpen((v) => !v)}
-            className="lg:hidden ml-auto"
+            className="xl:hidden ml-auto"
             style={{
               appearance: 'none',
               background: '#0F2C45',
@@ -266,7 +290,7 @@ export default function Shell() {
       {/* ── Mobile fullscreen nav ─────────────────────────── */}
       {navOpen && (
         <div
-          className="no-print fixed inset-0 z-40 lg:hidden flex flex-col p-6 pt-24"
+          className="no-print fixed inset-0 z-40 xl:hidden flex flex-col p-6 pt-24 overflow-y-auto"
           style={{
             background: 'rgba(241, 244, 244, 0.96)',
             backdropFilter: 'blur(24px) saturate(140%)',
@@ -297,7 +321,7 @@ export default function Shell() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: 12,
-                  animation: `fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.03}s both`,
+                  animation: `fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.025}s both`,
                 }}
               >
                 <span
@@ -347,14 +371,21 @@ export default function Shell() {
       {/* Sections */}
       <main className="relative">
         {SECTION_COMPONENTS.map((Section, idx) => (
-          <section
-            key={idx}
-            data-section-idx={idx}
-            id={`section-${idx}`}
-            className="section relative"
-          >
-            <Section />
-          </section>
+          <Fragment key={idx}>
+            <div
+              data-section-idx={idx}
+              id={`section-${idx}`}
+              className="relative"
+            >
+              <Section />
+            </div>
+            {/* Sección EQUIPO · entre §00 hero y §01 · no entra en navegación numerada */}
+            {idx === 0 && (
+              <div id="section-equipo" className="relative">
+                <SectionEquipo />
+              </div>
+            )}
+          </Fragment>
         ))}
       </main>
     </>

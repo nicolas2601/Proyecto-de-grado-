@@ -26,3 +26,11 @@ pnpm-debug.log*
 # local rufflo memory
 ruvector.db
 *.db-journal
+agentdb.rvf
+agentdb.rvf.lock
+
+# Playwright / QA screenshots (no van al repo)
+.playwright-mcp/
+/*.png
+/*.jpeg
+/*.jpg

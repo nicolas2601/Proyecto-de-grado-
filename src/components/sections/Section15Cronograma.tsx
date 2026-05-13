@@ -1,16 +1,64 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { CRONOGRAMA, METODOLOGIA } from '@/data/content';
-
-const EASE = [0.16, 1, 0.3, 1] as const;
+import { ENTER } from '@/lib/motion';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: ENTER } },
 };
 
 const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.07 } },
+};
+
+// Lane stagger 150ms left→right
+const laneStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15, delayChildren: 0.25 } },
+};
+
+const laneEnter = {
+  hidden: { opacity: 0, x: -28 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: ENTER } },
+};
+
+// Eje X axis draw
+const axisDraw = {
+  hidden: { scaleX: 0, opacity: 0 },
+  show: {
+    scaleX: 1,
+    opacity: 1,
+    transition: { duration: 0.7, ease: ENTER },
+  },
+};
+
+// Bar reveal con clip-path left→right
+const barReveal = (duration: number, delay: number) => ({
+  hidden: { clipPath: 'inset(0 100% 0 0)' },
+  show: {
+    clipPath: 'inset(0 0% 0 0)',
+    transition: { duration, ease: ENTER, delay },
+  },
+});
+
+// Línea actualidad scaleY
+const nowLine = {
+  hidden: { scaleY: 0, opacity: 0 },
+  show: {
+    scaleY: 1,
+    opacity: 1,
+    transition: { duration: 0.55, ease: ENTER, delay: 1.4 },
+  },
+};
+
+const nowLabel = {
+  hidden: { opacity: 0, y: -6 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: ENTER, delay: 1.75 },
+  },
 };
 
 // Configuración de cada barra de Gantt por fase
@@ -28,17 +76,35 @@ function GanttBar({
   variant,
   x1,
   x2,
+  index,
+  reduced,
 }: {
   variant: 'solid' | 'dashed-teal' | 'dashed-grey';
   x1: number;
   x2: number;
+  index: number;
+  reduced: boolean;
 }) {
   const width = `${x2 - x1}%`;
   const left = `${x1}%`;
 
+  // F1 (solid) → 0.8s, F2-F4 (dashed) → 0.6s; stagger 200ms entre lanes
+  const duration = variant === 'solid' ? 0.8 : 0.6;
+  const delay = 0.35 + index * 0.2;
+
+  const motionProps = reduced
+    ? {}
+    : {
+        initial: 'hidden',
+        whileInView: 'show',
+        viewport: { once: true, amount: 0.3 },
+        variants: barReveal(duration, delay),
+      };
+
   if (variant === 'solid') {
     return (
-      <div
+      <motion.div
+        {...motionProps}
         style={{
           position: 'absolute',
           left,
@@ -55,7 +121,8 @@ function GanttBar({
   }
   if (variant === 'dashed-teal') {
     return (
-      <div
+      <motion.div
+        {...motionProps}
         style={{
           position: 'absolute',
           left,
@@ -71,7 +138,8 @@ function GanttBar({
     );
   }
   return (
-    <div
+    <motion.div
+      {...motionProps}
       style={{
         position: 'absolute',
         left,
@@ -87,7 +155,15 @@ function GanttBar({
   );
 }
 
+// Stagger 80ms para grid 2x2 actividades
+const subStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
 export default function Section13Cronograma() {
+  const reduced = useReducedMotion() ?? false;
+
   return (
     <div className="container">
       {/* Header */}
@@ -99,7 +175,7 @@ export default function Section13Cronograma() {
         className="mb-12"
       >
         <motion.div variants={fadeUp} className="eyebrow-num mb-6">
-          §13 / CRONOGRAMA
+          §14 / CRONOGRAMA
         </motion.div>
 
         <motion.h2
@@ -154,8 +230,12 @@ export default function Section13Cronograma() {
             position: 'relative',
           }}
         >
-          {/* Header eje X · semestres */}
-          <div
+          {/* Header eje X · semestres con line draw */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={axisDraw}
             style={{
               display: 'grid',
               gridTemplateColumns: '220px 1fr 140px',
@@ -164,6 +244,7 @@ export default function Section13Cronograma() {
               paddingBottom: 14,
               borderBottom: '1px solid var(--color-line)',
               marginBottom: 8,
+              transformOrigin: 'left center',
             }}
           >
             <div
@@ -204,10 +285,16 @@ export default function Section13Cronograma() {
             >
               Estado
             </div>
-          </div>
+          </motion.div>
 
-          {/* Lanes de Gantt */}
-          <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+          {/* Lanes de Gantt · stagger 150ms */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={laneStagger}
+            style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}
+          >
             {CRONOGRAMA.map((hito, i) => {
               const layout = BAR_LAYOUT[hito.fase];
               const isActive = hito.estado === 'EN CURSO';
@@ -216,7 +303,7 @@ export default function Section13Cronograma() {
               return (
                 <motion.div
                   key={hito.fase}
-                  variants={fadeUp}
+                  variants={laneEnter}
                   style={{
                     display: 'grid',
                     gridTemplateColumns: '220px 1fr 140px',
@@ -299,6 +386,8 @@ export default function Section13Cronograma() {
                       variant={layout.variant}
                       x1={layout.x1}
                       x2={layout.x2}
+                      index={i}
+                      reduced={reduced}
                     />
                     <span
                       style={{
@@ -333,10 +422,13 @@ export default function Section13Cronograma() {
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
 
-          {/* Vertical line "AHORA" · ubicada al final del Semestre 1 */}
-          <div
+          {/* Vertical line "AHORA" · scaleY entrance + dot pulse */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
             aria-hidden
             style={{
               position: 'absolute',
@@ -347,7 +439,8 @@ export default function Section13Cronograma() {
               pointerEvents: 'none',
             }}
           >
-            <div
+            <motion.div
+              variants={nowLine}
               style={{
                 position: 'absolute',
                 top: 0,
@@ -356,9 +449,11 @@ export default function Section13Cronograma() {
                 background: 'var(--color-teal)',
                 opacity: 0.55,
                 transform: 'translateX(-1px)',
+                transformOrigin: 'top center',
               }}
             />
-            <span
+            <motion.span
+              variants={nowLabel}
               style={{
                 position: 'absolute',
                 top: -2,
@@ -370,8 +465,30 @@ export default function Section13Cronograma() {
                 borderRadius: 999,
                 boxShadow: '0 0 0 4px rgba(31,140,136,0.18)',
               }}
+              animate={
+                reduced
+                  ? undefined
+                  : {
+                      boxShadow: [
+                        '0 0 0 4px rgba(31,140,136,0.18)',
+                        '0 0 0 10px rgba(31,140,136,0)',
+                        '0 0 0 4px rgba(31,140,136,0.18)',
+                      ],
+                    }
+              }
+              transition={
+                reduced
+                  ? undefined
+                  : {
+                      duration: 2.2,
+                      repeat: Infinity,
+                      ease: 'easeOut',
+                      delay: 2.0,
+                    }
+              }
             />
-            <span
+            <motion.span
+              variants={nowLabel}
               style={{
                 position: 'absolute',
                 top: -22,
@@ -390,8 +507,8 @@ export default function Section13Cronograma() {
               }}
             >
               Actualidad
-            </span>
-          </div>
+            </motion.span>
+          </motion.div>
         </motion.div>
       </motion.div>
 
@@ -461,7 +578,11 @@ export default function Section13Cronograma() {
                   </span>
                 </div>
 
-                <div
+                <motion.div
+                  variants={subStagger}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true, amount: 0.2 }}
                   style={{
                     display: 'flex',
                     flexWrap: 'wrap',
@@ -469,8 +590,9 @@ export default function Section13Cronograma() {
                   }}
                 >
                   {fase.actividades.map((act, idx) => (
-                    <span
+                    <motion.span
                       key={idx}
+                      variants={fadeUp}
                       className="pill"
                       style={{
                         fontFamily: 'var(--font-mono)',
@@ -485,9 +607,9 @@ export default function Section13Cronograma() {
                       }}
                     >
                       {act}
-                    </span>
+                    </motion.span>
                   ))}
-                </div>
+                </motion.div>
               </motion.div>
             );
           })}

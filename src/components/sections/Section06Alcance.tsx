@@ -1,13 +1,13 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ALCANCE } from '@/data/content';
+import ScopeDial from '@/components/ui/ScopeDial';
+import { ENTER, MOVE } from '@/lib/motion';
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
-
-const fade = (delay = 0, y = 24) => ({
+const fadeUp = (delay = 0, y = 24) => ({
   initial: { opacity: 0, y },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-10%' },
-  transition: { duration: 0.7, ease: easeOut, delay },
+  transition: { duration: 0.7, ease: ENTER, delay },
 });
 
 function IconCheck() {
@@ -27,6 +27,8 @@ function IconX() {
 }
 
 export default function Section05Alcance() {
+  const reduced = useReducedMotion();
+
   return (
     <section
       id="alcance"
@@ -36,12 +38,12 @@ export default function Section05Alcance() {
       <div aria-hidden className="bg-grain pointer-events-none absolute inset-0" style={{ opacity: 0.3 }} />
 
       <div className="container relative">
-        <motion.div {...fade(0)} className="eyebrow-num mb-6">
-          §05 / Alcance y delimitación
+        <motion.div {...fadeUp(0)} className="eyebrow-num mb-6">
+          §06 / Alcance y delimitación
         </motion.div>
 
         <motion.h2
-          {...fade(0.08)}
+          {...fadeUp(0.08)}
           className="font-display"
           style={{
             fontSize: 'clamp(40px, 5.4vw, 72px)',
@@ -56,7 +58,7 @@ export default function Section05Alcance() {
         </motion.h2>
 
         <motion.p
-          {...fade(0.16)}
+          {...fadeUp(0.16)}
           className="mt-6"
           style={{
             fontSize: 18,
@@ -68,15 +70,66 @@ export default function Section05Alcance() {
           Los límites son tan importantes como los entregables. El alcance es un contrato con los jurados.
         </motion.p>
 
-        {/* ── GRID 2-col ─────────────────────────────── */}
+        {/* ── DIAL · síntesis visual scope + TRL al centro ──────── */}
+        <motion.div
+          {...fadeUp(0.2)}
+          className="mt-14"
+          style={{
+            background: '#FFFFFF',
+            border: '1px solid var(--color-line)',
+            borderRadius: 24,
+            padding: 'clamp(20px, 3vw, 36px)',
+            overflow: 'visible',
+          }}
+        >
+          <div className="mb-4 flex items-center justify-between flex-wrap gap-3">
+            <span
+              className="font-mono uppercase"
+              style={{
+                fontSize: 11,
+                letterSpacing: '0.18em',
+                color: 'var(--color-graphite)',
+              }}
+            >
+              Mapa de alcance · {ALCANCE.incluye.length} inclusiones · {ALCANCE.delimitacion.length} delimitaciones
+            </span>
+            <span
+              className="font-mono uppercase"
+              style={{
+                fontSize: 10,
+                letterSpacing: '0.18em',
+                color: 'var(--color-mist)',
+              }}
+            >
+              hover sobre un rayo para resaltar
+            </span>
+          </div>
+          <ScopeDial
+            incluye={ALCANCE.incluye}
+            delimitacion={ALCANCE.delimitacion as readonly { eje: string; detalle: string }[]}
+          />
+        </motion.div>
+
+        {/* ── GRID 2-col · clip-path desde lados opuestos ──────── */}
         <div className="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
           {/* ── COL IZQUIERDA · LO QUE SÍ CONTEMPLA ─────── */}
-          <div>
-            <motion.div {...fade(0.22)} className="flex items-center gap-3 mb-6">
-              <span
-                className="eyebrow"
-                style={{ color: 'var(--color-teal)' }}
-              >
+          <motion.div
+            initial={
+              reduced
+                ? { opacity: 0 }
+                : { clipPath: 'inset(0 100% 0 0)', opacity: 1 }
+            }
+            whileInView={
+              reduced
+                ? { opacity: 1 }
+                : { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
+            }
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 0.85, ease: MOVE, delay: 0.18 }}
+            style={{ willChange: 'clip-path' }}
+          >
+            <motion.div {...fadeUp(0.22)} className="flex items-center gap-3 mb-6">
+              <span className="eyebrow" style={{ color: 'var(--color-teal)' }}>
                 Lo que sí contempla
               </span>
               <span
@@ -89,13 +142,34 @@ export default function Section05Alcance() {
               />
             </motion.div>
 
-            <div className="flex flex-col gap-3">
+            <motion.div
+              className="flex flex-col gap-3"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-10%' }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.06, delayChildren: 0.4 } },
+              }}
+            >
               {ALCANCE.incluye.map((item, i) => {
                 const isHighlight = i === 4;
                 return (
                   <motion.div
                     key={i}
-                    {...fade(0.28 + i * 0.06)}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: { duration: 0.65, ease: ENTER },
+                      },
+                    }}
+                    whileHover={
+                      reduced
+                        ? undefined
+                        : { y: -3, transition: { type: 'spring', stiffness: 280, damping: 22 } }
+                    }
                     className={isHighlight ? 'card-teal' : 'card-paper'}
                     style={{
                       padding: 22,
@@ -150,11 +224,18 @@ export default function Section05Alcance() {
                   </motion.div>
                 );
               })}
-            </div>
+            </motion.div>
 
-            {/* Highlight box TRL 4 */}
+            {/* Highlight box TRL 4 · pulse scale al entrar */}
             <motion.div
-              {...fade(0.62)}
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={
+                reduced
+                  ? { opacity: 1, scale: 1 }
+                  : { opacity: 1, scale: [0.96, 1.02, 1] }
+              }
+              viewport={{ once: true, margin: '-10%' }}
+              transition={{ duration: 1.1, ease: ENTER, delay: 0.85, times: [0, 0.6, 1] }}
               className="card-teal mt-6"
               style={{
                 padding: 28,
@@ -162,6 +243,7 @@ export default function Section05Alcance() {
                 gap: 20,
                 alignItems: 'center',
                 borderRadius: 20,
+                willChange: 'transform',
               }}
             >
               <div
@@ -201,15 +283,26 @@ export default function Section05Alcance() {
                 </p>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
 
-          {/* ── COL DERECHA · LO QUE NO CONTEMPLA ─────── */}
-          <div>
-            <motion.div {...fade(0.22)} className="flex items-center gap-3 mb-6">
-              <span
-                className="eyebrow"
-                style={{ color: 'var(--color-charcoal)' }}
-              >
+          {/* ── COL DERECHA · LO QUE NO CONTEMPLA · clip desde right ─── */}
+          <motion.div
+            initial={
+              reduced
+                ? { opacity: 0 }
+                : { clipPath: 'inset(0 0 0 100%)', opacity: 1 }
+            }
+            whileInView={
+              reduced
+                ? { opacity: 1 }
+                : { clipPath: 'inset(0 0% 0 0%)', opacity: 1 }
+            }
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 0.85, ease: MOVE, delay: 0.18 }}
+            style={{ willChange: 'clip-path' }}
+          >
+            <motion.div {...fadeUp(0.22)} className="flex items-center gap-3 mb-6">
+              <span className="eyebrow" style={{ color: 'var(--color-charcoal)' }}>
                 Lo que no contempla
               </span>
               <span
@@ -222,11 +315,32 @@ export default function Section05Alcance() {
               />
             </motion.div>
 
-            <div className="flex flex-col gap-3">
-              {ALCANCE.delimitacion.map((item, i) => (
+            <motion.div
+              className="flex flex-col gap-3"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-10%' }}
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.06, delayChildren: 0.4 } },
+              }}
+            >
+              {ALCANCE.delimitacion.map((item) => (
                 <motion.div
                   key={item.eje}
-                  {...fade(0.28 + i * 0.06)}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.65, ease: ENTER },
+                    },
+                  }}
+                  whileHover={
+                    reduced
+                      ? undefined
+                      : { y: -3, transition: { type: 'spring', stiffness: 280, damping: 22 } }
+                  }
                   className="card-paper"
                   style={{
                     padding: 22,
@@ -276,13 +390,13 @@ export default function Section05Alcance() {
                   </div>
                 </motion.div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
         {/* Footer hairline */}
         <motion.div
-          {...fade(0.7)}
+          {...fadeUp(0.7)}
           className="hairline mt-16 pt-6 flex flex-wrap items-center justify-between gap-3"
         >
           <span

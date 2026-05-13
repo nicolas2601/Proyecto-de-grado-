@@ -1,12 +1,11 @@
 import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { REFERENCIAS } from '@/data/content';
-
-const EASE = [0.16, 1, 0.3, 1] as const;
+import { ENTER } from '@/lib/motion';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: ENTER } },
 };
 
 const stagger = {
@@ -14,7 +13,135 @@ const stagger = {
   show: { transition: { staggerChildren: 0.06 } },
 };
 
+// Filter pills · stagger 60ms scale
+const pillStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+};
+
+const pillScale = {
+  hidden: { opacity: 0, scale: 0.85 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.4, ease: ENTER },
+  },
+};
+
+// Acordeón cards · stagger 100ms
+const accordionStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
+
+// Cierre · word stagger 50ms
+const closingWords = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.4 } },
+};
+
+const closingWord = {
+  hidden: { y: '100%' },
+  show: { y: '0%', transition: { duration: 0.6, ease: ENTER } },
+};
+
+// Hairline scaleX
+const hairlineScale = {
+  hidden: { scaleX: 0, opacity: 0 },
+  show: {
+    scaleX: 1,
+    opacity: 1,
+    transition: { duration: 0.7, ease: ENTER, delay: 1.0 },
+  },
+};
+
+// Grid agradecimientos · stagger 200ms
+const gridStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.2, delayChildren: 1.2 } },
+};
+
+const gridItem = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: ENTER } },
+};
+
+// Pills bottom · spring scale
+const bottomPillStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 1.7 } },
+};
+
+const bottomPillSpring = {
+  hidden: { opacity: 0, scale: 0.85 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: 'spring' as const, stiffness: 280, damping: 18 },
+  },
+};
+
+// Item interno acordeón · stagger 40ms
+const itemStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.04, delayChildren: 0.08 } },
+};
+
+const itemFade = {
+  hidden: { opacity: 0, y: 6 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: ENTER } },
+};
+
+// Renderiza líneas con clip-path mask vertical (word-by-word)
+function ClosingHeadline({ reduced }: { reduced: boolean }) {
+  const lines = [['Quedamos', 'atentos'], ['a', 'sus', 'preguntas.']];
+
+  if (reduced) {
+    return (
+      <>
+        Quedamos atentos
+        <br />a sus preguntas.
+      </>
+    );
+  }
+
+  return (
+    <motion.span
+      variants={closingWords}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.3 }}
+      style={{ display: 'inline-block' }}
+    >
+      {lines.map((line, li) => (
+        <span key={li} style={{ display: 'block' }}>
+          {line.map((word, wi) => (
+            <span
+              key={`${li}-${wi}`}
+              style={{
+                display: 'inline-block',
+                overflow: 'hidden',
+                verticalAlign: 'bottom',
+                marginRight: '0.28em',
+              }}
+            >
+              <motion.span
+                variants={closingWord}
+                style={{ display: 'inline-block' }}
+              >
+                {word}
+              </motion.span>
+            </span>
+          ))}
+        </span>
+      ))}
+    </motion.span>
+  );
+}
+
 export default function Section15Referencias() {
+  const reduced = useReducedMotion() ?? false;
+
   // Estado · qué grupos están expandidos
   const [expanded, setExpanded] = useState<boolean[]>(
     () => REFERENCIAS.map(() => false)
@@ -48,7 +175,7 @@ export default function Section15Referencias() {
         className="mb-12"
       >
         <motion.div variants={fadeUp} className="eyebrow-num mb-6">
-          §15 / REFERENCIAS BIBLIOGRÁFICAS
+          §17 / REFERENCIAS BIBLIOGRÁFICAS
         </motion.div>
 
         <motion.h2
@@ -111,67 +238,65 @@ export default function Section15Referencias() {
         </motion.div>
       </motion.div>
 
-      {/* Filter pills */}
+      {/* Filter pills · stagger 60ms scale */}
       <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.1 }}
-        variants={stagger}
+        variants={pillStagger}
         className="mb-8"
+        style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}
       >
-        <motion.div
-          variants={fadeUp}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}
+        <motion.button
+          variants={pillScale}
+          onClick={() => setFilter('all')}
+          className={filter === 'all' ? 'pill-navy' : 'pill-ghost'}
+          style={{
+            appearance: 'none',
+            cursor: 'pointer',
+            padding: '7px 14px',
+            borderRadius: 9999,
+            fontFamily: 'var(--font-sans)',
+            fontSize: 13,
+            fontWeight: 500,
+            letterSpacing: '-0.01em',
+            transition: 'background-color 220ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
         >
-          <button
-            onClick={() => setFilter('all')}
-            className={filter === 'all' ? 'pill-navy' : 'pill-ghost'}
-            style={{
-              appearance: 'none',
-              cursor: 'pointer',
-              padding: '7px 14px',
-              borderRadius: 9999,
-              fontFamily: 'var(--font-sans)',
-              fontSize: 13,
-              fontWeight: 500,
-              letterSpacing: '-0.01em',
-              transition: 'all 220ms cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          >
-            Todas
-          </button>
-          {grupos.map((g) => {
-            const active = filter === g;
-            return (
-              <button
-                key={g}
-                onClick={() => setFilter(g)}
-                className={active ? 'pill-navy' : 'pill-ghost'}
-                style={{
-                  appearance: 'none',
-                  cursor: 'pointer',
-                  padding: '7px 14px',
-                  borderRadius: 9999,
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 13,
-                  fontWeight: 500,
-                  letterSpacing: '-0.01em',
-                  transition: 'all 220ms cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-              >
-                {g}
-              </button>
-            );
-          })}
-        </motion.div>
+          Todas
+        </motion.button>
+        {grupos.map((g) => {
+          const active = filter === g;
+          return (
+            <motion.button
+              key={g}
+              variants={pillScale}
+              onClick={() => setFilter(g)}
+              className={active ? 'pill-navy' : 'pill-ghost'}
+              style={{
+                appearance: 'none',
+                cursor: 'pointer',
+                padding: '7px 14px',
+                borderRadius: 9999,
+                fontFamily: 'var(--font-sans)',
+                fontSize: 13,
+                fontWeight: 500,
+                letterSpacing: '-0.01em',
+                transition: 'background-color 220ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms cubic-bezier(0.22, 1, 0.36, 1)',
+              }}
+            >
+              {g}
+            </motion.button>
+          );
+        })}
       </motion.div>
 
-      {/* Acordeón */}
+      {/* Acordeón · stagger 100ms */}
       <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.05 }}
-        variants={stagger}
+        variants={accordionStagger}
         className="flex flex-col gap-3 mb-20"
       >
         {REFERENCIAS.map((grupo, i) => {
@@ -206,7 +331,7 @@ export default function Section15Referencias() {
                   padding: '20px 24px',
                   cursor: 'pointer',
                   textAlign: 'left',
-                  transition: 'background-color 200ms cubic-bezier(0.16, 1, 0.3, 1)',
+                  transition: 'background-color 200ms cubic-bezier(0.22, 1, 0.36, 1)',
                 }}
               >
                 <div
@@ -255,8 +380,10 @@ export default function Section15Referencias() {
                   </span>
                 </div>
 
-                <span
+                <motion.span
                   aria-hidden
+                  animate={{ rotate: isOpen ? 45 : 0 }}
+                  transition={{ duration: 0.3, ease: ENTER }}
                   style={{
                     width: 32,
                     height: 32,
@@ -270,9 +397,6 @@ export default function Section15Referencias() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    transition:
-                      'transform 280ms cubic-bezier(0.16, 1, 0.3, 1), background 220ms cubic-bezier(0.16, 1, 0.3, 1)',
-                    transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
                   }}
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -283,7 +407,7 @@ export default function Section15Referencias() {
                       strokeLinecap="round"
                     />
                   </svg>
-                </span>
+                </motion.span>
               </button>
 
               <AnimatePresence initial={false}>
@@ -293,7 +417,7 @@ export default function Section15Referencias() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: EASE }}
+                    transition={{ duration: 0.4, ease: ENTER }}
                     style={{ overflow: 'hidden' }}
                   >
                     <div
@@ -302,15 +426,19 @@ export default function Section15Referencias() {
                         borderTop: '1px solid var(--color-line)',
                       }}
                     >
-                      <ul
+                      <motion.ul
+                        variants={itemStagger}
+                        initial="hidden"
+                        animate="show"
                         style={{
                           display: 'flex',
                           flexDirection: 'column',
                         }}
                       >
                         {grupo.items.map((cita, idx) => (
-                          <li
+                          <motion.li
                             key={idx}
+                            variants={itemFade}
                             style={{
                               display: 'flex',
                               gap: 14,
@@ -348,9 +476,9 @@ export default function Section15Referencias() {
                             >
                               {cita}
                             </span>
-                          </li>
+                          </motion.li>
                         ))}
-                      </ul>
+                      </motion.ul>
                     </div>
                   </motion.div>
                 )}
@@ -395,8 +523,7 @@ export default function Section15Referencias() {
               margin: 0,
             }}
           >
-            Quedamos atentos
-            <br />a sus preguntas.
+            <ClosingHeadline reduced={reduced} />
           </h3>
 
           <p
@@ -408,20 +535,29 @@ export default function Section15Referencias() {
               margin: 0,
             }}
           >
-            La sustentación cubre el cierre del primer objetivo / el segundo
+            La sustentación cubre el cierre del primer objetivo · el segundo
             objetivo se desarrolla en el siguiente sprint del proyecto.
           </p>
 
-          <div
+          <motion.div
+            variants={hairlineScale}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
             style={{
               width: '100%',
               maxWidth: 540,
               height: 1,
               background: 'rgba(255,255,255,0.15)',
+              transformOrigin: 'center',
             }}
           />
 
-          <div
+          <motion.div
+            variants={gridStagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
@@ -431,7 +567,7 @@ export default function Section15Referencias() {
               textAlign: 'left',
             }}
           >
-            <div>
+            <motion.div variants={gridItem}>
               <div
                 className="eyebrow"
                 style={{ color: 'var(--color-teal-soft)', marginBottom: 8 }}
@@ -449,9 +585,9 @@ export default function Section15Referencias() {
               >
                 Andrés Felipe Jerez Ariza / UNAB
               </div>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div variants={gridItem}>
               <div
                 className="eyebrow"
                 style={{ color: 'var(--color-teal-soft)', marginBottom: 8 }}
@@ -469,10 +605,14 @@ export default function Section15Referencias() {
               >
                 Karen Yaneth Sánchez Quiroga / KAUST
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div
+          <motion.div
+            variants={bottomPillStagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
             style={{
               display: 'flex',
               gap: 10,
@@ -481,7 +621,8 @@ export default function Section15Referencias() {
               marginTop: 8,
             }}
           >
-            <span
+            <motion.span
+              variants={bottomPillSpring}
               className="pill-teal-solid"
               style={{
                 fontFamily: 'var(--font-mono)',
@@ -494,8 +635,9 @@ export default function Section15Referencias() {
               }}
             >
               v2026.05.13
-            </span>
-            <span
+            </motion.span>
+            <motion.span
+              variants={bottomPillSpring}
               style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: 11,
@@ -510,8 +652,8 @@ export default function Section15Referencias() {
               }}
             >
               OBJ-01 EN CURSO
-            </span>
-          </div>
+            </motion.span>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>

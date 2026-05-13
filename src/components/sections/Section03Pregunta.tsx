@@ -1,56 +1,15 @@
 import { motion } from 'framer-motion';
 import { PREGUNTA } from '@/data/content';
+import CoherenceBridge from '@/components/ui/CoherenceBridge';
+import { ENTER } from '@/lib/motion';
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
-
-const fade = (delay = 0) => ({
+const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-10%' },
-  transition: { duration: 0.7, ease: easeOut, delay },
+  transition: { duration: 0.7, ease: ENTER, delay },
 });
 
-// Renderiza la pregunta central con highlights inline en las palabras
-// "aprendizaje autosupervisado" y "Santander"
-function PreguntaHighlighted({ text }: { text: string }) {
-  const targets = ['aprendizaje autosupervisado', 'Santander'];
-  // Tokenizamos manteniendo separadores
-  let parts: Array<{ s: string; hl: boolean }> = [{ s: text, hl: false }];
-  for (const t of targets) {
-    const next: typeof parts = [];
-    for (const p of parts) {
-      if (p.hl) {
-        next.push(p);
-        continue;
-      }
-      const segs = p.s.split(new RegExp(`(${t})`, 'g'));
-      for (const seg of segs) {
-        if (seg === t) next.push({ s: seg, hl: true });
-        else if (seg.length) next.push({ s: seg, hl: false });
-      }
-    }
-    parts = next;
-  }
-  return (
-    <>
-      {parts.map((p, i) =>
-        p.hl ? (
-          <span
-            key={i}
-            style={{
-              color: '#4FB8B4',
-              fontWeight: 600,
-            }}
-          >
-            {p.s}
-          </span>
-        ) : (
-          <span key={i}>{p.s}</span>
-        )
-      )}
-    </>
-  );
-}
 
 export default function Section03Pregunta() {
   return (
@@ -84,142 +43,124 @@ export default function Section03Pregunta() {
       />
 
       <div className="container relative">
-        {/* Header */}
+        {/* Header limpio */}
         <motion.div
-          {...fade(0)}
+          {...fadeUp(0)}
           className="eyebrow-num"
-          style={{ color: '#1F8C88' }}
+          style={{ color: '#7CD1CE' }}
         >
-          §03 · PREGUNTA E HIPÓTESIS
+          §03 · PREGUNTA DE INVESTIGACIÓN
         </motion.div>
 
-        <motion.div {...fade(0.08)} className="mt-4 flex items-center gap-3">
-          <span
-            className="pill-ghost"
-            style={{
-              fontSize: 12,
-              color: 'rgba(255,255,255,0.65)',
-              borderColor: 'rgba(255,255,255,0.3)',
-            }}
-          >
-            pregunta del evaluador
-          </span>
-          <span
-            className="font-serif-it"
-            style={{
-              color: 'rgba(255,255,255,0.7)',
-              fontSize: 18,
-            }}
-          >
-            "¿qué pregunta concreta van a responder?"
-          </span>
-        </motion.div>
-
-        {/* Pregunta central GIGANTE */}
+        {/* Pregunta central · una sola pieza tipográfica · respira */}
         <motion.h2
-          {...fade(0.18)}
-          className="mt-10"
+          {...fadeUp(0.1)}
+          className="mt-6"
           style={{
-            fontSize: 'clamp(32px, 5.6vw, 72px)',
-            lineHeight: 1.12,
-            color: '#ffffff',
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 'clamp(28px, 3.6vw, 44px)',
+            lineHeight: 1.25,
+            color: '#FFFFFF',
             maxWidth: '32ch',
             fontWeight: 500,
-            letterSpacing: '-0.025em',
+            letterSpacing: '-0.02em',
+            margin: 0,
           }}
         >
-          <PreguntaHighlighted text={PREGUNTA.central} />
+          ¿Cómo diseñar un algoritmo de inteligencia artificial basado en{' '}
+          <span
+            style={{
+              color: '#7CD1CE',
+              fontWeight: 600,
+              borderBottom: '2px solid #7CD1CE',
+              paddingBottom: 2,
+            }}
+          >
+            aprendizaje autosupervisado
+          </span>{' '}
+          (SSL) para la detección de lesiones cutáneas que apoye el diagnóstico
+          clínico en{' '}
+          <span
+            style={{
+              color: '#7CD1CE',
+              fontWeight: 600,
+              borderBottom: '2px solid #7CD1CE',
+              paddingBottom: 2,
+            }}
+          >
+            Santander
+          </span>
+          ?
         </motion.h2>
 
-        {/* Alcance */}
+        {/* Alcance · card-teal-soft sin animación clip-path */}
         <motion.div
-          {...fade(0.3)}
-          className="mt-12 card-teal-soft"
-          style={{ maxWidth: 880 }}
+          {...fadeUp(0.3)}
+          className="mt-10"
+          style={{
+            background: 'rgba(124,209,206,0.10)',
+            border: '1px solid rgba(124,209,206,0.28)',
+            borderRadius: 14,
+            padding: '20px 24px',
+            maxWidth: 880,
+          }}
         >
-          <div className="eyebrow" style={{ color: 'var(--color-teal)' }}>
-            alcance
+          <div
+            className="font-mono uppercase"
+            style={{
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              color: '#7CD1CE',
+              marginBottom: 8,
+            }}
+          >
+            Alcance de la pregunta
           </div>
           <p
-            className="mt-3"
             style={{
-              fontSize: 18,
-              lineHeight: 1.5,
-              color: 'var(--color-navy-deep)',
+              fontFamily: 'Inter, sans-serif',
+              fontSize: 16,
+              lineHeight: 1.55,
+              color: 'rgba(255,255,255,0.85)',
+              margin: 0,
             }}
           >
             {PREGUNTA.alcance}
           </p>
         </motion.div>
 
-        {/* 3 supuestos */}
-        <div className="mt-12">
+        {/* Tabla coherencia · problema → respuesta */}
+        <div className="mt-14">
           <motion.div
-            {...fade(0.38)}
-            className="eyebrow"
-            style={{ color: 'rgba(255,255,255,0.65)' }}
+            {...fadeUp(0.34)}
+            className="flex items-baseline justify-between mb-5 flex-wrap gap-3"
           >
-            supuestos · 3
+            <span
+              className="eyebrow"
+              style={{ color: 'rgba(255,255,255,0.55)' }}
+            >
+              Coherencia · problema → respuesta
+            </span>
+            <span
+              className="font-mono"
+              style={{
+                fontSize: 11,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.42)',
+              }}
+            >
+              {String(PREGUNTA.coherencia.length).padStart(2, '0')} · pares
+            </span>
           </motion.div>
 
-          <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Supuesto 01 — paper white */}
-            <motion.div {...fade(0.46)} className="card">
-              <div className="eyebrow" style={{ color: 'var(--color-teal)' }}>
-                supuesto 01
-              </div>
-              <p
-                className="mt-3"
-                style={{
-                  fontSize: 16,
-                  lineHeight: 1.5,
-                  color: 'var(--color-charcoal)',
-                }}
-              >
-                {PREGUNTA.supuestos[0]}
-              </p>
-            </motion.div>
-
-            {/* Supuesto 02 — paper soft */}
-            <motion.div {...fade(0.54)} className="card-paper">
-              <div className="eyebrow" style={{ color: 'var(--color-teal)' }}>
-                supuesto 02
-              </div>
-              <p
-                className="mt-3"
-                style={{
-                  fontSize: 16,
-                  lineHeight: 1.5,
-                  color: 'var(--color-charcoal)',
-                }}
-              >
-                {PREGUNTA.supuestos[1]}
-              </p>
-            </motion.div>
-
-            {/* Supuesto 03 — teal soft */}
-            <motion.div {...fade(0.62)} className="card-teal-soft">
-              <div className="eyebrow" style={{ color: 'var(--color-teal)' }}>
-                supuesto 03
-              </div>
-              <p
-                className="mt-3"
-                style={{
-                  fontSize: 16,
-                  lineHeight: 1.5,
-                  color: 'var(--color-navy-deep)',
-                }}
-              >
-                {PREGUNTA.supuestos[2]}
-              </p>
-            </motion.div>
-          </div>
+          <CoherenceBridge pairs={PREGUNTA.coherencia} tone="navy" />
         </div>
 
-        {/* Footer */}
+        {/* Footer · enfoque + next */}
         <motion.div
-          {...fade(0.7)}
-          className="mt-16 flex items-center justify-end"
+          {...fadeUp(0.7)}
+          className="mt-14 flex items-center justify-between flex-wrap gap-3"
           style={{
             paddingTop: 24,
             borderTop: '1px solid rgba(255,255,255,0.12)',
@@ -228,12 +169,23 @@ export default function Section03Pregunta() {
           <span
             className="font-mono"
             style={{
+              fontSize: 11,
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.55)',
+            }}
+          >
+            Enfoque · {PREGUNTA.enfoque}
+          </span>
+          <span
+            className="font-mono"
+            style={{
               fontSize: 12,
               letterSpacing: '0.06em',
               color: 'rgba(255,255,255,0.55)',
             }}
           >
-            → continúa con la justificación
+            → §04 hipótesis y supuestos
           </span>
         </motion.div>
       </div>

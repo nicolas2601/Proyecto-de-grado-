@@ -1,18 +1,155 @@
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import {
   PROBLEMA,
   EVIDENCIA_PROBLEMA,
-  ARBOL_PROBLEMA,
+  ARBOL_TREE,
 } from '@/data/content';
+import { Cite } from '@/components/ui/Cite';
+import ProblemGraph from '@/components/ui/ProblemGraph';
+import { ENTER } from '@/lib/motion';
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
-
-const fade = (delay = 0) => ({
+const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-10%' },
-  transition: { duration: 0.7, ease: easeOut, delay },
+  transition: { duration: 0.7, ease: ENTER, delay },
 });
+
+// ── WordReveal · clip-path mask
+function WordReveal({
+  text,
+  delay = 0,
+  stagger = 0.035,
+  className,
+  style,
+  as: As = 'h2',
+}: {
+  text: string;
+  delay?: number;
+  stagger?: number;
+  className?: string;
+  style?: React.CSSProperties;
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'div';
+}) {
+  const reduced = useReducedMotion();
+  const words = text.split(' ');
+  if (reduced) {
+    return (
+      <As className={className} style={style}>
+        {text}
+      </As>
+    );
+  }
+  return (
+    <As className={className} style={{ ...style, display: 'block' }} aria-label={text}>
+      {words.map((w, i) => (
+        <span
+          key={i}
+          aria-hidden
+          style={{
+            display: 'inline-block',
+            overflow: 'hidden',
+            paddingBlock: '0.15em',
+            marginBlock: '-0.15em',
+            verticalAlign: 'top',
+          }}
+        >
+          <motion.span
+            style={{ display: 'inline-block', willChange: 'transform' }}
+            initial={{ y: '110%' }}
+            whileInView={{ y: '0%' }}
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{
+              duration: 0.85,
+              ease: ENTER,
+              delay: delay + i * stagger,
+            }}
+          >
+            {w}
+            {i < words.length - 1 ? ' ' : ''}
+          </motion.span>
+        </span>
+      ))}
+    </As>
+  );
+}
+
+// ── Counter · scroll-triggered ticker for stats
+function Counter({
+  to,
+  duration = 1.4,
+  format = 'int',
+  scrambleOnHover = false,
+  className,
+  style,
+}: {
+  to: number;
+  duration?: number;
+  format?: 'int' | 'percent';
+  scrambleOnHover?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: '-10%' });
+  const reduced = useReducedMotion();
+  const [val, setVal] = useState(reduced ? to : 0);
+  const [scramble, setScramble] = useState(false);
+
+  useEffect(() => {
+    if (!inView || reduced) return;
+    let raf = 0;
+    const t0 = performance.now();
+    const easeOutExpo = (x: number) =>
+      x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / (duration * 1000));
+      const e = easeOutExpo(p);
+      setVal(to * e);
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else setVal(to);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, duration, reduced]);
+
+  // Scramble hover sequence
+  useEffect(() => {
+    if (!scramble || reduced) return;
+    let raf = 0;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const p = (now - t0) / 400;
+      if (p >= 1) {
+        setVal(to);
+        setScramble(false);
+        return;
+      }
+      // random scramble factor
+      setVal(to * (0.6 + Math.random() * 0.8));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [scramble, to, reduced]);
+
+  const display =
+    format === 'percent'
+      ? val.toFixed(2).replace('.', ',') + ' %'
+      : Math.round(val).toLocaleString('es-CO');
+
+  return (
+    <span
+      ref={ref}
+      className={className}
+      style={style}
+      onMouseEnter={scrambleOnHover ? () => setScramble(true) : undefined}
+    >
+      {display}
+    </span>
+  );
+}
 
 // ─── Inline SVG icons ────────────────────────────────────
 function IconGlobe() {
@@ -38,7 +175,6 @@ function IconGlobe() {
 }
 
 function IconColombia() {
-  // Pin de mapa estilizado
   return (
     <svg
       width="32"
@@ -79,6 +215,9 @@ function IconHospital() {
 }
 
 export default function Section02Problema() {
+  void PROBLEMA;
+  const reduced = useReducedMotion();
+
   return (
     <section
       id="problema"
@@ -93,12 +232,15 @@ export default function Section02Problema() {
 
       <div className="container relative">
         {/* Header */}
-        <motion.div {...fade(0)} className="eyebrow-num">
+        <motion.div {...fadeUp(0)} className="eyebrow-num">
           §02 · PLANTEAMIENTO DEL PROBLEMA
         </motion.div>
 
-        <motion.h2
-          {...fade(0.08)}
+        <WordReveal
+          as="h2"
+          text="De lo global a lo regional"
+          delay={0.1}
+          stagger={0.05}
           className="mt-4"
           style={{
             fontSize: 'clamp(40px, 5.4vw, 72px)',
@@ -108,12 +250,10 @@ export default function Section02Problema() {
             letterSpacing: '-0.025em',
             color: 'var(--color-navy)',
           }}
-        >
-          De lo global a lo regional
-        </motion.h2>
+        />
 
         <motion.p
-          {...fade(0.16)}
+          {...fadeUp(0.4)}
           className="mt-4"
           style={{
             fontSize: 22,
@@ -125,12 +265,39 @@ export default function Section02Problema() {
           Tres escalas convergen en una misma deficiencia diagnóstica.
         </motion.p>
 
-        {/* ─── Bento 3-col contexto ─────────────────────── */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* ─── Bento 3-col contexto con stagger 120ms ───────── */}
+        <motion.div
+          className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-10%' }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.5 } },
+          }}
+        >
           {/* Global */}
-          <motion.div {...fade(0.24)} className="card">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 28 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.75, ease: ENTER },
+              },
+            }}
+            whileHover={
+              reduced
+                ? undefined
+                : { y: -4, transition: { type: 'spring', stiffness: 280, damping: 22 } }
+            }
+            className="card"
+          >
             <IconGlobe />
-            <div className="eyebrow mt-4">Contexto Global</div>
+            <div className="eyebrow mt-4 flex items-center gap-2 flex-wrap">
+              <span>Contexto Global</span>
+              <Cite refs={['yang-2024']} tone="paper" />
+            </div>
             <p
               className="mt-3"
               style={{
@@ -139,33 +306,45 @@ export default function Section02Problema() {
                 color: 'var(--color-charcoal)',
               }}
             >
-              El cáncer de piel es una de las neoplasias más frecuentes en el
-              mundo.
+              El cáncer de piel es una de las neoplasias más frecuentes en el mundo.
             </p>
           </motion.div>
 
           {/* Nacional */}
           <motion.div
-            {...fade(0.32)}
+            variants={{
+              hidden: { opacity: 0, y: 28 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.75, ease: ENTER },
+              },
+            }}
+            whileHover={
+              reduced
+                ? undefined
+                : { y: -4, transition: { type: 'spring', stiffness: 280, damping: 22 } }
+            }
             className="card-paper"
             style={{ borderColor: 'rgba(31,140,136,0.4)' }}
           >
             <IconColombia />
             <div
-              className="eyebrow mt-4"
+              className="eyebrow mt-4 flex items-center gap-2 flex-wrap"
               style={{ color: 'var(--color-teal)' }}
             >
-              Contexto Nacional
+              <span>Contexto Nacional</span>
+              <Cite refs={['cac-2025']} tone="paper" />
             </div>
             <div
-              className="font-display tabular-nums mt-3"
+              className="font-display tabular-nums mt-3 flex items-baseline gap-2 flex-wrap"
               style={{
                 fontSize: 'clamp(40px, 5vw, 56px)',
                 color: 'var(--color-navy)',
                 lineHeight: 1,
               }}
             >
-              11.064
+              <Counter to={11064} scrambleOnHover />
             </div>
             <p
               className="mt-2"
@@ -175,19 +354,34 @@ export default function Section02Problema() {
                 color: 'var(--color-ink-soft)',
               }}
             >
-              Casos reportados en Colombia durante 2024 · Cuenta de Alto
-              Costo.
+              Casos reportados en Colombia durante 2024 · Cuenta de Alto Costo.
             </p>
           </motion.div>
 
           {/* Regional */}
-          <motion.div {...fade(0.4)} className="card-navy relative">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 28 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.75, ease: ENTER },
+              },
+            }}
+            whileHover={
+              reduced
+                ? undefined
+                : { y: -4, transition: { type: 'spring', stiffness: 280, damping: 22 } }
+            }
+            className="card-navy relative"
+          >
             <IconHospital />
             <div
-              className="eyebrow mt-4"
+              className="eyebrow mt-4 flex items-center gap-2 flex-wrap"
               style={{ color: '#B7E1DF' }}
             >
-              Contexto Regional (HIC)
+              <span>Contexto Regional (HIC)</span>
+              <Cite refs={['uribe-2018', 'el-frente-2024']} tone="navy" />
             </div>
             <div
               className="font-display tabular-nums mt-3"
@@ -197,7 +391,7 @@ export default function Section02Problema() {
                 lineHeight: 1,
               }}
             >
-              3.060
+              <Counter to={3060} scrambleOnHover />
             </div>
             <p
               className="mt-2"
@@ -209,13 +403,14 @@ export default function Section02Problema() {
             >
               Casos registrados en Santander (2016-2023).
             </p>
-            <div className="mt-4 flex items-center gap-2">
+            <div className="mt-4 flex items-center gap-2 flex-wrap">
               <span
                 style={{
                   width: 8,
                   height: 8,
                   borderRadius: 9999,
                   background: '#F26B3A',
+                  flexShrink: 0,
                 }}
               />
               <span
@@ -225,16 +420,30 @@ export default function Section02Problema() {
                   lineHeight: 1.4,
                 }}
               >
-                64,82 % corresponde a Carcinoma Basocelular (BCC)
+                <Counter to={64.82} format="percent" /> corresponde a Carcinoma
+                Basocelular (BCC)
               </span>
+              <Cite refs={['uribe-2018']} tone="navy" />
             </div>
           </motion.div>
-        </div>
+        </motion.div>
 
-        {/* ─── Banda paradoja del melanoma ──────────────── */}
+        {/* ─── Banda paradoja del melanoma · clip-path reveal horizontal ─ */}
         <motion.div
-          {...fade(0.48)}
           className="card-orange mt-6 flex flex-col md:flex-row items-start md:items-center gap-4"
+          initial={
+            reduced
+              ? { opacity: 0 }
+              : { clipPath: 'inset(0 100% 0 0)', opacity: 1 }
+          }
+          whileInView={
+            reduced
+              ? { opacity: 1 }
+              : { clipPath: 'inset(0 0% 0 0)', opacity: 1 }
+          }
+          viewport={{ once: true, margin: '-10%' }}
+          transition={{ duration: 0.95, ease: ENTER, delay: 0.2 }}
+          style={{ willChange: 'clip-path' }}
         >
           <span
             className="font-mono"
@@ -258,44 +467,65 @@ export default function Section02Problema() {
               letterSpacing: '-0.015em',
             }}
           >
-            <strong style={{ fontWeight: 700 }}>
-              LA PARADOJA DEL MELANOMA
-            </strong>
-            : Representa solo el 13,66 % de los casos regionales, pero causa
-            el 80 % de las muertes.
+            <strong style={{ fontWeight: 700 }}>LA PARADOJA DEL MELANOMA</strong>
+            : Representa solo el 13,66 % de los casos regionales, pero causa el{' '}
+            <Counter to={80} format="int" />% de las muertes.
           </p>
+          <Cite refs={['cac-2025', 'uribe-2018']} tone="white" />
         </motion.div>
 
         {/* ─── EVIDENCIA DEL PROBLEMA ─────────────────── */}
         <div className="mt-20">
           <motion.div
-            {...fade(0)}
+            {...fadeUp(0)}
             className="hairline pt-6 flex items-center gap-3"
           >
-            <span className="eyebrow">
-              evidencia del problema · 3 puntos
-            </span>
+            <span className="eyebrow">evidencia del problema · 3 puntos</span>
           </motion.div>
 
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {EVIDENCIA_PROBLEMA.map((ev, i) => (
+          <motion.div
+            className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-10%' }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.08, delayChildren: 0.16 } },
+            }}
+          >
+            {EVIDENCIA_PROBLEMA.map((ev) => (
               <motion.div
                 key={ev.id}
-                {...fade(0.16 + i * 0.08)}
+                variants={{
+                  hidden: { opacity: 0, y: 32 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.7, ease: ENTER },
+                  },
+                }}
+                whileHover={
+                  reduced
+                    ? undefined
+                    : { y: -4, transition: { type: 'spring', stiffness: 280, damping: 22 } }
+                }
                 className="card-paper"
               >
                 <div className="eyebrow" style={{ color: 'var(--color-teal)' }}>
                   {ev.titulo}
                 </div>
                 <div
-                  className="font-display mt-3 tabular-nums"
+                  className="font-display mt-3 tabular-nums flex items-baseline gap-2 flex-wrap"
                   style={{
                     fontSize: 'clamp(28px, 3.2vw, 40px)',
                     color: 'var(--color-navy)',
                     lineHeight: 1,
                   }}
                 >
-                  {ev.valor}
+                  <span>{ev.valor}</span>
+                  {'refs' in ev && Array.isArray((ev as any).refs) && (ev as any).refs.length > 0 ? (
+                    <Cite refs={(ev as any).refs} tone="paper" />
+                  ) : null}
                 </div>
                 <p
                   className="mt-3"
@@ -309,17 +539,17 @@ export default function Section02Problema() {
                 </p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
-        {/* ─── ÁRBOL DEL PROBLEMA · system architecture ───── */}
+        {/* ─── ÁRBOL DEL PROBLEMA · constelación causal · 5 capas ─── */}
         <div className="mt-20">
-          <motion.div {...fade(0)} className="eyebrow-num">
+          <motion.div {...fadeUp(0)} className="eyebrow-num">
             Árbol del problema
           </motion.div>
 
           <motion.h3
-            {...fade(0.08)}
+            {...fadeUp(0.08)}
             className="mt-3 font-display"
             style={{
               fontSize: 'clamp(22px, 2.4vw, 32px)',
@@ -329,193 +559,39 @@ export default function Section02Problema() {
               maxWidth: '40ch',
             }}
           >
-            System Architecture: Limitaciones en la detección cutánea
+            Constelación causal: de las condiciones estructurales al impacto sistémico
           </motion.h3>
 
-          <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* CAUSAS / INPUTS */}
-            <div className="lg:col-span-4 flex flex-col gap-3">
-              <div className="eyebrow flex items-center gap-2">
-                <span
-                  className="font-mono"
-                  style={{
-                    color: 'var(--color-teal)',
-                    fontWeight: 700,
-                  }}
-                >
-                  ← Inputs
-                </span>
-                <span>Causas</span>
-              </div>
-              {ARBOL_PROBLEMA.causas.map((c, i) => (
-                <motion.div
-                  key={c.codigo}
-                  {...fade(0.12 + i * 0.06)}
-                  className="card"
-                  style={{
-                    padding: 20,
-                    borderLeft: '2px solid var(--color-teal)',
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="font-mono"
-                      style={{
-                        fontSize: 11,
-                        color: 'var(--color-teal)',
-                        fontWeight: 600,
-                      }}
-                    >
-                      {c.codigo}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 15,
-                        fontWeight: 600,
-                        color: 'var(--color-navy)',
-                        lineHeight: 1.25,
-                      }}
-                    >
-                      {c.titulo}
-                    </span>
-                  </div>
-                  <p
-                    className="mt-2"
-                    style={{
-                      fontSize: 13,
-                      lineHeight: 1.5,
-                      color: 'var(--color-ink-soft)',
-                      maxWidth: '30ch',
-                    }}
-                  >
-                    {c.detalle}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
+          <motion.p
+            {...fadeUp(0.16)}
+            className="mt-3"
+            style={{
+              fontSize: 15,
+              lineHeight: 1.55,
+              color: 'var(--color-graphite)',
+              maxWidth: '64ch',
+            }}
+          >
+            Pasa el cursor sobre cada nodo para resaltar su vecindario causal y consultar la fuente.
+            Lectura izquierda→derecha: causas indirectas → causas directas → problema central →
+            consecuencias directas → consecuencias indirectas.
+          </motion.p>
 
-            {/* PROBLEMA CENTRAL */}
-            <div className="lg:col-span-4 flex flex-col justify-center">
-              <motion.div
-                {...fade(0.2)}
-                className="card-teal flex flex-col items-center justify-center text-center"
-                style={{
-                  minHeight: 280,
-                  padding: 32,
-                }}
-              >
-                <div
-                  className="eyebrow"
-                  style={{
-                    color: 'rgba(255,255,255,0.75)',
-                  }}
-                >
-                  Problema central
-                </div>
-                <p
-                  className="mt-4"
-                  style={{
-                    fontSize: 'clamp(18px, 1.8vw, 22px)',
-                    lineHeight: 1.35,
-                    fontWeight: 600,
-                    color: '#ffffff',
-                    letterSpacing: '-0.015em',
-                  }}
-                >
-                  {ARBOL_PROBLEMA.problemaCentral}
-                </p>
-                {/* Connectors hint */}
-                <div className="mt-6 flex items-center gap-2">
-                  <span
-                    style={{
-                      width: 24,
-                      height: 1,
-                      background: 'rgba(255,255,255,0.45)',
-                    }}
-                  />
-                  <span
-                    className="font-mono"
-                    style={{
-                      fontSize: 10,
-                      color: 'rgba(255,255,255,0.7)',
-                      letterSpacing: '0.1em',
-                    }}
-                  >
-                    NODO CENTRAL
-                  </span>
-                  <span
-                    style={{
-                      width: 24,
-                      height: 1,
-                      background: 'rgba(255,255,255,0.45)',
-                    }}
-                  />
-                </div>
-              </motion.div>
-            </div>
-
-            {/* CONSECUENCIAS / OUTPUTS */}
-            <div className="lg:col-span-4 flex flex-col gap-3">
-              <div
-                className="eyebrow flex items-center gap-2"
-                style={{ justifyContent: 'flex-end' }}
-              >
-                <span>Consecuencias</span>
-                <span
-                  className="font-mono"
-                  style={{
-                    color: 'var(--color-orange)',
-                    fontWeight: 700,
-                  }}
-                >
-                  Outputs →
-                </span>
-              </div>
-              {ARBOL_PROBLEMA.consecuencias.map((e, i) => (
-                <motion.div
-                  key={e.codigo}
-                  {...fade(0.12 + i * 0.06)}
-                  className="card-orange-soft"
-                  style={{ padding: 20 }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="font-mono"
-                      style={{
-                        fontSize: 11,
-                        color: 'var(--color-orange)',
-                        fontWeight: 700,
-                      }}
-                    >
-                      {e.codigo}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 15,
-                        fontWeight: 600,
-                        color: 'var(--color-navy-deep)',
-                        lineHeight: 1.25,
-                      }}
-                    >
-                      {e.titulo}
-                    </span>
-                  </div>
-                  <p
-                    className="mt-2"
-                    style={{
-                      fontSize: 13,
-                      lineHeight: 1.5,
-                      color: 'var(--color-ink-soft)',
-                      maxWidth: '30ch',
-                    }}
-                  >
-                    {e.detalle}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          <motion.div
+            {...fadeUp(0.24)}
+            className="mt-8 relative"
+            style={{
+              border: '1px solid var(--color-line)',
+              background: 'var(--color-paper-warm)',
+              borderRadius: 24,
+              padding: '24px 16px',
+              overflow: 'visible',
+            }}
+          >
+            <ProblemGraph tree={ARBOL_TREE} />
+          </motion.div>
         </div>
+
       </div>
     </section>
   );

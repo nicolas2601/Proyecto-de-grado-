@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { AVANCES } from '@/data/content';
-
-const EASE = [0.16, 1, 0.3, 1] as const;
+import { ENTER } from '@/lib/motion';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: ENTER } },
 };
 
 const stagger = {
@@ -13,9 +13,81 @@ const stagger = {
   show: { transition: { staggerChildren: 0.07 } },
 };
 
+// Headline word-by-word
+const wordStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+};
+
+const wordReveal = {
+  hidden: { y: '100%' },
+  show: { y: '0%', transition: { duration: 0.6, ease: ENTER } },
+};
+
+// Col 7 + Col 5 clip-path simultáneo
+const colLeft = {
+  hidden: { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
+  show: {
+    clipPath: 'inset(0 0% 0 0)',
+    opacity: 1,
+    transition: { duration: 0.82, ease: ENTER },
+  },
+};
+
+const colRight = {
+  hidden: { clipPath: 'inset(0 0 0 100%)', opacity: 0 },
+  show: {
+    clipPath: 'inset(0 0 0 0%)',
+    opacity: 1,
+    transition: { duration: 0.82, ease: ENTER },
+  },
+};
+
+// Stagger 80ms realizado · check spring
+const realizedStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.5 } },
+};
+
+const realizedItem = {
+  hidden: { opacity: 0, x: -10 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: ENTER } },
+};
+
+const checkSpring = {
+  hidden: { opacity: 0, scale: 0.6 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { type: 'spring' as const, stiffness: 280, damping: 18 },
+  },
+};
+
+// Stagger 60ms pendiente
+const pendingStagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.5 } },
+};
+
+const pendingItem = {
+  hidden: { opacity: 0, x: 10 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: ENTER } },
+};
+
+// Nota orange con pulse box-shadow loop
+const noteEnter = {
+  hidden: { opacity: 0, scale: 0.94 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.65, ease: ENTER },
+  },
+};
+
 function IconCheck() {
   return (
-    <span
+    <motion.span
+      variants={checkSpring}
       aria-hidden
       style={{
         width: 22,
@@ -38,7 +110,7 @@ function IconCheck() {
           strokeLinejoin="round"
         />
       </svg>
-    </span>
+    </motion.span>
   );
 }
 
@@ -58,7 +130,98 @@ function IconSquare() {
   );
 }
 
+// Headline word-by-word con clip-path mask vertical
+function HeadlineWords({ reduced }: { reduced: boolean }) {
+  const fragments = [
+    { text: 'Anteproyecto · Fase 1', bold: true },
+    { text: ' en curso', bold: false },
+  ];
+
+  if (reduced) {
+    return (
+      <>
+        <span style={{ fontWeight: 700 }}>Anteproyecto · Fase 1</span> en curso
+      </>
+    );
+  }
+
+  return (
+    <motion.span
+      variants={wordStagger}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.4 }}
+      style={{ display: 'inline-block' }}
+    >
+      {fragments.map((frag, fi) =>
+        frag.text.split(' ').map((word, wi) => (
+          <span
+            key={`${fi}-${wi}`}
+            style={{
+              display: 'inline-block',
+              overflow: 'hidden',
+              verticalAlign: 'bottom',
+              marginRight: word.trim() ? '0.28em' : 0,
+            }}
+          >
+            <motion.span
+              variants={wordReveal}
+              style={{
+                display: 'inline-block',
+                fontWeight: frag.bold ? 700 : 600,
+              }}
+            >
+              {word.trim() || ' '}
+            </motion.span>
+          </span>
+        ))
+      )}
+    </motion.span>
+  );
+}
+
+// Counter 0→25
+function PercentCounter({ reduced }: { reduced: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+  const [value, setValue] = useState(reduced ? 25 : 0);
+
+  useEffect(() => {
+    if (reduced) return;
+    if (!inView) return;
+    const duration = 1600;
+    const start = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const k = Math.min(1, (t - start) / duration);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - k, 3);
+      setValue(Math.round(eased * 25));
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, reduced]);
+
+  return (
+    <span
+      ref={ref}
+      className="tabular-nums"
+      style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 12,
+        color: 'var(--color-graphite)',
+        letterSpacing: '0.04em',
+      }}
+    >
+      {value} % / 100 %
+    </span>
+  );
+}
+
 export default function Section14Avances() {
+  const reduced = useReducedMotion() ?? false;
+
   return (
     <div className="container">
       {/* Header */}
@@ -70,7 +233,7 @@ export default function Section14Avances() {
         className="mb-12"
       >
         <motion.div variants={fadeUp} className="eyebrow-num mb-6">
-          §14 / AVANCES DEL TRABAJO
+          §15 / AVANCES DEL TRABAJO
         </motion.div>
 
         <motion.h2
@@ -85,7 +248,7 @@ export default function Section14Avances() {
             maxWidth: '22ch',
           }}
         >
-          <span style={{ fontWeight: 700 }}>Anteproyecto · Fase 1</span> en curso
+          <HeadlineWords reduced={reduced} />
         </motion.h2>
 
         <motion.p
@@ -102,7 +265,7 @@ export default function Section14Avances() {
         </motion.p>
       </motion.div>
 
-      {/* Bento 7 + 5 */}
+      {/* Bento 7 + 5 · clip-path simultáneo */}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -110,9 +273,9 @@ export default function Section14Avances() {
         variants={stagger}
         className="grid grid-cols-1 lg:grid-cols-12 gap-5 mb-10"
       >
-        {/* Col 7 · Realizado */}
+        {/* Col 7 · Realizado · entra desde left */}
         <motion.div
-          variants={fadeUp}
+          variants={colLeft}
           className="lg:col-span-7 card-teal-soft"
           style={{
             padding: 36,
@@ -129,7 +292,11 @@ export default function Section14Avances() {
             REALIZADO / 4 de 5 actividades
           </div>
 
-          <ul
+          <motion.ul
+            variants={realizedStagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -138,8 +305,9 @@ export default function Section14Avances() {
             }}
           >
             {AVANCES.realizado.map((item, i) => (
-              <li
+              <motion.li
                 key={i}
+                variants={realizedItem}
                 style={{
                   display: 'flex',
                   gap: 14,
@@ -157,14 +325,14 @@ export default function Section14Avances() {
                 >
                   {item}
                 </span>
-              </li>
+              </motion.li>
             ))}
-          </ul>
+          </motion.ul>
         </motion.div>
 
-        {/* Col 5 · Pendiente */}
+        {/* Col 5 · Pendiente · entra desde right */}
         <motion.div
-          variants={fadeUp}
+          variants={colRight}
           className="lg:col-span-5 card-navy"
           style={{
             padding: 36,
@@ -180,7 +348,11 @@ export default function Section14Avances() {
             PENDIENTE / próximos pasos
           </div>
 
-          <ul
+          <motion.ul
+            variants={pendingStagger}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -189,8 +361,9 @@ export default function Section14Avances() {
             }}
           >
             {AVANCES.pendiente.map((item, i) => (
-              <li
+              <motion.li
                 key={i}
+                variants={pendingItem}
                 style={{
                   display: 'flex',
                   gap: 12,
@@ -207,13 +380,13 @@ export default function Section14Avances() {
                 >
                   {item}
                 </span>
-              </li>
+              </motion.li>
             ))}
-          </ul>
+          </motion.ul>
         </motion.div>
       </motion.div>
 
-      {/* Nota metodológica · destacada */}
+      {/* Nota metodológica · destacada · scale + pulse box-shadow */}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -222,7 +395,7 @@ export default function Section14Avances() {
         className="mb-12"
       >
         <motion.div
-          variants={fadeUp}
+          variants={noteEnter}
           className="card-orange-soft"
           style={{
             padding: 32,
@@ -231,6 +404,27 @@ export default function Section14Avances() {
             alignItems: 'flex-start',
             flexWrap: 'wrap',
           }}
+          animate={
+            reduced
+              ? undefined
+              : {
+                  boxShadow: [
+                    '0 0 0 0 rgba(242,107,58,0.0)',
+                    '0 0 28px 2px rgba(242,107,58,0.22)',
+                    '0 0 0 0 rgba(242,107,58,0.0)',
+                  ],
+                }
+          }
+          transition={
+            reduced
+              ? undefined
+              : {
+                  duration: 3.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 0.9,
+                }
+          }
         >
           <div
             style={{
@@ -285,7 +479,7 @@ export default function Section14Avances() {
         </motion.div>
       </motion.div>
 
-      {/* Progress bar global */}
+      {/* Progress bar global · scaleX con transform-origin left */}
       <motion.div
         initial="hidden"
         whileInView="show"
@@ -308,15 +502,17 @@ export default function Section14Avances() {
           }}
         >
           <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: '25%' }}
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 1.2, ease: EASE, delay: 0.2 }}
+            transition={{ duration: 1.6, ease: ENTER, delay: 0.2 }}
             style={{
+              width: '25%',
               height: '100%',
               background: 'var(--color-teal)',
               borderRadius: 9999,
               boxShadow: '0 0 0 1px rgba(31,140,136,0.18) inset',
+              transformOrigin: 'left center',
             }}
           />
           {/* dividers cada 25% */}
@@ -363,17 +559,7 @@ export default function Section14Avances() {
               OBJ-02-04 PENDIENTES
             </span>
           </div>
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 12,
-              color: 'var(--color-graphite)',
-              letterSpacing: '0.04em',
-            }}
-            className="tabular-nums"
-          >
-            25 % / 100 %
-          </span>
+          <PercentCounter reduced={reduced} />
         </motion.div>
       </motion.div>
     </div>

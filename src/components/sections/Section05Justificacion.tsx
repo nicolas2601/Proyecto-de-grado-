@@ -1,13 +1,20 @@
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from 'framer-motion';
 import { JUSTIFICACION, JUSTIFICACION_RESUMEN } from '@/data/content';
+import { Cite } from '@/components/ui/Cite';
+import { ENTER } from '@/lib/motion';
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
-
-const fade = (delay = 0, y = 24) => ({
+const fadeUp = (delay = 0, y = 24) => ({
   initial: { opacity: 0, y },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: '-10%' },
-  transition: { duration: 0.7, ease: easeOut, delay },
+  transition: { duration: 0.7, ease: ENTER, delay },
 });
 
 // ── Icon set inline SVG 32px ──────────────────────────
@@ -66,6 +73,70 @@ function IconGraduation({ color = 'currentColor' }: { color?: string }) {
 
 const QUAD_ICONS = [IconUsers, IconNetwork, IconGearSpark, IconDatabase];
 
+// ── TiltCard · 3D tilt sutil basado en posición del mouse
+function TiltCard({
+  children,
+  className,
+  style,
+  index,
+  destacado,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  index: number;
+  destacado?: boolean;
+}) {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement | null>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 220, damping: 22 });
+  const sy = useSpring(my, { stiffness: 220, damping: 22 });
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-5, 5]);
+  const rotateX = useTransform(sy, [-0.5, 0.5], [4, -4]);
+
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current || reduced) return;
+    const r = ref.current.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  };
+  const onLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
+
+  // Diagonal stagger TL -> BR (index order 0,1,2,3 maps fine)
+  const delay = 0.22 + index * 0.1;
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-10%' }}
+      transition={{ duration: 0.8, ease: ENTER, delay }}
+      style={{
+        ...style,
+        rotateX: reduced ? 0 : (rotateX as any),
+        rotateY: reduced ? 0 : (rotateY as any),
+        transformPerspective: 1000,
+        transformStyle: 'preserve-3d',
+        willChange: 'transform',
+      }}
+      className={className}
+      // Avoid additional whileHover to keep tilt + entry isolated
+    >
+      <div style={{ transform: 'translateZ(0)' }}>{children}</div>
+      {/* subtle border glow for destacado on hover handled inline by CSS */}
+      {destacado && null}
+    </motion.div>
+  );
+}
+
 export default function Section04Justificacion() {
   const cuadrantes = JUSTIFICACION.slice(0, 4);
   const formacion = JUSTIFICACION[4];
@@ -79,12 +150,12 @@ export default function Section04Justificacion() {
 
       <div className="container relative">
         {/* Header */}
-        <motion.div {...fade(0)} className="eyebrow-num mb-6">
-          §04 / Justificación
+        <motion.div {...fadeUp(0)} className="eyebrow-num mb-6">
+          §05 / Justificación
         </motion.div>
 
         <motion.h2
-          {...fade(0.08)}
+          {...fadeUp(0.08)}
           className="font-display"
           style={{
             color: 'var(--color-navy)',
@@ -100,7 +171,7 @@ export default function Section04Justificacion() {
         </motion.h2>
 
         <motion.p
-          {...fade(0.16)}
+          {...fadeUp(0.16)}
           className="mt-6"
           style={{
             fontSize: 20,
@@ -112,15 +183,16 @@ export default function Section04Justificacion() {
           Una respuesta directa a una necesidad regional documentada.
         </motion.p>
 
-        {/* ── GRID 2x2 BENTO ─────────────────────────────────── */}
+        {/* ── GRID 2x2 BENTO con tilt 3D + stagger diagonal ──────── */}
         <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
           {cuadrantes.map((item, i) => {
             const Icon = QUAD_ICONS[i];
             const destacado = 'destacado' in item && item.destacado;
             return (
-              <motion.div
+              <TiltCard
                 key={item.titulo}
-                {...fade(0.22 + i * 0.07)}
+                index={i}
+                destacado={!!destacado}
                 className={destacado ? 'card-teal' : 'card-paper'}
                 style={{
                   padding: 36,
@@ -185,6 +257,12 @@ export default function Section04Justificacion() {
                   {item.texto}
                 </p>
 
+                {'refs' in item && Array.isArray((item as any).refs) && (item as any).refs.length > 0 ? (
+                  <div className="mt-4" style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    <Cite refs={(item as any).refs} tone={destacado ? 'white' : 'paper'} />
+                  </div>
+                ) : null}
+
                 {destacado && (
                   <div
                     className="mt-5"
@@ -200,18 +278,21 @@ export default function Section04Justificacion() {
                       fontFamily: 'var(--font-mono)',
                     }}
                   >
-                    Valor agregado
+                    Diferenciación
                   </div>
                 )}
-              </motion.div>
+              </TiltCard>
             );
           })}
         </div>
 
-        {/* ── Formación profesional · card ancho completo ───── */}
+        {/* ── Formación profesional · card ancho completo con clip-path ─ */}
         {formacion && (
           <motion.div
-            {...fade(0.55)}
+            initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 1 }}
+            whileInView={{ clipPath: 'inset(0 0% 0 0)', opacity: 1 }}
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 0.95, ease: ENTER, delay: 0.55 }}
             className="card-paper mt-5 lg:mt-6"
             style={{
               padding: 32,
@@ -220,6 +301,7 @@ export default function Section04Justificacion() {
               gap: 24,
               alignItems: 'flex-start',
               flexWrap: 'wrap',
+              willChange: 'clip-path',
             }}
           >
             <div
@@ -268,9 +350,12 @@ export default function Section04Justificacion() {
           </motion.div>
         )}
 
-        {/* ── Resumen estratégico · card navy ──────────────── */}
+        {/* ── Resumen estratégico · card navy con y:40 entry ──── */}
         <motion.div
-          {...fade(0.65)}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-10%' }}
+          transition={{ duration: 0.85, ease: ENTER, delay: 0.2 }}
           className="card-navy mt-10"
           style={{ padding: 48 }}
         >
@@ -281,20 +366,17 @@ export default function Section04Justificacion() {
             Resumen estratégico
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Importancia */}
-            <div>
-              <h4
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  color: '#ffffff',
-                  letterSpacing: '-0.01em',
-                  marginBottom: 12,
-                }}
-              >
-                Importancia
-              </h4>
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-10%' }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } },
+            }}
+          >
+            <ResumenCol title="Importancia">
               <p
                 style={{
                   fontSize: 14,
@@ -304,21 +386,9 @@ export default function Section04Justificacion() {
               >
                 {JUSTIFICACION_RESUMEN.importancia}
               </p>
-            </div>
+            </ResumenCol>
 
-            {/* Pertenencia */}
-            <div>
-              <h4
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  color: '#ffffff',
-                  letterSpacing: '-0.01em',
-                  marginBottom: 12,
-                }}
-              >
-                Pertenencia
-              </h4>
+            <ResumenCol title="Pertenencia">
               <ul style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <li>
                   <div
@@ -372,21 +442,9 @@ export default function Section04Justificacion() {
                   </div>
                 </li>
               </ul>
-            </div>
+            </ResumenCol>
 
-            {/* Beneficiarios */}
-            <div>
-              <h4
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  color: '#ffffff',
-                  letterSpacing: '-0.01em',
-                  marginBottom: 12,
-                }}
-              >
-                Beneficiarios
-              </h4>
+            <ResumenCol title="Beneficiarios">
               <p
                 style={{
                   fontSize: 14,
@@ -396,21 +454,9 @@ export default function Section04Justificacion() {
               >
                 {JUSTIFICACION_RESUMEN.beneficiarios}
               </p>
-            </div>
+            </ResumenCol>
 
-            {/* Alcance corto */}
-            <div>
-              <h4
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  color: '#ffffff',
-                  letterSpacing: '-0.01em',
-                  marginBottom: 12,
-                }}
-              >
-                Alcance corto
-              </h4>
+            <ResumenCol title="Alcance corto">
               <p
                 style={{
                   fontSize: 14,
@@ -420,10 +466,44 @@ export default function Section04Justificacion() {
               >
                 {JUSTIFICACION_RESUMEN.alcanceCorto}
               </p>
-            </div>
-          </div>
+            </ResumenCol>
+          </motion.div>
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function ResumenCol({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.7, ease: ENTER },
+        },
+      }}
+    >
+      <h4
+        style={{
+          fontSize: 18,
+          fontWeight: 600,
+          color: '#ffffff',
+          letterSpacing: '-0.01em',
+          marginBottom: 12,
+        }}
+      >
+        {title}
+      </h4>
+      {children}
+    </motion.div>
   );
 }
