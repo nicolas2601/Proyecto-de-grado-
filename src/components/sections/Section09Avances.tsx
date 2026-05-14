@@ -68,7 +68,7 @@ const FASE_1_ACTIVIDADES = [
   { label: 'Caracterización del problema clínico regional', done: true },
   { label: 'Revisión exhaustiva de la literatura', done: true },
   { label: 'Consolidación del estado del arte', done: true },
-  { label: 'Selección de corpus (HAM10000, BCN20000, CO2Wounds-V2)', done: true },
+  { label: 'Selección de datasets (HAM10000, BCN20000, CO2Wounds-V2)', done: true },
   { label: 'Análisis y caracterización preliminar del EDA', done: true },
   { label: 'Pipeline de preprocesamiento (Actividad 5)', done: false },
 ] as const;
@@ -365,7 +365,7 @@ export default function Section09Avances() {
         </div>
 
         {/* ════════════════════════════════════════════════════════════ */}
-        {/* DATOS DEL EDA · 3 corpus + gráfica HAM10000                 */}
+        {/* DATOS DEL EDA · 3 datasets + gráfica HAM10000                 */}
         {/* ════════════════════════════════════════════════════════════ */}
         <div style={{ marginBottom: 'clamp(64px, 8vw, 112px)' }}>
           <motion.div
@@ -385,7 +385,7 @@ export default function Section09Avances() {
                 margin: 0,
               }}
             >
-              Análisis Exploratorio · 3 corpus caracterizados
+              Análisis Exploratorio · 3 datasets caracterizados
             </h3>
             <span
               className="font-mono uppercase"
@@ -472,7 +472,7 @@ export default function Section09Avances() {
             })}
           </div>
 
-          {/* detalle del corpus activo · gráfica */}
+          {/* detalle del dataset activo · gráfica */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -503,7 +503,7 @@ export default function Section09Avances() {
         </div>
 
         {/* ════════════════════════════════════════════════════════════ */}
-        {/* GRÁFICAS COMPARATIVAS EDA                                   */}
+        {/* GRÁFICAS COMPARATIVAS EDA · estilo paper IEEE                */}
         {/* ════════════════════════════════════════════════════════════ */}
         <div style={{ marginBottom: 'clamp(64px, 8vw, 112px)' }}>
           <motion.h3
@@ -523,155 +523,45 @@ export default function Section09Avances() {
             Hallazgos cruzados del EDA
           </motion.h3>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: 'clamp(14px, 2vw, 24px)',
-            }}
+          {/* Figura 1 · Composición clínica (full-width) */}
+          <PaperFigure
+            num="Figura 1"
+            titulo="Composición clínica por dataset"
+            caption="Distribución de imágenes según naturaleza de la lesión. HAM10000 presenta mayor proporción benigna por la dominancia de la clase nv. BCN20000 muestra balance maligno/benigno cercano a la simetría."
+            n={36}
           >
-            {/* 1. Entropía + Gini comparados */}
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-6%' }}
-              transition={{ duration: 0.6, ease: ENTER, delay: 0.1 }}
-              style={{
-                background: '#ffffff',
-                border: '1px solid rgba(10,11,12,0.14)',
-                borderRadius: 14,
-                padding: 'clamp(22px, 2.6vw, 32px)',
-              }}
-            >
-              <div
-                className="font-mono uppercase"
-                style={{ fontSize: 11, letterSpacing: '0.28em', color: 'rgba(10,11,12,0.55)', fontWeight: 700, marginBottom: 14 }}
-              >
-                Balance · Shannon vs Gini
-              </div>
-              <h4
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(18px, 1.7vw, 22px)',
-                  fontWeight: 500,
-                  color: '#0a0b0c',
-                  margin: '0 0 18px 0',
-                  letterSpacing: '-0.014em',
-                  lineHeight: 1.15,
-                }}
-              >
-                BCN20000 mejor balanceado
-              </h4>
-              <BalanceChart />
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 13.5,
-                  lineHeight: 1.5,
-                  color: 'rgba(10,11,12,0.7)',
-                  margin: '14px 0 0 0',
-                  letterSpacing: '-0.003em',
-                }}
-              >
-                BCN20000 (H=2,41 · Gini=0,42) supera a HAM10000 (H=1,63 · Gini=0,64) en balance de clases.
-              </p>
-            </motion.div>
+            <CompositionStack />
+          </PaperFigure>
 
-            {/* 2. Distribución binaria BCN */}
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-6%' }}
-              transition={{ duration: 0.6, ease: ENTER, delay: 0.2 }}
-              style={{
-                background: '#ffffff',
-                border: '1px solid rgba(10,11,12,0.14)',
-                borderRadius: 14,
-                padding: 'clamp(22px, 2.6vw, 32px)',
-              }}
-            >
-              <div
-                className="font-mono uppercase"
-                style={{ fontSize: 11, letterSpacing: '0.28em', color: 'rgba(10,11,12,0.55)', fontWeight: 700, marginBottom: 14 }}
-              >
-                BCN20000 · binario
-              </div>
-              <h4
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(18px, 1.7vw, 22px)',
-                  fontWeight: 500,
-                  color: '#0a0b0c',
-                  margin: '0 0 18px 0',
-                  letterSpacing: '-0.014em',
-                  lineHeight: 1.15,
-                }}
-              >
-                Benigno · maligno
-              </h4>
-              <DonutBenignoMaligno />
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 13.5,
-                  lineHeight: 1.5,
-                  color: 'rgba(10,11,12,0.7)',
-                  margin: '14px 0 0 0',
-                  letterSpacing: '-0.003em',
-                }}
-              >
-                Distribución casi simétrica · 46,8% benigno · 46,8% maligno · 6,4% indeterminado.
-              </p>
-            </motion.div>
+          {/* Figura 2 · Entropía y eficiencia */}
+          <PaperFigure
+            num="Figura 2"
+            titulo="Entropía de Shannon y eficiencia distributiva"
+            caption="Comparación entre la entropía observada y el máximo teórico log₂(k). HAM10000 alcanza una eficiencia distributiva del 58 %; BCN20000 del 73 %, lo que indica una distribución más uniforme entre clases."
+            n={36}
+          >
+            <EntropyEfficiency />
+          </PaperFigure>
 
-            {/* 3. Cobertura cruzada 7 clases priorizadas */}
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-6%' }}
-              transition={{ duration: 0.6, ease: ENTER, delay: 0.3 }}
-              style={{
-                background: '#ffffff',
-                border: '1px solid rgba(10,11,12,0.14)',
-                borderRadius: 14,
-                padding: 'clamp(22px, 2.6vw, 32px)',
-                gridColumn: 'span 1',
-              }}
-            >
-              <div
-                className="font-mono uppercase"
-                style={{ fontSize: 11, letterSpacing: '0.28em', color: 'rgba(10,11,12,0.55)', fontWeight: 700, marginBottom: 14 }}
-              >
-                Sesgo de adquisición
-              </div>
-              <h4
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(18px, 1.7vw, 22px)',
-                  fontWeight: 500,
-                  color: '#0a0b0c',
-                  margin: '0 0 18px 0',
-                  letterSpacing: '-0.014em',
-                  lineHeight: 1.15,
-                }}
-              >
-                Resolución por corpus
-              </h4>
-              <ResolutionChart />
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 13.5,
-                  lineHeight: 1.5,
-                  color: 'rgba(10,11,12,0.7)',
-                  margin: '14px 0 0 0',
-                  letterSpacing: '-0.003em',
-                }}
-              >
-                Triple sesgo identificado · comparación dimensional directa entre los tres corpus no es válida.
-              </p>
-            </motion.div>
-          </div>
+          {/* Figura 3 · HAM10000 distribución acumulada (Lorenz-like) */}
+          <PaperFigure
+            num="Figura 3"
+            titulo="Curva de concentración de clases · HAM10000"
+            caption="Cuatro clases concentran más del 95 % del volumen total. La pendiente acusada en el segmento inferior izquierdo evidencia el desbalance que motiva el uso de muestreo ponderado y SSL en pre-entrenamiento."
+            n={36}
+          >
+            <LorenzCurve />
+          </PaperFigure>
+
+          {/* Figura 4 · Heterogeneidad dimensional */}
+          <PaperFigure
+            num="Figura 4"
+            titulo="Heterogeneidad dimensional inter-dataset"
+            caption="Resoluciones nominales reportadas. La comparación dimensional directa entre los tres datasets no es válida sin un protocolo común de redimensionamiento y normalización de canales."
+            n={36}
+          >
+            <DimensionTable />
+          </PaperFigure>
         </div>
 
         {/* ════════════════════════════════════════════════════════════ */}
@@ -908,7 +798,7 @@ export default function Section09Avances() {
             fontWeight: 500,
           }}
         >
-          <span>fase 1 · 3 corpus · 4 resultados · TRL 4</span>
+          <span>fase 1 · 3 datasets · 4 resultados · TRL 4</span>
           <span style={{ color: 'rgba(10,11,12,0.75)', fontWeight: 600 }}>continúa →</span>
         </motion.div>
       </div>
@@ -1174,7 +1064,7 @@ function CO2Stats({ data }: { data: typeof DATASETS[number] }) {
             className="font-mono uppercase"
             style={{ fontSize: 11.5, letterSpacing: '0.32em', color: data.accent, fontWeight: 700, marginBottom: 8 }}
           >
-            CO2Wounds-V2 · corpus local Santander
+            CO2Wounds-V2 · dataset local Santander
           </div>
           <h4
             style={{
@@ -1255,11 +1145,490 @@ function CO2Stats({ data }: { data: typeof DATASETS[number] }) {
           letterSpacing: '-0.003em',
         }}
       >
-        Resoluciones heterogéneas frente al estándar dermatoscópico. Rol del corpus: validar viabilidad metodológica en condiciones de captura locales, no comparación directa con HAM10000 ni BCN20000.
+        Resoluciones heterogéneas frente al estándar dermatoscópico. Rol del dataset: validar viabilidad metodológica en condiciones de captura locales, no comparación directa con HAM10000 ni BCN20000.
       </div>
     </div>
   );
 }
+
+// ─── Paper figure wrapper · estilo IEEE/Nature ──────────────────────
+
+function PaperFigure({ num, titulo, caption, n, children }: { num: string; titulo: string; caption: string; n: number; children: React.ReactNode }) {
+  return (
+    <motion.figure
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-6%' }}
+      transition={{ duration: 0.6, ease: ENTER }}
+      style={{
+        background: '#ffffff',
+        border: '1px solid rgba(10,11,12,0.18)',
+        borderRadius: 4,
+        padding: 'clamp(28px, 3.4vw, 48px)',
+        marginBottom: 'clamp(20px, 2.4vw, 32px)',
+      }}
+    >
+      <div
+        style={{
+          marginBottom: 28,
+          paddingBottom: 16,
+          borderBottom: '1px solid rgba(10,11,12,0.18)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline',
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
+        <div>
+          <div
+            className="font-mono uppercase"
+            style={{
+              fontSize: 10.5,
+              letterSpacing: '0.32em',
+              color: 'rgba(10,11,12,0.55)',
+              fontWeight: 700,
+              marginBottom: 6,
+            }}
+          >
+            {num}
+          </div>
+          <h4
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 'clamp(19px, 1.8vw, 23px)',
+              fontWeight: 500,
+              color: '#0a0b0c',
+              margin: 0,
+              letterSpacing: '-0.018em',
+              lineHeight: 1.2,
+            }}
+          >
+            {titulo}
+          </h4>
+        </div>
+        <span
+          className="font-mono uppercase"
+          style={{ fontSize: 10, letterSpacing: '0.22em', color: 'rgba(10,11,12,0.5)', fontWeight: 600 }}
+        >
+          n = {n}
+        </span>
+      </div>
+      <div style={{ marginBottom: 22 }}>{children}</div>
+      <figcaption
+        style={{
+          paddingTop: 14,
+          borderTop: '1px solid rgba(10,11,12,0.12)',
+          fontFamily: 'var(--font-sans)',
+          fontSize: 13,
+          lineHeight: 1.5,
+          color: 'rgba(10,11,12,0.7)',
+          letterSpacing: '-0.003em',
+          fontStyle: 'italic',
+        }}
+      >
+        <span style={{ fontStyle: 'normal', fontWeight: 600, color: '#0a0b0c' }}>{num}.</span>{' '}
+        {caption}
+      </figcaption>
+    </motion.figure>
+  );
+}
+
+// ─── Figura 1 · Composición clínica stack ───────────────────────────
+
+function CompositionStack() {
+  const data = [
+    {
+      label: 'HAM10000',
+      n: '10.015',
+      seg: [
+        { name: 'Benigna', pct: 81.43, color: '#0a0b0c' },
+        { name: 'Maligna', pct: 15.40, color: 'rgba(10,11,12,0.55)' },
+        { name: 'Precancerosa', pct: 3.27, color: 'rgba(10,11,12,0.25)' },
+      ],
+    },
+    {
+      label: 'BCN20000',
+      n: '18.946',
+      seg: [
+        { name: 'Benigna', pct: 46.8, color: '#0a0b0c' },
+        { name: 'Maligna', pct: 46.8, color: 'rgba(10,11,12,0.55)' },
+        { name: 'Indeterminada', pct: 6.4, color: 'rgba(10,11,12,0.25)' },
+      ],
+    },
+  ];
+  return (
+    <div style={{ fontFamily: 'var(--font-sans)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        {data.map((d, i) => (
+          <div key={d.label}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
+              <span
+                className="font-mono uppercase"
+                style={{ fontSize: 12, letterSpacing: '0.22em', color: '#0a0b0c', fontWeight: 700 }}
+              >
+                {d.label}
+              </span>
+              <span
+                className="font-mono tabular-nums"
+                style={{ fontSize: 12, color: 'rgba(10,11,12,0.55)', fontWeight: 600 }}
+              >
+                n = {d.n}
+              </span>
+            </div>
+            <div style={{ display: 'flex', height: 32, borderRadius: 2, overflow: 'hidden', border: '1px solid rgba(10,11,12,0.12)' }}>
+              {d.seg.map((s, j) => (
+                <motion.div
+                  key={j}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${s.pct}%` }}
+                  viewport={{ once: true, margin: '-2%' }}
+                  transition={{ duration: 0.9, ease: ENTER, delay: 0.15 + i * 0.1 + j * 0.05 }}
+                  style={{
+                    background: s.color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: s.color === 'rgba(10,11,12,0.25)' ? '#0a0b0c' : '#ffffff',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    letterSpacing: '0.04em',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {s.pct >= 8 ? `${s.pct.toFixed(1)}%` : ''}
+                </motion.div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 20, marginTop: 8, flexWrap: 'wrap' }}>
+              {d.seg.map((s) => (
+                <span
+                  key={s.name}
+                  className="font-mono uppercase"
+                  style={{ fontSize: 10, letterSpacing: '0.18em', color: 'rgba(10,11,12,0.7)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                >
+                  <span style={{ width: 10, height: 10, background: s.color, display: 'inline-block', borderRadius: 1 }} />
+                  {s.name} · {s.pct.toFixed(1)}%
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Figura 2 · Eficiencia entrópica ────────────────────────────────
+
+function EntropyEfficiency() {
+  const data = [
+    { label: 'HAM10000', H: 1.63, Hmax: 2.81, eff: 58 },
+    { label: 'BCN20000', H: 2.41, Hmax: 3.32, eff: 73 },
+  ];
+  return (
+    <svg viewBox="0 0 720 240" style={{ width: '100%', height: 'auto', display: 'block' }}>
+      {/* eje Y */}
+      <line x1="80" y1="30" x2="80" y2="190" stroke="#0a0b0c" strokeWidth="1" />
+      {/* eje X */}
+      <line x1="80" y1="190" x2="700" y2="190" stroke="#0a0b0c" strokeWidth="1" />
+
+      {/* ticks Y */}
+      {[0, 1, 2, 3, 4].map((v) => {
+        const y = 190 - (v / 4) * 160;
+        return (
+          <g key={v}>
+            <line x1="76" y1={y} x2="80" y2={y} stroke="#0a0b0c" strokeWidth="1" />
+            <text x={70} y={y + 3} textAnchor="end" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fill: 'rgba(10,11,12,0.65)' }}>
+              {v}
+            </text>
+            <line x1="80" y1={y} x2="700" y2={y} stroke="rgba(10,11,12,0.08)" strokeWidth="0.5" strokeDasharray="2 4" />
+          </g>
+        );
+      })}
+
+      {/* label eje Y */}
+      <text
+        transform="rotate(-90 24 110)"
+        x={24}
+        y={110}
+        textAnchor="middle"
+        style={{ fontFamily: 'Inter, sans-serif', fontStyle: 'italic', fontSize: 11, fill: 'rgba(10,11,12,0.7)' }}
+      >
+        Entropía · bits
+      </text>
+
+      {/* barras paired · H observado y Hmax teórico */}
+      {data.map((d, i) => {
+        const cx = 180 + i * 280;
+        const barW = 90;
+        const hObs = (d.H / 4) * 160;
+        const hMax = (d.Hmax / 4) * 160;
+        return (
+          <g key={d.label}>
+            {/* Hmax · barra contorno */}
+            <motion.rect
+              x={cx}
+              y={190 - hMax}
+              width={barW}
+              height={hMax}
+              fill="rgba(10,11,12,0.04)"
+              stroke="#0a0b0c"
+              strokeWidth={1}
+              strokeDasharray="4 3"
+              initial={{ height: 0, y: 190 }}
+              whileInView={{ height: hMax, y: 190 - hMax }}
+              viewport={{ once: true, margin: '-2%' }}
+              transition={{ duration: 0.8, ease: ENTER, delay: 0.2 + i * 0.1 }}
+            />
+            {/* H observada · barra sólida */}
+            <motion.rect
+              x={cx + barW + 12}
+              y={190 - hObs}
+              width={barW}
+              height={hObs}
+              fill="#0a0b0c"
+              initial={{ height: 0, y: 190 }}
+              whileInView={{ height: hObs, y: 190 - hObs }}
+              viewport={{ once: true, margin: '-2%' }}
+              transition={{ duration: 0.8, ease: ENTER, delay: 0.4 + i * 0.1 }}
+            />
+            {/* etiquetas valores */}
+            <text x={cx + barW / 2} y={190 - hMax - 8} textAnchor="middle" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, fill: '#0a0b0c' }}>
+              {d.Hmax.toFixed(2)}
+            </text>
+            <text x={cx + barW + 12 + barW / 2} y={190 - hObs - 8} textAnchor="middle" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, fill: '#0a0b0c' }}>
+              {d.H.toFixed(2)}
+            </text>
+            {/* eficiencia */}
+            <text x={cx + barW + 6} y={208} textAnchor="middle" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, fill: '#00543d', letterSpacing: '0.04em' }}>
+              η = {d.eff}%
+            </text>
+            {/* dataset label */}
+            <text x={cx + barW + 6} y={228} textAnchor="middle" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, fill: '#0a0b0c', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+              {d.label}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* leyenda */}
+      <g transform="translate(560, 30)">
+        <rect x={0} y={-7} width={12} height={12} fill="rgba(10,11,12,0.04)" stroke="#0a0b0c" strokeWidth={1} strokeDasharray="3 2" />
+        <text x={18} y={3} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 600, fill: 'rgba(10,11,12,0.7)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>
+          H máx · log₂(k)
+        </text>
+        <rect x={0} y={13} width={12} height={12} fill="#0a0b0c" />
+        <text x={18} y={23} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 600, fill: 'rgba(10,11,12,0.7)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>
+          H observada
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+// ─── Figura 3 · Curva de concentración (Lorenz) · HAM10000 ──────────
+
+function LorenzCurve() {
+  // ordenados ascendentes por count: df 1.15, vasc 1.42, akiec 3.27, bcc 5.13, bkl 10.97, mel 11.11, nv 66.95
+  const sorted = [
+    { code: 'df', pct: 1.15 },
+    { code: 'vasc', pct: 1.42 },
+    { code: 'akiec', pct: 3.27 },
+    { code: 'bcc', pct: 5.13 },
+    { code: 'bkl', pct: 10.97 },
+    { code: 'mel', pct: 11.11 },
+    { code: 'nv', pct: 66.95 },
+  ];
+  const k = sorted.length;
+  // acumulado
+  let acc = 0;
+  const pts = sorted.map((s, i) => {
+    acc += s.pct;
+    return { x: ((i + 1) / k) * 100, y: acc, code: s.code };
+  });
+  pts.unshift({ x: 0, y: 0, code: '' });
+
+  const W = 720;
+  const H = 240;
+  const PAD = 60;
+  const innerW = W - PAD * 2;
+  const innerH = H - PAD - 30;
+
+  function toX(v: number) {
+    return PAD + (v / 100) * innerW;
+  }
+  function toY(v: number) {
+    return PAD + innerH - (v / 100) * innerH;
+  }
+
+  const path = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${toX(p.x).toFixed(1)} ${toY(p.y).toFixed(1)}`).join(' ');
+  const equality = `M ${toX(0)} ${toY(0)} L ${toX(100)} ${toY(100)}`;
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+      {/* grid */}
+      {[0, 25, 50, 75, 100].map((v) => (
+        <g key={v}>
+          <line x1={PAD} y1={toY(v)} x2={W - PAD} y2={toY(v)} stroke="rgba(10,11,12,0.08)" strokeWidth="0.5" strokeDasharray="2 4" />
+          <text x={PAD - 8} y={toY(v) + 4} textAnchor="end" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fill: 'rgba(10,11,12,0.65)' }}>
+            {v}
+          </text>
+          <line x1={toX(v)} y1={PAD} x2={toX(v)} y2={PAD + innerH} stroke="rgba(10,11,12,0.08)" strokeWidth="0.5" strokeDasharray="2 4" />
+          <text x={toX(v)} y={PAD + innerH + 16} textAnchor="middle" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fill: 'rgba(10,11,12,0.65)' }}>
+            {v}
+          </text>
+        </g>
+      ))}
+      {/* axes */}
+      <line x1={PAD} y1={PAD + innerH} x2={W - PAD} y2={PAD + innerH} stroke="#0a0b0c" strokeWidth="1" />
+      <line x1={PAD} y1={PAD} x2={PAD} y2={PAD + innerH} stroke="#0a0b0c" strokeWidth="1" />
+      {/* eje labels */}
+      <text x={W / 2} y={H - 8} textAnchor="middle" style={{ fontFamily: 'Inter, sans-serif', fontStyle: 'italic', fontSize: 11, fill: 'rgba(10,11,12,0.7)' }}>
+        % acumulado de clases (ordenadas ascendente)
+      </text>
+      <text transform={`rotate(-90 16 ${H / 2})`} x={16} y={H / 2} textAnchor="middle" style={{ fontFamily: 'Inter, sans-serif', fontStyle: 'italic', fontSize: 11, fill: 'rgba(10,11,12,0.7)' }}>
+        % acumulado de imágenes
+      </text>
+
+      {/* equality line · referencia ideal */}
+      <path d={equality} stroke="rgba(10,11,12,0.45)" strokeWidth="1" strokeDasharray="4 4" fill="none" />
+      <text x={toX(50) + 6} y={toY(50) - 6} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fill: 'rgba(10,11,12,0.55)', fontStyle: 'italic' }}>
+        equidad teórica
+      </text>
+
+      {/* curva observada */}
+      <motion.path
+        d={path}
+        stroke="#0a0b0c"
+        strokeWidth="2"
+        fill="none"
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        viewport={{ once: true, margin: '-2%' }}
+        transition={{ duration: 1.4, ease: ENTER }}
+      />
+
+      {/* puntos */}
+      {pts.slice(1).map((p, i) => (
+        <g key={i}>
+          <motion.circle
+            cx={toX(p.x)}
+            cy={toY(p.y)}
+            r={4}
+            fill="#0a0b0c"
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-2%' }}
+            transition={{ duration: 0.4, ease: ENTER, delay: 0.6 + i * 0.08 }}
+          />
+          <text x={toX(p.x) + 8} y={toY(p.y) - 8} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, fontWeight: 700, fill: '#0a0b0c', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            {p.code}
+          </text>
+        </g>
+      ))}
+
+      {/* Gini annotation */}
+      <text x={W - PAD - 8} y={PAD + 20} textAnchor="end" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 700, fill: '#0a0b0c' }}>
+        Gini = 0,64
+      </text>
+    </svg>
+  );
+}
+
+// ─── Figura 4 · Tabla dimensional sobria ────────────────────────────
+
+function DimensionTable() {
+  const rows = [
+    { ds: 'HAM10000', res: '600 × 450 px', uniform: 'uniforme', captura: 'Dermatoscopio clínico', n: '10.015' },
+    { ds: 'BCN20000', res: '1024 × 1024 px (mediana)', uniform: 'heterogéneo', captura: 'Dermatoscopio multicéntrico', n: '18.946' },
+    { ds: 'CO2Wounds-V2', res: 'Variable · smartphone', uniform: 'heterogéneo', captura: 'Cámara de teléfono en campo', n: '764' },
+  ];
+  return (
+    <table
+      style={{
+        width: '100%',
+        borderCollapse: 'separate',
+        borderSpacing: 0,
+        fontFamily: 'var(--font-sans)',
+      }}
+    >
+      <thead>
+        <tr>
+          {['Dataset', 'Resolución', 'Uniformidad', 'Captura', 'n'].map((h) => (
+            <th
+              key={h}
+              style={{
+                textAlign: h === 'n' ? 'right' : 'left',
+                padding: '10px 12px',
+                borderBottom: '2px solid #0a0b0c',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10.5,
+                letterSpacing: '0.22em',
+                color: '#0a0b0c',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+              }}
+            >
+              {h}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r, i) => (
+          <motion.tr
+            key={r.ds}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-2%' }}
+            transition={{ duration: 0.4, ease: ENTER, delay: 0.05 + i * 0.06 }}
+          >
+            <td style={cellStyle(i, rows.length)}>
+              <span className="font-mono uppercase" style={{ fontSize: 12, letterSpacing: '0.16em', fontWeight: 700 }}>
+                {r.ds}
+              </span>
+            </td>
+            <td style={cellStyle(i, rows.length)}>{r.res}</td>
+            <td style={cellStyle(i, rows.length)}>
+              <span
+                className="font-mono uppercase"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '0.18em',
+                  fontWeight: 700,
+                  color: r.uniform === 'uniforme' ? '#00543d' : 'rgba(10,11,12,0.6)',
+                }}
+              >
+                {r.uniform === 'uniforme' ? '✓ uniforme' : '· heterogéneo'}
+              </span>
+            </td>
+            <td style={cellStyle(i, rows.length)}>{r.captura}</td>
+            <td style={{ ...cellStyle(i, rows.length), textAlign: 'right' }}>
+              <span className="font-mono tabular-nums" style={{ fontWeight: 700 }}>
+                {r.n}
+              </span>
+            </td>
+          </motion.tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function cellStyle(i: number, total: number): React.CSSProperties {
+  return {
+    padding: '14px 12px',
+    fontSize: 14.5,
+    color: '#0a0b0c',
+    letterSpacing: '-0.003em',
+    borderBottom: i < total - 1 ? '1px solid rgba(10,11,12,0.12)' : 'none',
+  };
+}
+
+// ─── (componentes anteriores conservados por compat) ────────────────
 
 function BalanceChart() {
   const data = [
@@ -1496,6 +1865,235 @@ function ResolutionChart() {
         </motion.div>
       ))}
     </div>
+  );
+}
+
+// ─── Coverage Matrix · 7 patologías × 3 datasets ────────────────────
+
+function CoverageMatrix() {
+  const datasets = [
+    { id: 'ham', label: 'HAM10000', accent: '#0d4ea8' },
+    { id: 'bcn', label: 'BCN20000', accent: '#8a3f85' },
+    { id: 'co2', label: 'CO2Wounds', accent: '#00543d' },
+  ];
+  const patologias = [
+    { code: 'mel', name: 'Melanoma', priority: 'Crítica', ham: 'full', bcn: 'full', co2: 'none' },
+    { code: 'bcc', name: 'Carcinoma basocelular', priority: 'Crítica', ham: 'full', bcn: 'full', co2: 'none' },
+    { code: 'scc', name: 'Carcinoma escamocelular (akiec)', priority: 'Crítica', ham: 'partial', bcn: 'full', co2: 'none' },
+    { code: 'nv', name: 'Nevus melanocítico', priority: 'Alta', ham: 'full', bcn: 'full', co2: 'none' },
+    { code: 'bkl', name: 'Queratosis benigna', priority: 'Media', ham: 'full', bcn: 'full', co2: 'none' },
+    { code: 'vasc', name: 'Lesión vascular', priority: 'Baja', ham: 'partial', bcn: 'partial', co2: 'none' },
+    { code: 'wound', name: 'Heridas crónicas / lepra', priority: 'Local', ham: 'none', bcn: 'none', co2: 'full' },
+  ];
+
+  function cellFill(level: string) {
+    if (level === 'full') return '#00543d';
+    if (level === 'partial') return 'rgba(0,84,61,0.45)';
+    return 'rgba(10,11,12,0.06)';
+  }
+  function cellLabel(level: string) {
+    if (level === 'full') return '✓';
+    if (level === 'partial') return '~';
+    return '—';
+  }
+  function priorityColor(p: string) {
+    if (p === 'Crítica') return '#bf3a3a';
+    if (p === 'Alta') return '#a68a00';
+    if (p === 'Media') return '#0d4ea8';
+    if (p === 'Local') return '#00543d';
+    return 'rgba(10,11,12,0.5)';
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-6%' }}
+      transition={{ duration: 0.7, ease: ENTER }}
+      style={{
+        background: '#ffffff',
+        border: '1px solid rgba(10,11,12,0.14)',
+        borderRadius: 16,
+        padding: 'clamp(24px, 3vw, 36px)',
+        boxShadow: '0 18px 40px -24px rgba(10,11,12,0.10)',
+        overflowX: 'auto',
+      }}
+    >
+      <table
+        style={{
+          width: '100%',
+          minWidth: 640,
+          borderCollapse: 'separate',
+          borderSpacing: 0,
+          fontFamily: 'var(--font-sans)',
+        }}
+      >
+        <thead>
+          <tr>
+            <th
+              style={{
+                textAlign: 'left',
+                padding: '12px 14px',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10.5,
+                letterSpacing: '0.22em',
+                color: 'rgba(10,11,12,0.55)',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                borderBottom: '1px solid rgba(10,11,12,0.18)',
+              }}
+            >
+              Patología
+            </th>
+            <th
+              style={{
+                textAlign: 'left',
+                padding: '12px 14px',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 10.5,
+                letterSpacing: '0.22em',
+                color: 'rgba(10,11,12,0.55)',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                borderBottom: '1px solid rgba(10,11,12,0.18)',
+              }}
+            >
+              Prioridad
+            </th>
+            {datasets.map((d) => (
+              <th
+                key={d.id}
+                style={{
+                  textAlign: 'center',
+                  padding: '12px 10px',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 11,
+                  letterSpacing: '0.22em',
+                  color: d.accent,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  borderBottom: '1px solid rgba(10,11,12,0.18)',
+                }}
+              >
+                {d.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {patologias.map((p, i) => (
+            <motion.tr
+              key={p.code}
+              initial={{ opacity: 0, x: -8 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-2%' }}
+              transition={{ duration: 0.45, ease: ENTER, delay: 0.05 + i * 0.05 }}
+            >
+              <td
+                style={{
+                  padding: '14px 14px',
+                  fontSize: 14.5,
+                  fontWeight: 500,
+                  color: '#0a0b0c',
+                  letterSpacing: '-0.005em',
+                  borderBottom: i < patologias.length - 1 ? '1px solid rgba(10,11,12,0.08)' : 'none',
+                }}
+              >
+                <div className="font-mono" style={{ fontSize: 10, color: 'rgba(10,11,12,0.5)', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 3 }}>
+                  {p.code}
+                </div>
+                {p.name}
+              </td>
+              <td
+                style={{
+                  padding: '14px 14px',
+                  borderBottom: i < patologias.length - 1 ? '1px solid rgba(10,11,12,0.08)' : 'none',
+                }}
+              >
+                <span
+                  className="font-mono uppercase"
+                  style={{
+                    display: 'inline-block',
+                    padding: '4px 10px',
+                    background: `${priorityColor(p.priority)}18`,
+                    color: priorityColor(p.priority),
+                    fontSize: 10,
+                    letterSpacing: '0.18em',
+                    fontWeight: 700,
+                    borderRadius: 4,
+                  }}
+                >
+                  {p.priority}
+                </span>
+              </td>
+              {[p.ham, p.bcn, p.co2].map((lvl, j) => (
+                <td
+                  key={j}
+                  style={{
+                    padding: '14px 10px',
+                    textAlign: 'center',
+                    borderBottom: i < patologias.length - 1 ? '1px solid rgba(10,11,12,0.08)' : 'none',
+                  }}
+                >
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 40,
+                      height: 40,
+                      background: cellFill(lvl),
+                      color: lvl === 'full' || lvl === 'partial' ? '#ffffff' : 'rgba(10,11,12,0.4)',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: 18,
+                      fontWeight: 700,
+                      borderRadius: 8,
+                    }}
+                  >
+                    {cellLabel(lvl)}
+                  </span>
+                </td>
+              ))}
+            </motion.tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* leyenda */}
+      <div style={{ display: 'flex', gap: 24, marginTop: 20, paddingTop: 16, borderTop: '1px dashed rgba(10,11,12,0.18)', flexWrap: 'wrap' }}>
+        {[
+          { label: 'Cobertura completa', sym: '✓', color: '#00543d' },
+          { label: 'Parcial · revisar volumen', sym: '~', color: 'rgba(0,84,61,0.45)' },
+          { label: 'No cubierto', sym: '—', color: 'rgba(10,11,12,0.4)' },
+        ].map((l) => (
+          <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span
+              style={{
+                width: 22,
+                height: 22,
+                background: l.color,
+                color: '#ffffff',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 4,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 11,
+                fontWeight: 700,
+              }}
+            >
+              {l.sym}
+            </span>
+            <span
+              className="font-mono uppercase"
+              style={{ fontSize: 10, letterSpacing: '0.18em', color: 'rgba(10,11,12,0.65)', fontWeight: 600 }}
+            >
+              {l.label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
   );
 }
 

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────
-// §11 · Gracias por ver · QR + cierre cinematográfico.
+// §11 · Gracias por ver · QR centrado · cierre minimalista.
 // ─────────────────────────────────────────────────────────────────────────
 
 import { motion } from 'framer-motion';
@@ -48,235 +48,92 @@ export default function Section11Gracias() {
       <div
         style={{
           position: 'relative',
-          maxWidth: 1280,
           width: '100%',
+          maxWidth: 1280,
           marginInline: 'auto',
           paddingInline: 'clamp(20px, 4vw, 56px)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          gap: 'clamp(32px, 4vw, 56px)',
         }}
       >
-        {/* Masthead */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-10%' }}
           transition={{ duration: 0.7, ease: ENTER }}
+          className="font-mono uppercase"
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'baseline',
-            paddingBottom: 14,
-            marginBottom: 64,
-            borderBottom: '1px solid rgba(255,255,255,0.22)',
+            fontSize: 13,
+            letterSpacing: '0.36em',
+            color: '#fce88b',
+            fontWeight: 700,
           }}
         >
-          <span
-            className="font-mono uppercase"
-            style={{ fontSize: 13, letterSpacing: '0.32em', color: 'rgba(255,255,255,0.82)', fontWeight: 700 }}
-          >
-            §11 · cierre
-          </span>
-          <span
-            className="font-mono uppercase"
-            style={{ fontSize: 12, letterSpacing: '0.28em', color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}
-          >
-            UNAB · 2026
-          </span>
+          ◆ Sustentación · Proyecto de Grado I
         </motion.div>
 
-        {/* Layout · texto izq + QR der */}
-        <div
+        <motion.h2
+          id="thx-h"
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-10%' }}
+          transition={{ duration: 0.9, ease: ENTER, delay: 0.1 }}
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 0.9fr)',
-            gap: 'clamp(32px, 5vw, 80px)',
-            alignItems: 'center',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'clamp(56px, 9vw, 144px)',
+            lineHeight: 0.95,
+            letterSpacing: '-0.034em',
+            fontWeight: 400,
+            color: '#ffffff',
+            margin: 0,
+            maxWidth: '16ch',
           }}
         >
-          {/* Texto */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-10%' }}
-              transition={{ duration: 0.8, ease: ENTER }}
-            >
-              <div
-                className="font-mono uppercase"
-                style={{
-                  fontSize: 13,
-                  letterSpacing: '0.36em',
-                  color: '#fce88b',
-                  fontWeight: 700,
-                  marginBottom: 24,
-                }}
-              >
-                ◆ Sustentación · Proyecto de Grado I
-              </div>
-              <h2
-                id="thx-h"
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(48px, 7vw, 112px)',
-                  lineHeight: 0.95,
-                  letterSpacing: '-0.034em',
-                  fontWeight: 400,
-                  color: '#ffffff',
-                  margin: 0,
-                  maxWidth: '14ch',
-                }}
-              >
-                Gracias por <span style={{ color: '#fce88b', fontWeight: 500 }}>ver</span>.
-              </h2>
-              <p
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(17px, 1.8vw, 22px)',
-                  lineHeight: 1.45,
-                  color: 'rgba(255,255,255,0.75)',
-                  margin: '28px 0 0 0',
-                  maxWidth: '44ch',
-                  letterSpacing: '-0.008em',
-                }}
-              >
-                Algoritmo de aprendizaje autosupervisado para la detección de lesiones cutáneas aplicado al contexto clínico de Santander.
-              </p>
-            </motion.div>
+          Gracias por <span style={{ color: '#fce88b', fontWeight: 500 }}>ver</span>.
+        </motion.h2>
 
-            {/* autores */}
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-10%' }}
-              transition={{ duration: 0.7, ease: ENTER, delay: 0.25 }}
-              style={{
-                marginTop: 48,
-                paddingTop: 20,
-                borderTop: '1px solid rgba(255,255,255,0.22)',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                gap: 24,
-              }}
-            >
-              {[
-                { rol: 'Autor', nombre: 'Nicolás Moreno' },
-                { rol: 'Co-autora', nombre: 'María Paula Saavedra' },
-                { rol: 'Asesora externa', nombre: 'Karen Sánchez · KAUST' },
-              ].map((p) => (
-                <div key={p.nombre}>
-                  <div
-                    className="font-mono uppercase"
-                    style={{
-                      fontSize: 10.5,
-                      letterSpacing: '0.28em',
-                      color: 'rgba(255,255,255,0.5)',
-                      fontWeight: 700,
-                      marginBottom: 6,
-                    }}
-                  >
-                    {p.rol}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: 15,
-                      fontWeight: 500,
-                      color: '#ffffff',
-                      letterSpacing: '-0.008em',
-                    }}
-                  >
-                    {p.nombre}
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* QR + logo UNAB */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-10%' }}
-            transition={{ duration: 0.9, ease: ENTER, delay: 0.2 }}
+        {/* QR centrado */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.92 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-10%' }}
+          transition={{ duration: 0.9, ease: ENTER, delay: 0.3 }}
+          style={{
+            background: '#ffffff',
+            padding: 'clamp(22px, 2.6vw, 36px)',
+            borderRadius: 20,
+            boxShadow: '0 32px 80px -32px rgba(252,232,139,0.45), 0 18px 48px -28px rgba(0,84,61,0.55)',
+          }}
+        >
+          <img
+            src="/media/qr-sustentacion.png"
+            alt="QR · Acceso al proyecto"
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 24,
+              display: 'block',
+              width: 'clamp(220px, 26vw, 320px)',
+              height: 'clamp(220px, 26vw, 320px)',
+              borderRadius: 10,
             }}
-          >
-            <div
-              style={{
-                background: '#ffffff',
-                padding: 'clamp(20px, 2.4vw, 32px)',
-                borderRadius: 18,
-                boxShadow: '0 32px 80px -32px rgba(252,232,139,0.45), 0 18px 48px -28px rgba(0,84,61,0.55)',
-                position: 'relative',
-              }}
-            >
-              <img
-                src="/media/qr-sustentacion.png"
-                alt="QR · Acceso a la presentación"
-                style={{
-                  display: 'block',
-                  width: 'clamp(180px, 22vw, 280px)',
-                  height: 'clamp(180px, 22vw, 280px)',
-                  borderRadius: 8,
-                }}
-              />
-            </div>
-            <div
-              className="font-mono uppercase"
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.32em',
-                color: 'rgba(255,255,255,0.6)',
-                fontWeight: 700,
-                textAlign: 'center',
-              }}
-            >
-              Escanea · accede al proyecto
-            </div>
+          />
+        </motion.div>
 
-            {/* Logo UNAB */}
-            <img
-              src="/media/logo-unab-full.png"
-              alt="Universidad Autónoma de Bucaramanga"
-              style={{
-                marginTop: 16,
-                maxWidth: 'clamp(140px, 16vw, 200px)',
-                height: 'auto',
-                opacity: 0.78,
-                filter: 'invert(1) brightness(1.4)',
-              }}
-            />
-          </motion.div>
-        </div>
-
-        {/* Footer */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-10%' }}
           transition={{ duration: 0.7, ease: ENTER, delay: 0.5 }}
+          className="font-mono uppercase"
           style={{
-            marginTop: 'clamp(56px, 7vw, 96px)',
-            paddingTop: 20,
-            borderTop: '1px solid rgba(255,255,255,0.22)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'baseline',
-            flexWrap: 'wrap',
-            gap: 16,
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 11.5,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.55)',
-            fontWeight: 500,
+            fontSize: 12,
+            letterSpacing: '0.32em',
+            color: 'rgba(255,255,255,0.6)',
+            fontWeight: 700,
           }}
         >
-          <span>Ingeniería de sistemas · UNAB · 2026</span>
-          <span style={{ color: '#fce88b', fontWeight: 700 }}>fin</span>
+          Escanea · accede al proyecto
         </motion.div>
       </div>
     </section>

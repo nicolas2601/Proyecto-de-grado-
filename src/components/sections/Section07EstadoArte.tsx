@@ -25,7 +25,7 @@ const PAPERS = [
     autor: 'Tschandl et al.',
     anio: '2018',
     venue: 'Sci. Data',
-    tag: 'Corpus HAM10000',
+    tag: 'Dataset HAM10000',
     aporte: '10.015 dermatoscopias multicéntricas. Referencia obligada para evaluar.',
     accent: '#8a3f85',
   },
@@ -61,7 +61,7 @@ const OBSERVACIONES_NACIONAL = [
     body: 'La investigación nacional en deep learning médico apunta sobre todo a radiología y patología. Dermatología queda relativamente al margen.',
   },
   {
-    title: 'Corpus local · dominio cercano',
+    title: 'Dataset local · dominio cercano',
     body: 'CO2-Wounds-V2 (UIS) aporta imágenes colombianas de heridas crónicas captadas con celulares. Dominio cercano a dermatología, calidad heterogénea frente al estándar dermatoscópico.',
   },
   {
@@ -155,7 +155,7 @@ export default function Section07EstadoArte() {
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* 01 · PANORAMA INTERNACIONAL                                 */}
         {/* ═══════════════════════════════════════════════════════════ */}
-        <FrenteHeader n="01" titulo="Panorama internacional" color="#0d4ea8" descripcion="Cinco trabajos landmark · supervisado · corpus · SSL." />
+        <FrenteHeader n="01" titulo="Panorama internacional" color="#0d4ea8" descripcion="Cinco trabajos landmark · supervisado · datasets · SSL." />
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
