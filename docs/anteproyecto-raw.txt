@@ -1,0 +1,106 @@
+Algoritmo de aprendizaje autosupervisado para la detección de lesiones cutáneas en imágenes dermatológicas aplicado al contexto clínico de Santander
+Anteproyecto de Trabajo de Grado
+1. Introducción
+El cáncer de piel es una de las neoplasias más frecuentes en el mundo y su detección temprana es determinante para la supervivencia del paciente. En Colombia, y particularmente en Santander, esta detección enfrenta una doble barrera: la dependencia de la experiencia del especialista y la escasez de herramientas tecnológicas adaptadas al contexto local. El diagnóstico clínico convencional alcanza una precisión que oscila entre el 62% y el 80% según la experiencia del especialista (Chaturvedi et al., 2020), y las alternativas como la biopsia resultan invasivas, costosas y lentas para un sistema de salud con recursos limitados.
+Esta situación se agudiza en regiones como Santander, donde la disponibilidad de especialistas es limitada y las herramientas tecnológicas de apoyo diagnóstico no están adaptadas a las condiciones del sistema de salud local. La detección oportuna de lesiones malignas, en particular del melanoma, sigue dependiendo casi exclusivamente del criterio clínico, lo que representa un reto estructural con consecuencias directas sobre la mortalidad y la calidad de atención de los pacientes.
+2. Planteamiento del Problema
+2.1 Contexto global y nacional
+El cáncer de piel es una de las neoplasias más frecuentes en el mundo. En Colombia, la situación es crítica: solo en 2024 se reportaron 11.064 casos, lo que refleja una tendencia creciente que exige soluciones tecnológicas adaptadas al contexto local.
+2.2 Situación en Santander
+Entre 2016 y 2023 se registraron 3.060 casos de cáncer de piel en el Instituto de Cáncer del Hospital Universitario de Santander (HUS). El carcinoma basocelular es el tipo más frecuente (64,82%); sin embargo, el melanoma representa la causa del 80% de las muertes relacionadas, pese a tener menor prevalencia, lo que evidencia la urgencia de un diagnóstico oportuno y preciso.
+2.3 Deficiencias del diagnóstico actual
+El diagnóstico actual presenta tres limitaciones estructurales:
+Dependencia del experto: la precisión diagnóstica varía entre el 62% (especialistas con 3–5 años de experiencia) y el 80% (más de 10 años), generando una brecha significativa en la detección temprana (Chaturvedi et al., 2020).
+Barreras económicas y de acceso: las biopsias son invasivas, costosas y lentas, lo que dificulta el diagnóstico oportuno en entornos con recursos limitados como Santander.
+Limitación tecnológica: los modelos de inteligencia artificial actuales basados en aprendizaje supervisado dependen de grandes volúmenes de imágenes etiquetadas por especialistas, un recurso escaso y costoso en la región.
+Esta carencia tecnológica deriva en diagnósticos tardíos, mayor mortalidad y sobrecarga en los servicios de dermatología del departamento.
+3. Pregunta e Hipótesis de Investigación
+¿Cómo diseñar un algoritmo de inteligencia artificial basado en aprendizaje autosupervisado (SSL) para la detección de lesiones cutáneas que apoye el diagnóstico clínico en el departamento de Santander?
+Se asume que las técnicas de SSL permiten extraer representaciones visuales robustas de imágenes dermatológicas sin necesidad de etiquetas exhaustivas, superando las limitaciones del aprendizaje supervisado convencional en escenarios de datos escasos. El proyecto busca desarrollar una herramienta de apoyo al juicio clínico, no un sustituto del especialista.
+4. Justificación
+La justificación del proyecto se articula en cinco dimensiones:
+1. Relevancia — ¿Por qué ahora?
+La mayoría de modelos de IA en salud fueron diseñados para contextos con infraestructura consolidada y datos abundantes. Colombia no cumple esa condición: los datos etiquetados son escasos y su generación es costosa, generando una brecha real entre la tecnología disponible y las capacidades del sistema de salud regional.
+2. Pertinencia — ¿A qué responde?
+Responde a una necesidad clínica identificada en Santander para el apoyo al diagnóstico dermatológico, y se alinea con los lineamientos de transformación digital en salud del Ministerio de Salud y Protección Social, que reconoce la IA como estrategia para reducir brechas diagnósticas territoriales.
+3. Valor agregado — ¿Qué lo diferencia?
+El SSL permite aprender de datos sin etiquetar, lo que lo hace viable donde otros modelos no lo son. Según la literatura revisada, es la primera aplicación de este enfoque en Colombia para clasificación de lesiones cutáneas, y es replicable en otras instituciones con las mismas limitaciones.
+4. Viabilidad — ¿Es realizable?
+Datasets públicos disponibles (HAM10000, ISIC) + técnicas SSL con resultados probados en literatura + herramientas de código abierto = proyecto ejecutable con los recursos y tiempos del trabajo de grado.
+5. Formación profesional
+Fortalece competencias en diseño de sistemas inteligentes, procesamiento de imágenes médicas e implementación de modelos de aprendizaje automático, promoviendo una formación orientada a la innovación con impacto en procesos clínicos reales.
+5. Objetivos
+5.1 Objetivo General
+Desarrollar un algoritmo de inteligencia artificial basado en aprendizaje autosupervisado para la clasificación de lesiones cutáneas a partir de imágenes dermatológicas, orientado al apoyo del diagnóstico clínico en el contexto del departamento de Santander.
+5.2 Objetivos Específicos
+Analizar conjuntos de datos de imágenes dermatológicas representativos de lesiones cutáneas relevantes para el contexto clínico del departamento de Santander.
+Diseñar un algoritmo de clasificación de lesiones cutáneas basado en aprendizaje autosupervisado utilizando imágenes dermatológicas.
+Evaluar el desempeño del algoritmo propuesto mediante métricas reportadas en la literatura científica para tareas de análisis de imágenes médicas.
+Implementar un prototipo de aplicación que integre el algoritmo desarrollado para el apoyo en el análisis de imágenes dermatológicas.
+6. Alcance y Delimitación
+6.1 Alcance
+El proyecto contempla el diseño, implementación y validación de un algoritmo SSL para la detección y clasificación de lesiones cutáneas. El prototipo resultante alcanzará un nivel de madurez tecnológica TRL 4, validado en entorno de laboratorio bajo condiciones controladas. Los beneficiarios directos son médicos generales y dermatólogos de Santander.
+6.2 Delimitación
+Datos: se utilizarán únicamente repositorios públicos (HAM10000, ISIC); no se recolectarán imágenes nuevas en entornos hospitalarios.
+Pruebas clínicas: no se realizarán pruebas con pacientes reales ni validaciones médicas formales.
+Integración: el prototipo es independiente y no se conectará con sistemas de historias clínicas electrónicas.
+Madurez: el proyecto se limita a TRL 4; no incluye despliegue en producción ni integración hospitalaria.
+7. Antecedentes y Estado del Arte
+7.1 Contexto internacional — Aprendizaje Autosupervisado
+En el ámbito internacional, los avances más relevantes en SSL aplicado a dermatología provienen de Europa. El modelo DINO (2024) demostró capacidad para agrupar lesiones cutáneas sin requerir etiquetas, mientras que Barlow Twins (2024) superó al aprendizaje supervisado en escenarios con pocos datos etiquetados. El referente más avanzado es PanDerm (Nature Medicine, 2025), un modelo fundacional entrenado con millones de imágenes dermatológicas.
+Sin embargo, estos modelos presentan limitaciones críticas para el contexto regional: están desarrollados sobre poblaciones predominantemente caucásicas y requieren infraestructuras computacionales inasequibles para clínicas regionales colombianas.
+7.2 Contexto nacional — Colombia
+A nivel nacional, los trabajos existentes se han limitado al aprendizaje supervisado mediante redes neuronales convolucionales (CNN) y machine learning tradicional. El referente más cercano al presente proyecto es el trabajo de Sánchez et al. (2024), investigadores de la Universidad Industrial de Santander, quienes desarrollaron Co2Wounds-V2, un dataset extendido de heridas crónicas en pacientes con lepra presentado en el IEEE International Conference on Image Processing (ICIP) 2024. Este trabajo representa el esfuerzo nacional más significativo en imágenes médicas cutáneas con inteligencia artificial, y su enfoque supervisado contrasta directamente con la propuesta autosupervisada del presente proyecto.
+Cabe destacar que una de las coinvestigadoras de Co2Wounds-V2 participa como codirectora del presente trabajo de grado, lo que fortalece la vinculación entre los antecedentes regionales y la propuesta actual.
+7.3 Vacío investigativo identificado
+Tras el análisis de la literatura, se identifica que no existe, hasta la fecha, una aplicación de aprendizaje autosupervisado (SSL) en el contexto colombiano para la clasificación de lesiones cutáneas. Este proyecto busca llenar ese vacío, adaptando tecnologías globales a las capacidades computacionales locales y a los fototipos de piel prevalentes en la región.
+8. Marco Teórico y Conceptual
+8.1 Fundamento clínico
+Las lesiones cutáneas se clasifican entre benignas (nevos melanocíticos, queratosis seborreica) y malignas (melanoma, carcinoma basocelular, carcinoma espinocelular). El melanoma, pese a representar una menor proporción de casos, causa el 80% de las muertes relacionadas con cáncer de piel, lo que justifica la priorización de su detección temprana. Los estándares diagnósticos actuales incluyen el criterio ABCDE y la dermatoscopía.
+8.2 Fundamento técnico — Deep Learning
+El aprendizaje profundo (Deep Learning) ha transformado el análisis de imágenes médicas. Arquitecturas como ResNet han establecido líneas base sólidas en clasificación de imágenes, mientras que los Vision Transformers (ViT) han introducido mecanismos de atención que permiten capturar relaciones globales en la imagen, relevantes para el análisis de patrones dermatológicos complejos.
+8.3 Eje central — Aprendizaje Autosupervisado (SSL)
+El aprendizaje autosupervisado permite que un modelo aprenda representaciones visuales útiles a partir de datos no etiquetados, mediante la generación de señales de supervisión desde los propios datos. Las dos estrategias principales relevantes para este proyecto son:
+Métodos contrastivos (SimCLR): el modelo aprende a distinguir representaciones de distintas vistas aumentadas de una misma imagen, maximizando la similitud entre vistas de la misma imagen y minimizándola entre imágenes distintas.
+Métodos de destilación (DINO): el modelo aprende mediante la destilación del conocimiento entre una red estudiante y una red maestra, sin requerir etiquetas ni pares negativos explícitos.
+Ambas estrategias permiten el preentrenamiento con grandes volúmenes de datos no etiquetados, seguido de un fine-tuning supervisado con una fracción reducida de datos etiquetados, lo que las hace especialmente adecuadas para el contexto de Santander.
+9. Marco Normativo y Consideraciones Éticas
+Dado que el proyecto involucra el procesamiento de imágenes médicas, su desarrollo se enmarca en la siguiente normativa:
+Ley 1581 de 2012: protección de datos personales en Colombia.
+Ley 1419 de 2010: marco regulatorio para la telesalud en Colombia.
+Marco Ético para la IA en Colombia (2021): exige transparencia algorítmica y reducción de sesgos en sistemas de inteligencia artificial aplicados al sector salud.
+GDPR europeo y Declaración de Helsinki: referentes internacionales para el manejo de datos biométricos y la ética en investigación médica.
+El proyecto utiliza exclusivamente datasets públicos anonimizados (HAM10000, ISIC). El prototipo declarará explícitamente que constituye una herramienta de apoyo al diagnóstico y no reemplaza el juicio clínico del especialista.
+10. Diseño Metodológico
+El proyecto sigue la metodología CRISP-DM, estructurada en cuatro fases que se corresponden directamente con los objetivos específicos:
+Fase 1 — Análisis y preparación de conjuntos de datos (OE1)
+Se revisarán y caracterizarán los conjuntos de datos públicos disponibles para clasificación de lesiones cutáneas, evaluando cobertura de clases, tamaño, calidad de imagen y condiciones de licencia. La distribución de tipos de lesiones se contrastará con el perfil epidemiológico de Santander a partir de registros del Ministerio de Salud y literatura regional.
+Entregable: caracterización y preparación del conjunto de datos seleccionado, incluyendo criterios de inclusión, distribución de clases y esquema de partición estratificada.
+Fase 2 — Diseño del algoritmo SSL (OE2)
+A partir del conjunto de datos preprocesado, se diseñará el algoritmo de aprendizaje autosupervisado, incluyendo la selección de la arquitectura backbone, la estrategia SSL, el entrenamiento con datos no etiquetados y el proceso de fine-tuning con datos etiquetados.
+Entregable: algoritmo computacional basado en SSL para la clasificación de lesiones cutáneas, con arquitectura, hiperparámetros y decisiones de diseño documentadas.
+Fase 3 — Evaluación del desempeño (OE3)
+Se evaluará el modelo propuesto sobre los conjuntos de prueba y se comparará con modelos supervisados de referencia bajo las mismas condiciones experimentales, utilizando el mismo backbone para garantizar comparaciones válidas y libres de sesgo.
+Métricas principales: AUC-ROC (métrica principal), F1-score (especialmente relevante ante el desbalance de clases), exactitud desagregada por clase diagnóstica y matrices de confusión. Se prestará especial atención a los falsos positivos, dado el impacto clínico de un diagnóstico erróneo de malignidad.
+Entregable: informe comparativo con tablas de resultados, matrices de confusión y análisis estadístico del modelo propuesto frente a los métodos del estado del arte.
+Fase 4 — Implementación del prototipo (OE4)
+A partir del modelo validado, se desarrollará un prototipo funcional de apoyo diagnóstico que integre el flujo completo desde la carga de la imagen hasta la generación de la predicción, incluyendo la visualización explícita de las métricas de desempeño para el usuario médico.
+Entregable: prototipo funcional documentado con manual de uso. Las decisiones tecnológicas de despliegue se definirán en esta fase, priorizando herramientas de acceso abierto compatibles con el modelo entrenado.
+11. Resultados Esperados y Madurez Tecnológica
+Técnico: algoritmo SSL entrenado con desempeño comparable o superior a modelos supervisados convencionales en escenarios de datos etiquetados limitados.
+Comparativo: informe que contraste el modelo propuesto con líneas base supervisadas bajo las mismas condiciones y arquitectura.
+Funcional: prototipo de apoyo diagnóstico que informe explícitamente las métricas de desempeño al especialista.
+Madurez tecnológica: TRL 4 — tecnología validada en entorno de laboratorio bajo condiciones controladas.
+12. Estado Actual del Proyecto
+El proyecto se encuentra actualmente en la Fase 1 (Objetivo Específico 1). Se han completado las siguientes actividades:
+Definición y caracterización del problema clínico regional.
+Revisión exhaustiva de la literatura y consolidación del estado del arte.
+Selección inicial de datasets públicos (HAM10000, ISIC) y definición del diseño metodológico.
+Análisis y caracterización preliminar de los conjuntos de datos seleccionados.
+Pendiente de la Fase 1: ejecución del pipeline de preprocesamiento (Actividad 5).
+Referencias Clave
+Sánchez, K., Hinojosa, C., Mieles, O., Zhao, C., Ghanem, B. y Arguello, H. (2024). Co2Wounds-V2: Extended Chronic Wounds Dataset from Leprosy Patients. 2024 IEEE International Conference on Image Processing (ICIP), Abu Dhabi, EAU, pp. 69–75. https://doi.org/10.1109/ICIP51287.2024.10647641
+Harczos, T. et al. (2024). Self-supervised learning strategies for dermatological image analysis. [Referencia metodológica — Fase 2].
+Huang, Y. et al. (2023). Fine-tuning pretrained models for skin lesion classification. [Referencia metodológica — Fase 2].
+HAM10000 Dataset: Tschandl, P. et al. (2018). The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions. Scientific Data.
+ISIC Archive: International Skin Imaging Collaboration. https://www.isic-archive.com

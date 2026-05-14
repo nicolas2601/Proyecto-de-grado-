@@ -21,16 +21,18 @@ export default function Section00Inicio() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.7, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, reduced ? 1 : 1.05]);
 
-  // Video fade-in
+  // Video fade-in · revela en cuanto haya el primer frame disponible
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    const onCanPlay = () => setVideoLoaded(true);
-    v.addEventListener('canplay', onCanPlay);
-    v.play().catch(() => {
-      // poster fallback
-    });
-    return () => v.removeEventListener('canplay', onCanPlay);
+    // Si ya está cargado (cache, HMR), revelar de inmediato
+    if (v.readyState >= 2) {
+      setVideoLoaded(true);
+    }
+    const onLoadedData = () => setVideoLoaded(true);
+    v.addEventListener('loadeddata', onLoadedData);
+    v.play().catch(() => {});
+    return () => v.removeEventListener('loadeddata', onLoadedData);
   }, []);
 
   const scrollNext = () => {
@@ -57,12 +59,12 @@ export default function Section00Inicio() {
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
           aria-label="Dermatoscopia · imagen clínica de referencia"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             opacity: videoLoaded ? 1 : 0,
-            transition: 'opacity 900ms cubic-bezier(0.22, 1, 0.36, 1)',
+            transition: 'opacity 450ms cubic-bezier(0.22, 1, 0.36, 1)',
             filter: 'saturate(0.85) contrast(1.05)',
           }}
         />

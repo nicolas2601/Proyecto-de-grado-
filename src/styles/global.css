@@ -68,6 +68,21 @@
   /* Easing */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* ── Design System Ada · Precise Analytical Blueprint ──────── */
+  /* Aplicado a partir de §01. El hero §00 conserva la paleta NotebookLM. */
+  --ada-graphite:   #0a0b0c;   /* texto primario */
+  --ada-vapor:      #ffffff;   /* canvas base */
+  --ada-cloud:      #f9f9f9;   /* surface alterna */
+  --ada-mist:       #d8d8d8;   /* borders, dividers */
+  --ada-moss:       #00543d;   /* accent botones, bordes prominentes */
+  --ada-sky:        #abcbf9;   /* primary action, highlights */
+  --ada-lavender:   #ffbbfc;   /* categorización */
+  --ada-gold:       #fce88b;   /* categorización */
+  --ada-plum:       #392c38;   /* decorative */
+  --ada-green:      #95b7ae;   /* muted accent */
+  --ada-magenta:    #fbe0fa;   /* muted */
+  --ada-blue:       #dae7f9;   /* muted */
 }
 
 @layer base {

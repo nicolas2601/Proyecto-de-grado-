@@ -1,4 +1,32 @@
-# Claude Code Configuration - RuFlo V3
+# Claude Code Configuration · Sustentación SSL Santander · UNAB 2026
+
+## ⚠ CARGAR ANTES DE CUALQUIER MUTACIÓN
+
+Antes de tocar archivos de UI/componentes, leer en orden:
+
+1. **`docs/project-rules.md`** · reglas del proyecto · skills obligatorias · prohibiciones · workflow
+2. **`docs/context.md`** · anteproyecto + epidemiología + EDA + design system + citas (toda la info)
+3. **`docs/design-system-ada.md`** · tokens canónicos del Design Ada (paleta, Roobert 400, radii, spacing)
+
+Si no hay tiempo para los 3, `project-rules.md` es la referencia mínima.
+
+## Skills obligatorias por defecto
+
+Activar SIEMPRE al iniciar una sección o cambio de UI:
+
+`taste-design` · `impeccable` · `high-end-visual-design` · `frontend-design` · `tailwind` · `motion` · `ui-animation` · `vercel-react-best-practices` · `self-critique` · `comprehensive-review`
+
+Complementarias según contexto: `gsap-scrolltrigger`, `radix-primitives`, `playwright`, `three`, `react-three-fiber`, `nano-banana-pro`, `scroll-scrub-canvas`, `magic-mcp-21st`, `find-skills`.
+
+## Reglas duras del proyecto
+
+- Poco texto · datos con propósito · síntesis > párrafos
+- Todo dato numérico/clínico con superíndice `[n]` que enlaza a `citations.ts`
+- SVG interactivo en TODOS los gráficos · sin PNG, sin canvas plano
+- Responsive obligatorio (pantalla completa + laptop + tablet)
+- Motion with purpose · stack autorizado: Framer Motion + GSAP + Lenis + Three.js
+- Design System Ada es ley · Roobert 400 · paleta Vapor White / Sky Blue / Deep Moss
+- Sin shadows decorativos · sin gradient text · sin emojis · sin em dashes
 
 ## Behavioral Rules (Always Enforced)
 
